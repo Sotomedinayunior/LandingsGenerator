@@ -2,6 +2,6 @@
     <router-view/>
 </template>
   <script>
-  console.log("sdgxg")
+  console.log("application in mode develop")
   
 </script>
