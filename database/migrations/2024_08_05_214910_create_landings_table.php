@@ -19,6 +19,7 @@ return new class extends Migration
             $table->string('color_primary', 15);
             $table->string('color_secondary', 15);
             $table->string('color_tertiary', 15);
+            $table->boolean('published')->default(false);
             $table->timestamps();
             $table->softDeletes();
 
