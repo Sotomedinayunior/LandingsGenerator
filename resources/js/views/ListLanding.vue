@@ -6,7 +6,7 @@
       <h1
         class="font-semibold text-xl sm:text-sm md:text-2xl lg:text-4xl xl:text-5xl"
       >
-        Tus Landings
+        Tus Landingssss
       </h1>
       <div
         class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-4 sm:mt-0"
