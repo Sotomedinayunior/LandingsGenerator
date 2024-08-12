@@ -5,7 +5,7 @@ import ListLanding from '../views/ListLanding.vue';
 import Help from '../views/Help.vue';
 import Reservation from '../views/Reservation.vue';
 import MainLayout from '../views/MainLayout.vue'; 
-
+import LayoutDesigner from '../views/LayoutDesigner.vue';
 const routes = [
   { path: '/', component: Login, name: 'login' },
   { 
@@ -22,6 +22,11 @@ const routes = [
 
     ]
     // meta: { requiresAuth: true } 
+  },
+  {
+    path:'/layoutdesigner',
+    name:'LayoutDesigner',
+    component:LayoutDesigner,
   }
 ];
 
