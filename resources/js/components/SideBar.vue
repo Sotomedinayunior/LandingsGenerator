@@ -19,7 +19,7 @@
     </button>
 
     <!-- Sidebar -->
-    <aside :class="sidebarClass"  class="flex flex-col h-full px-6">
+    <aside :class="sidebarClass"  class=" w-64 h-screen flex flex-col  px-6">
       <!-- Logo e Icono -->
       <div class="flex justify-between items-center py-6 px-2">
         <img
@@ -82,10 +82,11 @@ import {
   Cog6ToothIcon,
 } from "@heroicons/vue/24/outline";
 
-
+import ButtonDefault from '../components/ButtonDefault.vue';
 
 
 export default {
+ 
   data() {
     return {
       isOpen: false,
