@@ -5,120 +5,125 @@ namespace App\Http\Controllers;
 use App\Models\Landing;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 
 class LandingController extends Controller
 {
     // Mostrar una lista de todos los landings con sus relaciones
-    public function index()
+    public function index($userId)
     {
-        // Obtener todos los landings con sus relaciones
-        $landings = Landing::with(['user', 'vehicles', 'reservations'])->get();
-        return response()->json($landings, 200);
+        // Obtén la landing asociada a ese usuario, incluyendo vehículos y reservas
+        $landing = Landing::with(['vehicles', 'reservations'])->where('uid_users_landing', $userId)->first();
+    
+        // Devuelve la respuesta en formato JSON
+        return response()->json($landing);
     }
-
+    
     // Guardar un nuevo landing en la base de datos
     public function create(Request $request)
     {
-        // 1. Validación de los datos
         $validatedData = $request->validate([
             'id_users_landing' => 'required|exists:users,id',
             'name' => 'required|string|max:255',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif|max:2048', // validación de la imagen
-            'color_primary' => 'nullable|string|max:7',
-            'color_secondary' => 'nullable|string|max:7',
-            'color_tertiary' => 'nullable|string|max:7',
+            'logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'color_primary' => ['nullable', 'string', 'max:7', 'regex:/^#([0-9a-fA-F]{3}){1,2}$/'],
+            'color_secondary' => ['nullable', 'string', 'max:7', 'regex:/^#([0-9a-fA-F]{3}){1,2}$/'],
+            'color_tertiary' => ['nullable', 'string', 'max:7', 'regex:/^#([0-9a-fA-F]{3}){1,2}$/'],
             'published' => 'boolean',
         ]);
-    
-        // 2. Subida y almacenamiento de la imagen
+
         if ($request->hasFile('logo')) {
             $logo = $request->file('logo');
-            // Crear un nombre único para la imagen
             $logoName = time() . '_' . $logo->getClientOriginalName();
-            // Mover la imagen a la carpeta public/logos
             $logo->move(public_path('logos'), $logoName);
-            // Guardar la URL de la imagen
             $logoUrl = asset('logos/' . $logoName);
         } else {
-            $logoUrl = null; // Si no se sube una imagen, dejamos el valor como nulo
+            $logoUrl = null;
         }
-    
-        // 3. Guardar los datos en la base de datos
+
         $landing = new Landing();
         $landing->id_users_landing = $validatedData['id_users_landing'];
         $landing->name = $validatedData['name'];
-        $landing->logo = $logoUrl; // Guardamos la URL de la imagen en la base de datos
+        $landing->logo = $logoUrl;
         $landing->color_primary = $validatedData['color_primary'];
         $landing->color_secondary = $validatedData['color_secondary'];
         $landing->color_tertiary = $validatedData['color_tertiary'];
-        $landing->published = $validatedData['published'] ?? false; // Valor por defecto en false si no se proporciona
+        $landing->published = $validatedData['published'] ?? false;
         $landing->save();
-    
-        // Retornar una respuesta (podría ser un redireccionamiento o un mensaje JSON)
+
         return response()->json([
             'message' => 'Landing page created successfully',
             'landing' => $landing,
         ]);
     }
     
-    // Mostrar los detalles de un landing específico
-    public function show($id)
-    {
-        $landing = Landing::with(['user', 'vehicles', 'reservations'])->findOrFail($id);
-        return response()->json($landing, 200);
-    }
-
+    
     // Actualizar un landing existente en la base de datos
+ 
     public function update(Request $request, $id)
     {
-        // Validar los datos recibidos
+        // Validar los datos entrantes
         $validatedData = $request->validate([
-            'name' => 'string|max:255',
-            'logo' => 'nullable|string|max:255',
+            'name' => 'required|string|max:255',
+            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'color_primary' => 'nullable|string|max:7',
             'color_secondary' => 'nullable|string|max:7',
             'color_tertiary' => 'nullable|string|max:7',
             'published' => 'boolean',
-            'vehicles' => 'nullable|array',
-            'vehicles.*.id' => 'nullable|exists:vehicles,id',
-            'vehicles.*.name' => 'required_with:vehicles|string|max:255',
-            'vehicles.*.description' => 'nullable|string',
-            'vehicles.*.price' => 'required_with:vehicles|numeric',
         ]);
-
-        // Obtener el landing y actualizar sus datos
+    
+        // Buscar la landing que se va a actualizar
         $landing = Landing::findOrFail($id);
-        $landing->update($validatedData);
-
-        // Si se pasaron vehículos, actualizarlos o crearlos
-        if (!empty($validatedData['vehicles'])) {
-            foreach ($validatedData['vehicles'] as $vehicleData) {
-                if (isset($vehicleData['id'])) {
-                    // Actualizar vehículo existente
-                    $vehicle = Vehicle::findOrFail($vehicleData['id']);
-                    $vehicle->update($vehicleData);
-                } else {
-                    // Crear nuevo vehículo
-                    $landing->vehicles()->create($vehicleData);
+    
+        try {
+            // Si se sube un nuevo logo, guardar la imagen y actualizar la URL en la base de datos
+            if ($request->hasFile('logo')) {
+                // Eliminar el logo antiguo si existe
+                if ($landing->logo && Storage::disk('public')->exists($landing->logo)) {
+                    // Si la eliminación falla, puedes lanzar una excepción personalizada si es necesario
+                    if (!Storage::disk('public')->delete($landing->logo)) {
+                        throw new \Exception('No se pudo eliminar el logo anterior');
+                    }
                 }
+    
+                // Guardar el nuevo logo
+                $logoPath = $request->file('logo')->store('logos', 'public');
+                $validatedData['logo'] = $logoPath;
             }
+    
+            // Actualizar los datos de la landing
+            $landing->update($validatedData);
+    
+            return response()->json([
+                'message' => 'Landing actualizada con éxito',
+                'landing' => $landing,
+            ], 200);
+    
+        } catch (\Throwable $e) { // Catch Throwable to catch both Errors and Exceptions
+            // Manejo de errores y respuestas HTTP
+            return response()->json([
+                'message' => 'Error al actualizar la landing',
+                'error' => $e->getMessage(),
+            ], 500);
         }
-
-        return response()->json(['message' => 'Landing actualizado exitosamente', 'landing' => $landing], 200);
     }
-
+    
+        
     // Eliminar un landing y sus vehículos relacionados
     public function destroy($id)
     {
-        // Obtener el landing
-        $landing = Landing::findOrFail($id);
-
-        // Eliminar los vehículos asociados
-        $landing->vehicles()->delete();
-
-        // Eliminar el landing
+        // Busca la landing por su ID
+        $landing = Landing::find($id);
+    
+        // Verifica si la landing existe
+        if (!$landing) {
+            return response()->json(['message' => 'Landing not found'], 404);
+        }
+    
+        // Elimina (suavemente) la landing
         $landing->delete();
-
-        return response()->json(['message' => 'Landing eliminado exitosamente'], 200);
+    
+        return response()->json(['message' => 'Landing deleted successfully']);
     }
+    
 }

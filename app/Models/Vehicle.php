@@ -8,6 +8,20 @@ use Illuminate\Database\Eloquent\Model;
 class Vehicle extends Model
 {
     use HasFactory;
+    protected $fillable = [
+        'name',
+        'description',
+        'id_landing',
+        'price',
+        'luggage',
+        'people',
+        'type_of_car',
+        'bluetooth',
+        'siriusxm',
+        'manual',
+        'automatic',
+        'cvt',
+    ];
 
     // Definir la relación inversa uno a muchos con Landing
     public function landing()

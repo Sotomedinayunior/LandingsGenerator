@@ -6,27 +6,42 @@ import Help from '../views/Help.vue';
 import Reservation from '../views/Reservation.vue';
 import MainLayout from '../views/MainLayout.vue'; 
 import LayoutDesigner from '../views/LayoutDesigner.vue';
+
 const routes = [
-  { path: '/', component: Login, name: 'login' },
+  { 
+    path: '/', 
+    component: Login, 
+    name: 'login',
+    meta: { title: 'Login - Nelly App' } 
+  },
   { 
     path: '/dashboard', 
     name: 'dashboard',
     component: MainLayout,
-    children:[
-      {path:'/landings' , component:ListLanding},
-      {path:'/reservation' , component:Reservation},
-      {path:'/help' , component:Help},
-      // {path:'/Landings' , component:ListLanding},
-
-      
-
-    ]
-    // meta: { requiresAuth: true } 
+    meta: { title: 'Dashboard - Nelly App', requiresAuth: true },
+    children: [
+      { 
+        path: '/landings', 
+        component: ListLanding, 
+        meta: { title: 'List of Landings - Nelly App' } 
+      },
+      { 
+        path: '/reservation', 
+        component: Reservation, 
+        meta: { title: 'Reservations - Nelly App' } 
+      },
+      { 
+        path: '/help', 
+        component: Help, 
+        meta: { title: 'Help - Nelly App' } 
+      },
+    ],
   },
   {
-    path:'/layoutdesigner',
-    name:'LayoutDesigner',
-    component:LayoutDesigner,
+    path: '/layout-designer',
+    name: 'LayoutDesigner',
+    component: LayoutDesigner,
+    meta: { title: 'Layout Designer - Nelly App', requiresAuth: true } 
   }
 ];
 
@@ -35,7 +50,7 @@ const router = createRouter({
   routes,
 });
 
-// Protección de rutas
+// Protección de rutas y actualización del título
 router.beforeEach(async (to, from, next) => {
   // Llama a checkSession para manejar la expiración de la sesión
   await store.dispatch('checkSession');
@@ -45,11 +60,13 @@ router.beforeEach(async (to, from, next) => {
 
   if (requiresAuth && !isAuthenticated) {
     next({ name: 'login' });
-  }
-  else if (to.name === 'login' && isAuthenticated) {
+  } else if (to.name === 'login' && isAuthenticated) {
     next({ name: 'dashboard' }); 
-  } 
-  else {
+  } else {
+    // Establecer el título de la página
+    const title = to.meta.title || 'Nelly App'; // Título predeterminado si no se especifica
+    document.title = title;
+
     next();
   }
 });

@@ -82,7 +82,6 @@ import {
   Cog6ToothIcon,
 } from "@heroicons/vue/24/outline";
 
-import ButtonDefault from '../components/ButtonDefault.vue';
 
 
 export default {
@@ -141,6 +140,4 @@ export default {
 </style>
 
 
-<style scoped>
-/* Aquí puedes agregar estilos específicos para el componente */
-</style>
+

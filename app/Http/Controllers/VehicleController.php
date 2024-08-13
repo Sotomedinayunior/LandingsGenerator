@@ -2,89 +2,103 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Vehicle;
 use App\Models\Landing;
+use App\Models\Vehicle;
+use App\Models\VehicleImage;
 use Illuminate\Http\Request;
-
+use Illuminate\Support\Facades\Storage;
 class VehicleController extends Controller
 {
-    // Mostrar una lista de todos los vehículos con sus relaciones
-    public function index()
+    /**
+     * Lista todos los vehículos asociados a una landing específica.
+     *
+     * @param  int  $landingId
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function index($landingId)
     {
-        // Obtener todos los vehículos con sus relaciones
-        $vehicles = Vehicle::with(['landing', 'reservations'])->get();
-        return response()->json($vehicles, 200);
-    }
+        // Validar que la landing existe
+        $landing = Landing::find($landingId);
+        if (!$landing) {
+            return response()->json(['message' => 'Landing no encontrada'], 404);
+        }
 
-    // Guardar un nuevo vehículo en la base de datos
+        // Obtener todos los vehículos asociados a la landing
+        $vehicles = Vehicle::where('id_landing', $landingId)->get();
+
+        // Devolver una respuesta en formato JSON
+        return response()->json([
+            'message' => $vehicles->isEmpty() ? 'No se encontraron vehículos para esta landing' : 'Vehículos encontrados',
+            'vehicles' => $vehicles
+        ]);
+    }
     public function store(Request $request)
     {
-        // Validar los datos recibidos
-        $validatedData = $request->validate([
-            'id_landing' => 'required|exists:landings,id',
+        // Validar la solicitud
+        $request->validate([
             'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
+            'id_landing'=>'required|integer',
+            'description' => 'required|string',
             'price' => 'required|numeric',
             'luggage' => 'required|integer',
             'people' => 'required|integer',
-            'type_of_car' => 'required|string|max:255',
+            'type_of_car' => 'required|string',
             'bluetooth' => 'boolean',
             'siriusxm' => 'boolean',
             'manual' => 'boolean',
             'automatic' => 'boolean',
             'cvt' => 'boolean',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validar imágenes
         ]);
 
         // Crear el vehículo
-        $vehicle = Vehicle::create($validatedData);
+        $vehicle = Vehicle::create($request->except('images'));
 
-        return response()->json(['message' => 'Vehículo creado exitosamente', 'vehicle' => $vehicle], 201);
+        // Manejar las imágenes
+        if ($request->hasFile('images')) {
+            $images = $request->file('images');
+
+            foreach ($images as $image) {
+                // Guardar la imagen en el almacenamiento público
+                $imagePath = $image->store('vehicle_images', 'public');
+
+                // Guardar la ruta de la imagen en la base de datos
+                VehicleImage::create([
+                    'vehicle_id' => $vehicle->id,
+                    'path_images' => $imagePath,
+                ]);
+            }
+        }
+
+        return response()->json(['message' => 'Vehículo creado con éxito.'], 201);
     }
-
-    // Mostrar los detalles de un vehículo específico
-    public function show($id)
-    {
-        $vehicle = Vehicle::with(['landing', 'reservations'])->findOrFail($id);
-        return response()->json($vehicle, 200);
-    }
-
-    // Actualizar un vehículo existente en la base de datos
-    public function update(Request $request, $id)
-    {
-        // Validar los datos recibidos
-        $validatedData = $request->validate([
-            'name' => 'string|max:255',
-            'description' => 'nullable|string',
-            'price' => 'numeric',
-            'luggage' => 'integer',
-            'people' => 'integer',
-            'type_of_car' => 'string|max:255',
-            'bluetooth' => 'boolean',
-            'siriusxm' => 'boolean',
-            'manual' => 'boolean',
-            'automatic' => 'boolean',
-            'cvt' => 'boolean',
-        ]);
-
-        // Obtener el vehículo y actualizar sus datos
-        $vehicle = Vehicle::findOrFail($id);
-        $vehicle->update($validatedData);
-
-        return response()->json(['message' => 'Vehículo actualizado exitosamente', 'vehicle' => $vehicle], 200);
-    }
-
-    // Eliminar un vehículo y sus reservas relacionadas
     public function destroy($id)
     {
-        // Obtener el vehículo
-        $vehicle = Vehicle::findOrFail($id);
+        // Buscar el vehículo por ID
+        $vehicle = Vehicle::find($id);
 
-        // Eliminar las reservas asociadas
-        $vehicle->reservations()->delete();
+        if (!$vehicle) {
+            return response()->json(['message' => 'Vehículo no encontrado'], 404);
+        }
 
-        // Eliminar el vehículo
+        // Obtener todas las imágenes asociadas al vehículo
+        $images = VehicleImage::where('vehicle_id', $id)->get();
+
+        // Eliminar las imágenes del almacenamiento y de la base de datos
+        foreach ($images as $image) {
+            // Eliminar el archivo de la carpeta pública
+            if (Storage::exists('public/' . $image->path_images)) {
+                Storage::delete('public/' . $image->path_images);
+            }
+
+            // Eliminar la entrada de la base de datos (soft delete)
+            $image->delete();
+        }
+
+        // Eliminar el vehículo de la base de datos (soft delete)
         $vehicle->delete();
 
-        return response()->json(['message' => 'Vehículo eliminado exitosamente'], 200);
+        return response()->json(['message' => 'Vehículo y sus imágenes eliminadas con éxito.'], 200);
     }
+    
 }
