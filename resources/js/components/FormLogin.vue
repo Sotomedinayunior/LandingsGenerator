@@ -1,15 +1,29 @@
 <template>
   <form @submit.prevent="handleSubmit" class="login-form">
     <div class="form-group">
-      <i class="fas fa-envelope" id="icon"></i>
-      <input type="email" v-model="email" placeholder="Email" required />
+      <div :class="['icon-container', { shake: errors.email }]">
+        <i class="fas fa-envelope"></i>
+      </div>
+      <input
+        type="email"
+        v-model="email"
+        placeholder="Email"
+        :class="{'error': errors.email}"
+        @input="clearError('email')"
+      />
+     
+</div> <div class="container">      <p v-if="errors.email" class="error-message">{{ errors.email[0] }}</p>
     </div>
     <div class="form-group">
-      <i class="fas fa-lock" id="icon"></i>
+      <div :class="['icon-container', { shake: errors.password }]">
+        <i class="fas fa-lock"></i>
+      </div>
       <input
         :type="passwordFieldType"
         v-model="password"
         placeholder="Password"
+        :class="{'error': errors.password}"
+        @input="clearError('password')"
         required
       />
       <i
@@ -17,22 +31,30 @@
         @click="togglePasswordVisibility"
         class="toggle-password"
       ></i>
-    </div>
-    <ButtonComponent text="Ingresar" typeEvent="submit" />
+      
+     
+    </div><div class="container"> <p v-if="errors.password" class="error-message">{{ errors.password[0] }}</p></div>
+    <button
+      :disabled="loading"
+      class="submit-button"
+    >
+      <span v-if="loading">Loading...</span>
+      <span v-else>Login</span>
+    </button>
   </form>
 </template>
 
 <script>
-import { mapActions } from 'vuex';
-import ButtonComponent from "./ButtonSubmit.vue";
+import { mapActions } from "vuex";
 
 export default {
-  components: { ButtonComponent },
   data() {
     return {
       email: "",
       password: "",
       showPassword: false,
+      loading: false,
+      errors: {} // Objeto para almacenar los errores
     };
   },
   computed: {
@@ -47,16 +69,25 @@ export default {
     togglePasswordVisibility() {
       this.showPassword = !this.showPassword;
     },
-    ...mapActions(['login']),
+    ...mapActions(["login"]),
     handleSubmit() {
+      this.loading = true;
+      this.errors = {}; // Resetear errores
+
       this.login({ email: this.email, password: this.password })
         .then(() => {
+          this.loading = false;
           // Redirigir al dashboard
-          this.$router.push('/dashboard');
+          this.$router.push("/dashboard");
         })
-        .catch(error => {
-          console.error('Error en el inicio de sesión:', error);
+        .catch((error) => {
+          this.loading = false;
+          console.error("Error en el inicio de sesión:", error);
+          this.errors = error; // Asignar errores a la propiedad errors
         });
+    },
+    clearError(field) {
+      this.$set(this.errors, field, []); // Limpiar errores del campo
     }
   },
 };
@@ -77,38 +108,81 @@ export default {
 .form-group {
   position: relative;
   width: 100%;
-  margin-bottom: 15px;
+  margin-bottom: 25px;
 }
 
-.form-group #icon {
+.icon-container {
   position: absolute;
   top: 50%;
   left: 10px;
   transform: translateY(-50%);
-  color: $color-font-secondary;
+  color: #999; /* Color del icono */
+  transition: transform 0.3s; /* Transición suave para la animación */
+  z-index: 1; /* Asegurarse de que el icono esté encima del campo de entrada */
+}
+
+.icon-container.shake {
+  animation: shake 0.3s; /* Animación de error */
 }
 
 .form-group input {
   width: 100%;
-  padding: 12px 10px 12px 40px;
-  border: 1px solid $color-border-primary;
+  padding: 12px 10px 12px 40px; /* Espacio para el icono */
+  border: 1px solid #ddd; /* Color del borde */
   border-radius: 8px;
   box-sizing: border-box;
-  font-family: $font-family-base;
+  font-family: sans-serif;
+}
+
+.form-group input.error {
+  border-color: #e74c3c; /* Color del borde en caso de error */
 }
 
 .form-group input:focus {
-  border-color: $color-border-secondary;
   outline: none;
 }
 
-.form-group .toggle-password {
+.error-message {
+  color: #e74c3c;
+  font-size: 0.75em;
+  margin-top: -24px; /* Margen superior para el mensaje de error */
+}
+
+.toggle-password {
   position: absolute;
   right: 10px;
   top: 50%;
   transform: translateY(-50%);
   cursor: pointer;
-  color: $color-font-secondary;
+  color: #999; /* Color del icono */
+  z-index: 1; /* Asegurarse de que el icono esté encima del campo de entrada */
+}
+
+.submit-button {
+  width: 100%;
+  padding: 10px;
+  border: none;
+  border-radius: 8px;
+  background-color: #f16822;
+  color: white;
+
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.submit-button:disabled {
+  opacity: 0.6;
+  cursor: not-allowed;
+}
+
+.submit-button:hover {
+  background-color: #d5551d;
+}
+
+@keyframes shake {
+  0% { transform: translateX(-2px); }
+  50% { transform: translateX(2px); }
+  100% { transform: translateX(0); }
 }
 
 @media (max-width: 600px) {

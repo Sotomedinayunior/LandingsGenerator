@@ -5,14 +5,15 @@ namespace App\Http\Controllers;
 use App\Models\Landing;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
-use App\Http\Controllers\Storage;
+use Illuminate\Support\Facades\Storage;
+
 class LandingController extends Controller
 {
     // Mostrar una lista de todos los landings con sus relaciones
     public function index($userId)
     {
         // Obtén la landing asociada a ese usuario, incluyendo vehículos y reservas
-        $landing = Landing::with(['vehicles', 'reservations'])->where('user_id', $userId)->first();
+        $landing = Landing::with(['vehicles', 'reservations'])->where('uid_users_landing', $userId)->first();
     
         // Devuelve la respuesta en formato JSON
         return response()->json($landing);
@@ -58,6 +59,7 @@ class LandingController extends Controller
     
     
     // Actualizar un landing existente en la base de datos
+ 
     public function update(Request $request, $id)
     {
         // Validar los datos entrantes
@@ -77,8 +79,11 @@ class LandingController extends Controller
             // Si se sube un nuevo logo, guardar la imagen y actualizar la URL en la base de datos
             if ($request->hasFile('logo')) {
                 // Eliminar el logo antiguo si existe
-                if ($landing->logo) {
-                    Storage::disk('public')->delete($landing->logo);
+                if ($landing->logo && Storage::disk('public')->exists($landing->logo)) {
+                    // Si la eliminación falla, puedes lanzar una excepción personalizada si es necesario
+                    if (!Storage::disk('public')->delete($landing->logo)) {
+                        throw new \Exception('No se pudo eliminar el logo anterior');
+                    }
                 }
     
                 // Guardar el nuevo logo
@@ -91,16 +96,19 @@ class LandingController extends Controller
     
             return response()->json([
                 'message' => 'Landing actualizada con éxito',
-                'landing' => $landing
+                'landing' => $landing,
             ], 200);
     
-        } catch (\Exception $e) {
+        } catch (\Throwable $e) { // Catch Throwable to catch both Errors and Exceptions
+            // Manejo de errores y respuestas HTTP
             return response()->json([
                 'message' => 'Error al actualizar la landing',
                 'error' => $e->getMessage(),
             ], 500);
         }
     }
+    
+        
     // Eliminar un landing y sus vehículos relacionados
     public function destroy($id)
     {

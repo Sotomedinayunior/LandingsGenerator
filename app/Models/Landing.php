@@ -4,10 +4,22 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Landing extends Model
 {
-    use HasFactory;
+    use HasFactory, SoftDeletes;
+
+    // Campos que pueden ser asignados en masa
+    protected $fillable = [
+        'id_users_landing',
+        'name',
+        'logo',
+        'color_primary',
+        'color_secondary',
+        'color_tertiary',
+        'published',
+    ];
 
     // Definir la relación inversa uno a uno con User
     public function user()
@@ -27,3 +39,4 @@ class Landing extends Model
         return $this->hasMany(Reservation::class, 'id_landing');
     }
 }
+

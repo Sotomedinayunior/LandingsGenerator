@@ -54,33 +54,47 @@ class AuthController extends Controller
     }
 
     public function login(Request $request)
-    {
-        $request->validate([
-            'email' => 'required|email|exists:users',
-            'password' => 'required'
-        ]);
+{
+    // Validar los datos del request
+    $request->validate([
+        'email' => 'required|email',
+        'password' => 'required'
+    ]);
 
-        $user = User::where('email', $request->email)->first();
+    // Buscar el usuario por email
+    $user = User::where('email', $request->email)->first();
 
-        if (!$user || !Hash::check($request->password, $user->password)) {
-            return [
-                'errors' => [
-                    'email' => ['The provided credentials are incorrect.']
-                ]
-            ];
-            // return [
-            //     'message' => 'The provided credentials are incorrect.' 
-            // ];
+    // Preparar el array de errores
+    $errors = [];
+
+    // Verificar si el usuario existe
+    if (!$user) {
+        $errors['email'] = ['The email is not registered.'];
+    } else {
+        // Verificar la contraseña
+        if (!Hash::check($request->password, $user->password)) {
+            $errors['password'] = ['The password is incorrect.'];
         }
-
-        $token = $user->createToken($user->name,['*'] ,now()->addMinutes(30));
-
-        return response()->json([
-            'user' => $user,
-            'token' => $token->plainTextToken,
-            'expiration' => now()->addMinutes(30)->toDateTimeString()
-        ]);
     }
+
+    // Si hay errores, devolver una respuesta con los errores
+    if (!empty($errors)) {
+        return response()->json([
+            'errors' => $errors
+        ], 422);
+    }
+
+    // Si no hay errores, generar el token y devolver la respuesta de éxito
+    $token = $user->createToken($user->name, ['*'], now()->addMinutes(30));
+
+    return response()->json([
+        'user' => $user,
+        'token' => $token->plainTextToken,
+        'expiration' => now()->addMinutes(30)->toDateTimeString()
+    ]);
+}
+
+
 
     public function logout(Request $request)
     {

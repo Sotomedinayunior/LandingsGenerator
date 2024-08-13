@@ -9,7 +9,7 @@
 export default {
   methods: {
     navigateToLayoutDesigner() {
-      this.$router.push('/layoutdesigner');
+      this.$router.push('/layout-designer');
     }
   }
 };

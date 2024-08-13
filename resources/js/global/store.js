@@ -6,23 +6,28 @@ const store = createStore({
   state() {
     return {
       token: localStorage.getItem('NellyToken') || null,
+      iduser: localStorage.getItem('NellyUserId') || null,
       user: null,
       sessionExpiry: localStorage.getItem('sessionExpiry') || null,
     };
   },
   mutations: {
-    setToken(state, { token }) {
+    setToken(state, { token, iduser }) {
       const expiry = new Date().getTime() + 30 * 60 * 1000; // 30 minutos en milisegundos
       state.token = token;
       state.sessionExpiry = expiry;
+      state.iduser = iduser; // Almacenar el iduser en el estado
       localStorage.setItem('NellyToken', token);
       localStorage.setItem('sessionExpiry', expiry);
+      localStorage.setItem('NellyUserId', iduser); // Guardar iduser en localStorage
     },
     clearToken(state) {
       state.token = null;
       state.user = null;
       state.sessionExpiry = null;
+      state.iduser = null; // Limpiar iduser en el estado
       localStorage.removeItem('NellyToken');
+      localStorage.removeItem('NellyUserId'); // Remover iduser de localStorage
       localStorage.removeItem('sessionExpiry');
     },
     setUser(state, user) {
@@ -39,14 +44,20 @@ const store = createStore({
         const response = await axios.post('/api/login', credentials);
         const { token, user } = response.data;
 
-        // Establecer token y tiempo de expiración en el estado global
-        commit('setToken', { token });
+        // Establecer token, iduser y tiempo de expiración en el estado global
+        commit('setToken', { token, iduser: user.id }); // Guardar solo el id del usuario
         commit('setUser', user);
 
         // Redirigir al dashboard
         router.push('/dashboard');
       } catch (error) {
-        console.error('Error en login:', error);
+        if (error.response && error.response.status === 422) {
+          // Si hay errores de validación (422), los devolvemos para manejarlos en el componente
+          return Promise.reject(error.response.data.errors);
+        } else {
+          console.error('Error en login:', error);
+          return Promise.reject({ general: 'An unexpected error occurred. Please try again.' });
+        }
       }
     },
     logout({ commit }) {
@@ -84,6 +95,9 @@ const store = createStore({
     },
     getUser(state) {
       return state.user;
+    },
+    getUserId(state) {
+      return state.iduser; // Getter para obtener el id del usuario
     }
   }
 });
