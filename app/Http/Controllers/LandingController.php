@@ -13,7 +13,7 @@ class LandingController extends Controller
     public function index($userId)
     {
         // Obtén la landing asociada a ese usuario, incluyendo vehículos y reservas
-        $landing = Landing::with(['vehicles', 'reservations'])->where('uid_users_landing', $userId)->first();
+        $landing = Landing::with(['vehicles', 'reservations'])->where('id_users_landing', $userId)->first();
     
         // Devuelve la respuesta en formato JSON
         return response()->json($landing);
@@ -25,7 +25,7 @@ class LandingController extends Controller
         $validatedData = $request->validate([
             'id_users_landing' => 'required|exists:users,id',
             'name' => 'required|string|max:255',
-            'logo' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048',
+            'logo' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'color_primary' => ['nullable', 'string', 'max:7', 'regex:/^#([0-9a-fA-F]{3}){1,2}$/'],
             'color_secondary' => ['nullable', 'string', 'max:7', 'regex:/^#([0-9a-fA-F]{3}){1,2}$/'],
             'color_tertiary' => ['nullable', 'string', 'max:7', 'regex:/^#([0-9a-fA-F]{3}){1,2}$/'],

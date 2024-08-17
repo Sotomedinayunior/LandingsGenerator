@@ -17,8 +17,18 @@ class Landing extends Model
         'logo',
         'color_primary',
         'color_secondary',
-        'color_tertiary',
+        'place_of_departure',
+        'arrival_place',
+        'number_of_persons',
+        'date_of_departure',
+        'time_of_departure',
+        'date_of_arrival',
+        'time_of_arrival',
         'published',
+        'dynamic_fields',
+    ];
+    protected $casts = [
+        'dynamic_fields' => 'array', // Convierte el campo JSON a un array
     ];
 
     // Definir la relación inversa uno a uno con User

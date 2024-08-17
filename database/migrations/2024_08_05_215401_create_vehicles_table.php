@@ -25,6 +25,7 @@ return new class extends Migration
             $table->boolean('manual');
             $table->boolean('automatic');
             $table->boolean('cvt');
+            $table->json('dynamic_fields')->nullable(); // Campo para datos dinámicos
             $table->timestamps();
             $table->softDeletes();
 

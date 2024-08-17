@@ -6,7 +6,10 @@ import Help from '../views/Help.vue';
 import Reservation from '../views/Reservation.vue';
 import MainLayout from '../views/MainLayout.vue'; 
 import LayoutDesigner from '../views/LayoutDesigner.vue';
-
+import NotFoundDashboard from '../views/NotFoundDashorad.vue'; // 404 para usuarios autenticados
+import NotFoundPublic from '../views/NotFoundPublic.vue'; // 404 para usuarios no autenticados
+import HistoryLanding from '../views/HistoryLanding.vue';
+import LocationReservation from '../views/LocationReservation.vue';
 const routes = [
   { 
     path: '/', 
@@ -35,6 +38,16 @@ const routes = [
         component: Help, 
         meta: { title: 'Help - Nelly App' } 
       },
+      {
+        path:'/history',
+        component:HistoryLanding,
+        meta:{title:'History - Nelly App'}
+      },
+      {
+        path:'/location-reservaction ',
+        component:LocationReservation,
+        meta:{title:'location - Nelly App'}
+      }
     ],
   },
   {
@@ -42,7 +55,16 @@ const routes = [
     name: 'LayoutDesigner',
     component: LayoutDesigner,
     meta: { title: 'Layout Designer - Nelly App', requiresAuth: true } 
-  }
+  },
+  // Ruta catch-all para usuarios autenticados
+  {
+    path: '/:pathMatch(.*)*',
+    name: 'NotFoundAuth',
+    component: NotFoundDashboard,
+    meta: { title: 'Not Found - Nelly App', requiresAuth: true }
+  },
+
+
 ];
 
 const router = createRouter({

@@ -1,6 +1,7 @@
 <template>
-
-    <div>xfx</div>
+    <div>
+        <h1>gyuv</h1>
+    </div>
 </template>
 <script>
 

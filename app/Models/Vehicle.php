@@ -15,12 +15,18 @@ class Vehicle extends Model
         'price',
         'luggage',
         'people',
-        'type_of_car',
+        'sedan',       
         'bluetooth',
         'siriusxm',
         'manual',
         'automatic',
         'cvt',
+        'id_image',
+        'dynamic_fields'
+    ];
+    
+    protected $casts = [
+        'dynamic_fields' => 'array', // Convierte el campo JSON a un array
     ];
 
     // Definir la relación inversa uno a muchos con Landing
