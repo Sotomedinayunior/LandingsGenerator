@@ -8,91 +8,165 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Hash;
 use GuzzleHttp\Client;
+
 class AuthController extends Controller
 {
 
-   
+
     public function register(Request $request)
     {
-        // Validación de los campos de la solicitud
-        $fields = $request->validate([
-            'name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:users',
-            'password' => 'required|string|min:3|confirmed',
-            'phone' => 'string|max:25',
-            'theme' => 'string|max:100',
-            'avatar'=>'nullable|string|max:600',
-            'role' => 'required|string|in:admin,user', // Asegúrate de que el rol esté presente y sea válido
-        ]);
+        try {
+            // Validar los datos
+            $fields = $request->validate([
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users',
+                'password' => 'required|string|confirmed|min:3',
+                'phone' => 'nullable|string|max:15',
+                'theme' => 'nullable|string|max:255',
+                'role' => 'required|string|in:admin,user',
+                'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048', // Validar la imagen del avatar si se proporciona
+            ]);
 
-        // Utiliza una imagen de avatar predeterminada si no se proporciona una
-        $avatar = 'https://api.multiavatar.com/Binx Bond.png'; // Cambia esta URL por la de la imagen predeterminada
+            // Manejar la carga de archivo del avatar
+            if ($request->hasFile('avatar')) {
+                $avatarPath = $request->file('avatar')->store('users', 'public'); // Almacena el archivo en public/users
+                $avatar = asset('storage/' . $avatarPath); // Genera la URL pública
+            } else {
+                // Generar un avatar único usando Multiavatar si no se proporciona una imagen
+                $avatar = 'https://api.multiavatar.com/' . urlencode($fields['name']) . '.png';
+            }
 
-        // Crea el usuario con los datos proporcionados
-        $user = User::create([
-            'name' => $fields['name'],
-            'email' => $fields['email'],
-            'password' => Hash::make($fields['password']),
-            'phone' => $fields['phone'],
-            'avatar' => $avatar,
-            'theme' => $fields['theme'],
-            'role' => $fields['role'], // Incluye el rol en el modelo User si es necesario
-        ]);
+            // Validar la URL del avatar (opcional)
+            if (!filter_var($avatar, FILTER_VALIDATE_URL)) {
+                throw new \Exception('URL del avatar no válida.');
+            }
 
-        // Asignar el rol al usuario
-        $user->assignRole($fields['role']);
+            // Crear el usuario con los datos proporcionados
+            $user = User::create([
+                'name' => $fields['name'],
+                'email' => $fields['email'],
+                'password' => Hash::make($fields['password']),
+                'phone' => $fields['phone'],
+                'avatar' => $avatar,
+                'theme' => $fields['theme'],
+                'role' => $fields['role'],
+            ]);
 
-        // Crear un token para el usuario
-        $token = $user->createToken($request->name , ['*'] ,now()->addMinutes(30) );
+            // Asignar el rol al usuario
+            $user->assignRole($fields['role']);
 
-        // Retornar la respuesta con el usuario y el token
-        return response()->json([
-            'user' => $user,
-            'token' => $token->plainTextToken,
-            'expires_in'=> 30 * 60
-        ]);
-    }
+            // Crear un token para el usuario
+            $token = $user->createToken($request->name, ['*'], now()->addMinutes(30));
 
-    public function login(Request $request)
-{
-    // Validar los datos del request
-    $request->validate([
-        'email' => 'required|email',
-        'password' => 'required'
-    ]);
-
-    // Buscar el usuario por email
-    $user = User::where('email', $request->email)->first();
-
-    // Preparar el array de errores
-    $errors = [];
-
-    // Verificar si el usuario existe
-    if (!$user) {
-        $errors['email'] = ['The email is not registered.'];
-    } else {
-        // Verificar la contraseña
-        if (!Hash::check($request->password, $user->password)) {
-            $errors['password'] = ['The password is incorrect.'];
+            // Retornar la respuesta con el usuario y el token
+            return response()->json([
+                'user' => $user,
+                'token' => $token->plainTextToken,
+                'expires_in' => 30 * 60
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Manejar errores de validación
+            return response()->json(['error' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            // Manejar otros errores
+            return response()->json(['error' => $e->getMessage()], 500);
         }
     }
 
-    // Si hay errores, devolver una respuesta con los errores
-    if (!empty($errors)) {
+
+
+    public function login(Request $request)
+    {
+        // Validar los datos del request
+        $request->validate([
+            'email' => 'required|email',
+            'password' => 'required'
+        ]);
+
+        // Buscar el usuario por email
+        $user = User::where('email', $request->email)->first();
+
+        // Preparar el array de errores
+        $errors = [];
+
+        // Verificar si el usuario existe
+        if (!$user) {
+            $errors['email'] = ['The email is not registered.'];
+        } else {
+            // Verificar la contraseña
+            if (!Hash::check($request->password, $user->password)) {
+                $errors['password'] = ['The password is incorrect.'];
+            }
+        }
+
+        // Si hay errores, devolver una respuesta con los errores
+        if (!empty($errors)) {
+            return response()->json([
+                'errors' => $errors
+            ], 422);
+        }
+
+        // Si no hay errores, generar el token y devolver la respuesta de éxito
+        $token = $user->createToken($user->name, ['*'], now()->addMinutes(30));
+
         return response()->json([
-            'errors' => $errors
-        ], 422);
+            'user' => $user,
+            'token' => $token->plainTextToken,
+            'expiration' => now()->addMinutes(30)->toDateTimeString()
+        ]);
     }
+    public function update(Request $request)
+    {
+        try {
+            // Validar los datos
+            $fields = $request->validate([
+                'name' => 'nullable|string|max:255',
+                'email' => 'nullable|string|email|max:255|unique:users,email,' . $request->user()->id,
+                'phone' => 'nullable|string|max:15',
+                'theme' => 'nullable|string|max:255',
+                'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048', // Validar la imagen del avatar si se proporciona
+            ]);
 
-    // Si no hay errores, generar el token y devolver la respuesta de éxito
-    $token = $user->createToken($user->name, ['*'], now()->addMinutes(30));
+            // Obtener el usuario autenticado
+            $user = $request->user();
 
-    return response()->json([
-        'user' => $user,
-        'token' => $token->plainTextToken,
-        'expiration' => now()->addMinutes(30)->toDateTimeString()
-    ]);
-}
+            // Manejar la carga de archivo del avatar
+            if ($request->hasFile('avatar')) {
+                // Eliminar el avatar antiguo si existe
+                if ($user->avatar && filter_var($user->avatar, FILTER_VALIDATE_URL) === false) {
+                    $oldAvatarPath = str_replace(asset('storage/') . '/', '', $user->avatar);
+                    Storage::disk('public')->delete($oldAvatarPath);
+                }
+
+                // Almacenar el nuevo avatar
+                $avatarPath = $request->file('avatar')->store('users', 'public'); // Almacena el archivo en public/users
+                $avatar = asset('storage/' . $avatarPath); // Genera la URL pública
+            } else {
+                // Mantener el avatar actual si no se proporciona uno nuevo
+                $avatar = $user->avatar;
+            }
+
+            // Actualizar los datos del usuario
+            $user->update([
+                'name' => $fields['name'] ?? $user->name,
+                'email' => $fields['email'] ?? $user->email,
+                'phone' => $fields['phone'] ?? $user->phone,
+                'theme' => $fields['theme'] ?? $user->theme,
+                'avatar' => $avatar,
+            ]);
+
+            // Retornar la respuesta con el usuario actualizado
+            return response()->json([
+                'user' => $user
+            ]);
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Manejar errores de validación
+            return response()->json(['error' => $e->errors()], 422);
+        } catch (\Exception $e) {
+            // Manejar otros errores
+            return response()->json(['error' => $e->getMessage()], 500);
+        }
+    }
 
 
 
@@ -101,7 +175,7 @@ class AuthController extends Controller
         $request->user()->currentAccessToken()->delete();
 
         return [
-            'message' => 'You are logged out.' 
+            'message' => 'You are logged out.'
         ];
     }
 }

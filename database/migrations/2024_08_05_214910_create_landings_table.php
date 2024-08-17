@@ -16,10 +16,18 @@ return new class extends Migration
             $table->unsignedBigInteger('id_users_landing');
             $table->string('name');
             $table->string('logo')->nullable();
-            $table->string('color_primary', 15);
-            $table->string('color_secondary', 15);
-            $table->string('color_tertiary', 15);
+            $table->string('color_primary', 7);
+            $table->string('color_secondary', 7);
+            $table->string('place_of_departure')->nullable();
+            $table->string('arrival_place')->nullable();
+            $table->integer('number_of_persons')->nullable();
+            $table->date('date_of_departure')->nullable();
+            $table->time('time_of_departure')->nullable();
+            $table->date('date_of_arrival')->nullable();
+            $table->time('time_of_arrival')->nullable(); 
+            $table->json('dynamic_fields')->nullable(); // Campo para datos dinámicos
             $table->boolean('published')->default(false);
+          
             $table->timestamps();
             $table->softDeletes();
 

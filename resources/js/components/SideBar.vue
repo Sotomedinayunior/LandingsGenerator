@@ -1,6 +1,6 @@
 <template>
   <div>
-    <!-- button  Hamburguesa -->
+    <!-- button Hamburguesa -->
     <button @click="toggleSidebar" class="lg:hidden p-4 text-[#F57200]">
       <svg
         class="w-6 h-6"
@@ -19,7 +19,7 @@
     </button>
 
     <!-- Sidebar -->
-    <aside :class="sidebarClass"  class=" w-64 h-screen flex flex-col  px-6">
+    <aside :class="sidebarClass" class="w-64 h-screen flex flex-col px-6">
       <!-- Logo e Icono -->
       <div class="flex justify-between items-center py-6 px-2">
         <img
@@ -58,45 +58,61 @@
         <div class="flex items-center space-x-2 mb-4">
           <img src="../static/asset/config.svg" alt="configuracion de usuario" loading="lazy">
           <img
-            src=""
+            :src="userAvatar" 
             alt="User Avatar"
             class="h-12 w-12 rounded-full border-2 border-[#F57200]"
           />
         </div>
         <button
           @click="logout"
-          class="px-4 py-2 tex-sm text-[#F57200] border border-[#F57200] rounded hover:bg-[#F57200] hover:text-white transition-colors"
+          class="px-4 py-2 text-sm text-[#F57200] border border-[#F57200] rounded hover:bg-[#F57200] hover:text-white transition-colors"
         >
           Cerrar Sesión
         </button>
       </div>
     </aside>
+
+    <!-- Mensaje de Salida -->
+    <div v-if="loggingOut" class="fixed inset-0 bg-gray-900 bg-opacity-50 flex items-center justify-center z-50">
+      <div class="bg-white p-6 rounded-lg shadow-lg text-center">
+        <p class="text-lg">Saliendo...</p>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
 import {
   NewspaperIcon,
-   BookOpenIcon,
+  BookOpenIcon,
   QuestionMarkCircleIcon,
-  Cog6ToothIcon,
+  TrashIcon,
+  MapPinIcon
+  
 } from "@heroicons/vue/24/outline";
 
-
+import { mapGetters } from 'vuex';
 
 export default {
- 
   data() {
     return {
       isOpen: false,
+      loggingOut: false, // Estado para mostrar el mensaje de salida
       links: [
         { name: "Landings", route: "/landings", icon: NewspaperIcon },
         { name: "Reservacion", route: "/reservation", icon: BookOpenIcon },
+        { name: "Papeleria", route: "/history", icon: TrashIcon },
+        {name:'Localizaciones' , route:'/location-reservaction ',icon:MapPinIcon},
         { name: "Ayuda", route: "/help", icon: QuestionMarkCircleIcon },
       ],
     };
   },
   computed: {
+    ...mapGetters(['getUser']),
+    userAvatar() {
+      // Obtener el avatar del usuario desde el store
+      return this.getUser?.avatar || 'https://api.multiavatar.com/Binx Bond.png'; // URL de fallback si no hay avatar
+    },
     sidebarClass() {
       return [
         "fixed top-0 left-0 w-64 h-screen bg-[#FAF8F6] lg:translate-x-0 transition-transform",
@@ -124,20 +140,22 @@ export default {
         : "text-gray-600";
     },
     async logout() {
-      try {
-        await this.$store.dispatch('logout');
+      this.loggingOut = true; // Mostrar el mensaje de salida
 
-      } catch (err) {
-        console.error(`Ocurrió un error al cerrar la sesión: ${err}`);
-      }
+      setTimeout(async () => {
+        try {
+          await this.$store.dispatch('logout');
+          this.$router.push('/'); // Redirigir a la página de login después de cerrar sesión
+        } catch (err) {
+          console.error(`Ocurrió un error al cerrar la sesión: ${err}`);
+        } finally {
+          this.loggingOut = false; // Ocultar el mensaje de salida
+        }
+      }, 1000); // Ajusta el tiempo según sea necesario
     },
+  },
+  created() {
+    // Puedes incluir lógica adicional si es necesario cuando el componente se crea
   },
 };
 </script>
-
-<style scoped>
-/* Agrega estilos específicos para el componente aquí */
-</style>
-
-
-
