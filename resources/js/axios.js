@@ -1,9 +1,11 @@
 import axios from 'axios';
 import store from './global/store';
 
-axios.defaults.baseURL = 'http://localhost:8000/api';
+axios.defaults.baseURL = import.meta.env.VITE_API_URL;
+
 axios.interceptors.request.use(config => {
   const token = store.state.token;
+  // console.log(` token`);
   if (token) {
     config.headers.Authorization = `Bearer ${token}`;
   }
@@ -13,7 +15,7 @@ axios.interceptors.request.use(config => {
 });
 
 axios.interceptors.response.use(response => {
-  if (response.config.url === '/api/login' && response.status === 200) {
+  if (response.config.url === '/api/login-nelly' && response.status === 200) {
     store.dispatch('checkSession'); // Verificar la sesión después de iniciar sesión
   }
   return response;
@@ -23,3 +25,4 @@ axios.interceptors.response.use(response => {
   }
   return Promise.reject(error);
 });
+export default axios;

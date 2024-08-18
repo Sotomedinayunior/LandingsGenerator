@@ -56,13 +56,13 @@ class AuthController extends Controller
             $user->assignRole($fields['role']);
 
             // Crear un token para el usuario
-            $token = $user->createToken($request->name, ['*'], now()->addMinutes(30));
+            $token = $user->createToken($request->name, ['*'], now()->addMinutes(60));
 
             // Retornar la respuesta con el usuario y el token
             return response()->json([
                 'user' => $user,
                 'token' => $token->plainTextToken,
-                'expires_in' => 30 * 60
+                'expires_in' => 60
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Manejar errores de validación
@@ -107,12 +107,12 @@ class AuthController extends Controller
         }
 
         // Si no hay errores, generar el token y devolver la respuesta de éxito
-        $token = $user->createToken($user->name, ['*'], now()->addMinutes(30));
+        $token = $user->createToken($user->name, ['*'], now()->addMinutes(60));
 
         return response()->json([
             'user' => $user,
             'token' => $token->plainTextToken,
-            'expiration' => now()->addMinutes(30)->toDateTimeString()
+            'expiration' => now()->addMinutes(60)->toDateTimeString()
         ]);
     }
     public function update(Request $request)

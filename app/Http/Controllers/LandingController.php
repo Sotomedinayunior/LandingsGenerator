@@ -12,15 +12,24 @@ class LandingController extends Controller
     // Mostrar una lista de todos los landings con sus relaciones
     public function index($userId)
     {
-        // Obtén la landing asociada a ese usuario, incluyendo vehículos y reservas
-        $landing = Landing::with(['vehicles', 'reservations'])->where('id_users_landing', $userId)->first();
+        try {
+            // Obtén la landing asociada a ese usuario, incluyendo vehículos y reservas
+            $landing = Landing::with(['vehicles', 'reservations'])->where('id_users_landing', $userId)->first();
+        
+            if (!$landing) {
+                return response()->json(['message' => 'Landing not found'], 404);
+            }
     
-        // Devuelve la respuesta en formato JSON
-        return response()->json($landing);
+            // Devuelve la respuesta en formato JSON
+            return response()->json($landing);
+        } catch (\Exception $e) {
+            // Devuelve un error 500 en caso de cualquier excepción
+            return response()->json(['error' => 'Server Error'], 500);
+        }
     }
     
     // Guardar un nuevo landing en la base de datos
-    public function create(Request $request)
+    public function store(Request $request)
     {
         $validatedData = $request->validate([
             'id_users_landing' => 'required|exists:users,id',
@@ -28,8 +37,7 @@ class LandingController extends Controller
             'logo' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             'color_primary' => ['nullable', 'string', 'max:7', 'regex:/^#([0-9a-fA-F]{3}){1,2}$/'],
             'color_secondary' => ['nullable', 'string', 'max:7', 'regex:/^#([0-9a-fA-F]{3}){1,2}$/'],
-            'color_tertiary' => ['nullable', 'string', 'max:7', 'regex:/^#([0-9a-fA-F]{3}){1,2}$/'],
-            'published' => 'boolean',
+            'published' => 'nullable|boolean',
         ]);
 
         if ($request->hasFile('logo')) {
@@ -47,7 +55,6 @@ class LandingController extends Controller
         $landing->logo = $logoUrl;
         $landing->color_primary = $validatedData['color_primary'];
         $landing->color_secondary = $validatedData['color_secondary'];
-        $landing->color_tertiary = $validatedData['color_tertiary'];
         $landing->published = $validatedData['published'] ?? false;
         $landing->save();
 

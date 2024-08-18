@@ -13,7 +13,7 @@ const store = createStore({
   },
   mutations: {
     setToken(state, { token, iduser }) {
-      const expiry = new Date().getTime() + 30 * 60 * 1000; // 30 minutos en milisegundos
+      const expiry = new Date().getTime() + 60 * 60 * 1000; // 60 minutos en milisegundos
       state.token = token;
       state.sessionExpiry = expiry;
       state.iduser = iduser; // Almacenar el iduser en el estado
@@ -41,7 +41,7 @@ const store = createStore({
         await axios.get('/sanctum/csrf-cookie');
         
         // Solicitar autenticación
-        const response = await axios.post('/api/login', credentials);
+        const response = await axios.post('/api/login-nelly', credentials);
         const { token, user } = response.data;
 
         // Establecer token, iduser y tiempo de expiración en el estado global

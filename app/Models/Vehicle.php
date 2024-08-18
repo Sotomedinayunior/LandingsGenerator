@@ -15,7 +15,7 @@ class Vehicle extends Model
         'price',
         'luggage',
         'people',
-        'sedan',       
+        'type_of_car',       
         'bluetooth',
         'siriusxm',
         'manual',
