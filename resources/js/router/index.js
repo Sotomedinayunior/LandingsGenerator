@@ -10,6 +10,7 @@ import LayoutDesigner from '../views/LayoutDesigner.vue';
 import NotFoundDashboard from '../views/NotFoundDashorad.vue'; // 404 para usuarios autenticados
 import HistoryLanding from '../views/HistoryLanding.vue';
 import LocationReservation from '../views/LocationReservation.vue';
+import ViewConfigLanding from '../views/ViewConfigLanding.vue';
 const routes = [
   { 
     path: '/', 
@@ -52,6 +53,11 @@ const routes = [
         path:'/user-config',
         component:ConfigUser,
         meta:{title:'user - Nelly App'}
+      },
+      {
+        path: '/view-landing/:id',
+        component: ViewConfigLanding,
+        meta: { title: 'View-landing - Nelly App' }
       }
     ],
   },

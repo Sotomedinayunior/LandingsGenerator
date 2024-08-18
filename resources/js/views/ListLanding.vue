@@ -11,12 +11,11 @@
             type="text"
             placeholder="Buscar un landing"
             v-model="searchTerm"
-            @input="filterLandings"
-            class="p-2 pr-5 border border-gray-500 rounded-md focus:outline-none placeholder: text-sm w-full sm:w-auto"
+            class="p-2 pr-5 border border-gray-500 rounded-md focus:outline-none placeholder:text-sm w-full sm:w-auto"
           />
           <!-- SVG de lupa -->
           <svg
-            class="absolute inset-y-2 right-1 w-6 h-6 text-gray"
+            class="absolute inset-y-2 right-1 w-6 h-6 text-gray-500"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -33,14 +32,14 @@
         <ButtonDefault @click="addLanding" />
       </div>
     </div>
-    <div class="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-3">
-      <CardLanding
-        v-for="landing in filteredLandings"
-        :key="landing.id"
-        :landing="landing"
-        @delete="deleteLanding"
-      />
-    </div>
+
+    <!-- Iterar sobre los landings y mostrar CardLanding para cada uno -->
+     <div class="grid grid-cols-3 gap-2"> <CardLanding 
+      v-for="landing in filteredLandings" 
+      :key="landing.id" 
+      :landing="landing" 
+    /></div>
+   
   </section>
 </template>
 
@@ -53,32 +52,41 @@ export default {
   components: { ButtonDefault, CardLanding },
   data() {
     return {
-      landings: [],
-      searchTerm: '',
-      filteredLandings: []
+      searchTerm: "", // Término de búsqueda
+      landings: [], // Array vacío para almacenar los landings
     };
   },
-  mounted() {
-    this.fetchLandings();
+  created() {
+    this.getLandingsData();
   },
- 
-  methods: {
-    async fetchLandings() {
-      try {
-        const userId = localStorage.getItem('NellyUserId');
-        const response = await Axios.get(`/api/landings/${userId}`, {
-          headers: {
-            'Accept': 'application/json'
-          }
-        });
-        this.landings = response.data || [];
-        console.log(this.landings); // Verifica si los datos se reciben correctamente
-      } catch (error) {
-        console.error("Error fetching landings:", error.response ? error.response.data : error.message);
+  computed: {
+    filteredLandings() {
+      // Asegúrate de que 'landings' es un array antes de filtrar
+      if (!Array.isArray(this.landings)) {
+        console.error("landings no es un array:", this.landings);
+        return [];
       }
+      return this.landings.filter(landing =>
+        landing.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
+    },
+  },
+  methods: {
+    getLandingsData() {
+      let userId = localStorage.getItem('NellyUserId');
+      Axios.get(`/api/landing/${userId}`)
+        .then(response => {
+          // Asegúrate de que response.data sea un array
+           console.log(response.data)
+            this.landings = response.data;
+         
+        })
+        .catch(error => {
+          
+        });
+    },
    
-  }
-}
+  },
 };
 </script>
 

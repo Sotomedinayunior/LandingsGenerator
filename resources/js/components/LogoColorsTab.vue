@@ -1,8 +1,11 @@
 <template>
   <div class="grid grid-cols-2 gap-8">
     <div class="p-5 w-full flex flex-col justify-center">
-      <!-- Contenido para la primera columna -->
-      <form ref="form" @submit.prevent="handleSubmit" enctype="multipart/form-data">
+      <form
+        ref="form"
+        @submit.prevent="handleSubmit"
+        enctype="multipart/form-data"
+      >
         <div class="mb-7">
           <h2 class="text-2xl font-semibold text-slate-950 mb-2">
             1- Name your website
@@ -43,7 +46,6 @@
                 />
               </template>
               <template v-else>
-                <!-- Icono de cámara de Font Awesome -->
                 <i class="fa-solid fa-camera text-[#F2994A] text-4xl"></i>
                 <p class="text-[#F2994A] mt-2">
                   Tamaño recomendado 1920 x 1080px
@@ -99,7 +101,7 @@
             :disabled="!isFormComplete"
             :class="{
               'bg-orange-500': isFormComplete,
-              'bg-gray-500': !isFormComplete
+              'bg-gray-500': !isFormComplete,
             }"
             class="px-4 py-2 text-white rounded transition-colors"
           >
@@ -107,46 +109,61 @@
           </button>
         </div>
       </div>
-      <p class="ml-[80px] my-1 text-sm text-gray-500">Echa un vistazo a cómo se verá y se sentirá</p>
+      <p class="ml-[80px] my-1 text-sm text-gray-500">
+        Echa un vistazo a cómo se verá y se sentirá
+      </p>
 
       <img
         src="../static/asset/under-construcion.webp"
         class="h-61 max-w-lg rounded-lg"
         alt="underconstrucion"
-        lazy="loading"
+        loading="lazy"
         title="Muy pronto a la luz para el publico"
       />
     </div>
-    <ModalComponent
-      :title="modalTitle"
-      :message="modalMessage"
-      :isVisible="isModalVisible"
-      @close="closeModal"
-    />
+
+    <!-- Modal -->
+    <div
+      v-if="isModalVisible"
+      class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75"
+    >
+      <div class="bg-white p-6 rounded shadow-lg text-center">
+        <h2 class="text-2xl font-bold mb-4">{{ modalTitle }}</h2>
+        <p>{{ modalMessage }}</p>
+        <button
+          @click="confirmModal"
+          class="mt-4 bg-orange-500 text-white px-4 py-2 rounded"
+        >
+          Aceptar
+        </button>
+      </div>
+    </div>
   </div>
 </template>
 
 <script>
-import Axios from '../axios';
-import ModalComponent from './ModalComponent.vue';
+import Axios from "../axios";
 
 export default {
-  components: {
-    ModalComponent
-  },
   data() {
     return {
-      name: '',
+      step: null,
+      name: "",
       logoUrl: null, // Para almacenar la URL de la imagen
-      primaryColor: '#000000', // Valor por defecto para el color primario
-      secondaryColor: '#FFFFFF', // Valor por defecto para el color secundario
+      primaryColor: "#000000", // Valor por defecto para el color primario
+      secondaryColor: "#FFFFFF", // Valor por defecto para el color secundario
+      isModalVisible: false, // Controla la visibilidad del modal
+      modalTitle: "Landing Creada",
+      modalMessage: "Tu landing ha sido creada exitosamente.",
     };
   },
   computed: {
     isFormComplete() {
       // Verifica si todos los campos necesarios están llenos
-      return this.name && this.logoUrl && this.primaryColor && this.secondaryColor;
-    }
+      return (
+        this.name && this.logoUrl && this.primaryColor && this.secondaryColor
+      );
+    },
   },
   methods: {
     previewImage(event) {
@@ -156,46 +173,60 @@ export default {
       }
     },
     handleSubmit() {
-      // Tomar el ID del usuario desde el almacenamiento local
-      let userId = localStorage.getItem('NellyUserId');
-      
+      let userId = localStorage.getItem("NellyUserId");
+
       if (!userId) {
-        console.error('User ID is required');
+        console.error("User ID is required");
         return;
       }
 
-      // Crear un objeto FormData para enviar los datos del formulario
       const formData = new FormData();
-      formData.append('id_users_landing', userId);
-      formData.append('name', this.name);
-      formData.append('logo', this.$refs.logoInput.files[0]); // Usando una referencia al input de archivo
-      formData.append('color_primary', this.primaryColor);
-      formData.append('color_secondary', this.secondaryColor);
+      formData.append("id_users_landing", userId);
+      formData.append("name", this.name);
+      formData.append("logo", this.$refs.logoInput.files[0]);
+      formData.append("color_primary", this.primaryColor);
+      formData.append("color_secondary", this.secondaryColor);
 
-      // Enviar los datos usando Axios
-      Axios.post('/api/landing', formData, {
+      Axios.post("/api/landing", formData, {
         headers: {
-          'Content-Type': 'multipart/form-data',
-        }
+          "Content-Type": "multipart/form-data",
+        },
       })
-      .then(response => {
-        console.log('Formulario enviado con éxito:', response.data);
-        let IdLanding = localStorage.setItem("NellyLandinCreate" , response.data.id)
-        // Manejar la respuesta exitosa aquí, por ejemplo, redirigir o mostrar un mensaje
-      })
-      .catch(error => {
-        console.error('Error al enviar el formulario:', error);
-        // Manejar el error aquí, por ejemplo, mostrar un mensaje de error
-      });
+        .then((response) => {
+          if (response.data && response.data.id) {
+            localStorage.setItem("NellyLandinCreate", response.data.id);
+            console.log("ID de la landing creada:", response.data.id);
+          } else {
+            console.error(
+              "El ID de la landing no está en la respuesta:",
+              response.data
+            );
+          }
+
+          // Mostrar el modal
+          this.isModalVisible = true;
+
+          // Redirigir después de 2 segundos
+          setTimeout(() => {
+            this.confirmModal();
+          }, 2000);
+        })
+        .catch((error) => {
+          console.error("Error al enviar el formulario:", error);
+        });
     },
     submitForm() {
-      // Llamar al método de envío del formulario
-      this.$refs.form.requestSubmit(); // Usar requestSubmit() para enviar el formulario
-    }
-  }
+      this.$refs.form.requestSubmit();
+    },
+    confirmModal() {
+      this.isModalVisible = false;
+      // Redirigir a la siguiente ventana (por ejemplo, /next-page)
+      this.$emit("next", "addVehicles");
+    },
+  },
 };
 </script>
 
 <style scoped>
-/* Agrega aquí tus estilos personalizados si es necesario */
+/* Estilos personalizados */
 </style>

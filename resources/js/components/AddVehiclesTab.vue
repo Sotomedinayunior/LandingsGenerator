@@ -35,7 +35,7 @@
         <!-- Carousel de imágenes del vehículo -->
         <form
           @submit.prevent="addVehicle"
-          class="grid grid-cols-1 md:grid-cols-2"
+          class="grid grid-cols-1 md:grid-cols-2 gap-5"
         >
           <div class="pl-10">
             <!-- Contenedor de carga de imágenes -->
@@ -73,7 +73,11 @@
 
             <!-- Vista previa de imágenes subidas con opción para eliminar -->
             <div class="mt-4 flex flex-wrap space-x-2">
-              <div v-for="(image, index) in vehicleImages" :key="index" class="relative">
+              <div
+                v-for="(image, index) in vehicleImages"
+                :key="index"
+                class="relative"
+              >
                 <img
                   :src="image"
                   alt="Preview"
@@ -129,52 +133,26 @@
                 <!-- Select Equipaje -->
                 <div class="relative inline-block">
                   <select
-                    class="appearance-none pl-10 pr-4 py-2 border rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
+                    class="appearance-none pl-10 pr-6 py-2 border text-sm rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
                   >
                     <option>Equipaje</option>
                     <option>Maletero</option>
                     <option>Carga</option>
                   </select>
                   <div class="absolute inset-y-0 left-0 flex items-center pl-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-5 w-5 text-gray-500"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M3 12h18M3 12l6-6m-6 6l6 6"
-                      />
-                    </svg>
+                    <i class="fa-solid fa-suitcase text-gray-500"></i>
                   </div>
                   <div
                     class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-5 w-5 text-gray-500"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
+                    <i class="fas fa-chevron-down text-gray-500"></i>
                   </div>
                 </div>
 
                 <!-- Select Capacidad -->
                 <div class="relative inline-block">
                   <select
-                    class="appearance-none pl-10 pr-4 py-2 border rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
+                    class="appearance-none pl-10 pr-6 py-2 border text-sm rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
                   >
                     <option>Capacidad</option>
                     <option>2 Personas</option>
@@ -182,45 +160,19 @@
                     <option>6 Personas</option>
                   </select>
                   <div class="absolute inset-y-0 left-0 flex items-center pl-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-5 w-5 text-gray-500"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M6 8h12M6 16h12M6 12h12"
-                      />
-                    </svg>
+                    <i class="fa-solid fa-users text-gray-500"></i>
                   </div>
                   <div
                     class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-5 w-5 text-gray-500"
-                      fill="none"
-                      viewBox="0 0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
+                    <i class="fas fa-chevron-down text-gray-500"></i>
                   </div>
                 </div>
 
                 <!-- Select Tipo -->
                 <div class="relative inline-block">
                   <select
-                    class="appearance-none pl-10 pr-4 py-2 border rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
+                    class="appearance-none pl-10 pr-6 py-2 border text-sm rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
                   >
                     <option>Tipo</option>
                     <option>Sedan</option>
@@ -228,38 +180,12 @@
                     <option>Camioneta</option>
                   </select>
                   <div class="absolute inset-y-0 left-0 flex items-center pl-2">
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-5 w-5 text-gray-500"
-                      fill="none"
-                      viewBox="0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M6 8h12M6 16h12M6 12h12"
-                      />
-                    </svg>
+                    <i class="fas fa-car text-gray-500"></i>
                   </div>
                   <div
                     class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
                   >
-                    <svg
-                      xmlns="http://www.w3.org/2000/svg"
-                      class="h-5 w-5 text-gray-500"
-                      fill="none"
-                      viewBox="0 24 24"
-                      stroke="currentColor"
-                    >
-                      <path
-                        stroke-linecap="round"
-                        stroke-linejoin="round"
-                        stroke-width="2"
-                        d="M19 9l-7 7-7-7"
-                      />
-                    </svg>
+                    <i class="fas fa-chevron-down text-gray-500"></i>
                   </div>
                 </div>
               </div>
@@ -285,9 +211,9 @@ export default {
       step: 1,
       vehicles: [], // Array de vehículos
       newVehicle: {
-        name: '',
-        description: '',
-        price: '',
+        name: "",
+        description: "",
+        price: "",
       },
       vehicleImages: [], // Array para almacenar las imágenes cargadas
       currentImage: null, // Imagen seleccionada para previsualización
@@ -303,18 +229,18 @@ export default {
     handleImageUpload(event) {
       const files = event.target.files;
       if (files.length + this.vehicleImages.length > 12) {
-        alert('Puedes subir un máximo de 12 imágenes.');
+        alert("Puedes subir un máximo de 12 imágenes.");
         return;
       }
       Array.from(files).forEach((file) => {
-        if (file.type.startsWith('image/')) {
+        if (file.type.startsWith("image/")) {
           const reader = new FileReader();
           reader.onload = (e) => {
             this.vehicleImages.push(e.target.result);
           };
           reader.readAsDataURL(file);
         } else {
-          alert('Por favor, selecciona solo imágenes.');
+          alert("Por favor, selecciona solo imágenes.");
         }
       });
     },
@@ -328,7 +254,7 @@ export default {
         images: this.vehicleImages,
       });
       // Resetear campos
-      this.newVehicle = { name: '', description: '', price: '' };
+      this.newVehicle = { name: "", description: "", price: "" };
       this.vehicleImages = [];
       this.step = 1; // Regresar al paso inicial
     },
