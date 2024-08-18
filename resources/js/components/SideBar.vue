@@ -56,11 +56,14 @@
       <!-- Sección Inferior -->
       <div class="flex flex-col items-center mb-6 mt-auto">
         <div class="flex items-center space-x-2 mb-4">
-          <img src="../static/asset/config.svg" alt="configuracion de usuario" loading="lazy">
+          <img src="../static/asset/config.svg" class="cursor-pointer" alt="configuracion de usuario" title="configuracion de usuario" loading="lazy" @click="UserConfig">
           <img
             :src="userAvatar" 
             alt="User Avatar"
-            class="h-12 w-12 rounded-full border-2 border-[#F57200]"
+            title="Avatar" 
+            loading="lazy" 
+            @click="UserConfig"
+            class="h-12 w-12 cursor-pointer rounded-full border-2 border-[#F57200]"
           />
         </div>
         <button
@@ -92,6 +95,7 @@ import {
 } from "@heroicons/vue/24/outline";
 
 import { mapGetters } from 'vuex';
+
 
 export default {
   data() {
@@ -138,6 +142,9 @@ export default {
       return this.$route.path === route
         ? "text-[#F57200] font-bold border-b-2 border-[#F57200]"
         : "text-gray-600";
+    },
+    UserConfig(){
+      return this.$router.push('/user-config');
     },
     async logout() {
       this.loggingOut = true; // Mostrar el mensaje de salida

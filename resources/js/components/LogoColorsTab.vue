@@ -2,7 +2,7 @@
   <div class="grid grid-cols-2 gap-8">
     <div class="p-5 w-full flex flex-col justify-center">
       <!-- Contenido para la primera columna -->
-      <form action="" method="post" enctype="multipart/form-data">
+      <form ref="form" @submit.prevent="handleSubmit" enctype="multipart/form-data">
         <div class="mb-7">
           <h2 class="text-2xl font-semibold text-slate-950 mb-2">
             1- Name your website
@@ -26,6 +26,8 @@
             <input
               type="file"
               id="logo"
+              ref="logoInput"
+              name="logo"
               @change="previewImage"
               class="absolute inset-0 opacity-0 cursor-pointer"
             />
@@ -64,6 +66,7 @@
                 type="color"
                 id="primaryColor"
                 v-model="primaryColor"
+                name="primaryColor"
                 class="w-12 h-12 cursor-pointer border border-slate-300 rounded"
               />
             </div>
@@ -77,6 +80,7 @@
                 type="color"
                 id="secondaryColor"
                 v-model="secondaryColor"
+                name="secondaryColor"
                 class="w-12 h-12 cursor-pointer border border-slate-300 rounded"
               />
             </div>
@@ -86,24 +90,63 @@
     </div>
 
     <!-- Segunda columna -->
-    <div class="p-8 w-full flex items-center justify-center">
-      <!-- Contenido para la segunda columna -->
-      <button
-        @click="$emit('next')"
-        class="px-4 py-2 bg-orange-500 text-white rounded"
-      >
-        Continuar
-      </button>
+    <div class="p-8 w-full flex justify-center flex-col">
+      <div class="flex justify-around">
+        <h2 class="text-2xl font-bold text-gray-500">Preview</h2>
+        <div class="flex justify-end">
+          <button
+            @click="submitForm"
+            :disabled="!isFormComplete"
+            :class="{
+              'bg-orange-500': isFormComplete,
+              'bg-gray-500': !isFormComplete
+            }"
+            class="px-4 py-2 text-white rounded transition-colors"
+          >
+            Continuar
+          </button>
+        </div>
+      </div>
+      <p class="ml-[80px] my-1 text-sm text-gray-500">Echa un vistazo a cómo se verá y se sentirá</p>
+
+      <img
+        src="../static/asset/under-construcion.webp"
+        class="h-61 max-w-lg rounded-lg"
+        alt="underconstrucion"
+        lazy="loading"
+        title="Muy pronto a la luz para el publico"
+      />
     </div>
+    <ModalComponent
+      :title="modalTitle"
+      :message="modalMessage"
+      :isVisible="isModalVisible"
+      @close="closeModal"
+    />
   </div>
 </template>
 
 <script>
+import Axios from '../axios';
+import ModalComponent from './ModalComponent.vue';
+
 export default {
+  components: {
+    ModalComponent
+  },
   data() {
     return {
+      name: '',
       logoUrl: null, // Para almacenar la URL de la imagen
+      primaryColor: '#000000', // Valor por defecto para el color primario
+      secondaryColor: '#FFFFFF', // Valor por defecto para el color secundario
     };
+  },
+  computed: {
+    isFormComplete() {
+      // Verifica si todos los campos necesarios están llenos
+      return this.name && this.logoUrl && this.primaryColor && this.secondaryColor;
+    }
   },
   methods: {
     previewImage(event) {
@@ -112,6 +155,47 @@ export default {
         this.logoUrl = URL.createObjectURL(file); // Generar la URL de la imagen
       }
     },
-  },
+    handleSubmit() {
+      // Tomar el ID del usuario desde el almacenamiento local
+      let userId = localStorage.getItem('NellyUserId');
+      
+      if (!userId) {
+        console.error('User ID is required');
+        return;
+      }
+
+      // Crear un objeto FormData para enviar los datos del formulario
+      const formData = new FormData();
+      formData.append('id_users_landing', userId);
+      formData.append('name', this.name);
+      formData.append('logo', this.$refs.logoInput.files[0]); // Usando una referencia al input de archivo
+      formData.append('color_primary', this.primaryColor);
+      formData.append('color_secondary', this.secondaryColor);
+
+      // Enviar los datos usando Axios
+      Axios.post('/api/landing', formData, {
+        headers: {
+          'Content-Type': 'multipart/form-data',
+        }
+      })
+      .then(response => {
+        console.log('Formulario enviado con éxito:', response.data);
+        let IdLanding = localStorage.setItem("NellyLandinCreate" , response.data.id)
+        // Manejar la respuesta exitosa aquí, por ejemplo, redirigir o mostrar un mensaje
+      })
+      .catch(error => {
+        console.error('Error al enviar el formulario:', error);
+        // Manejar el error aquí, por ejemplo, mostrar un mensaje de error
+      });
+    },
+    submitForm() {
+      // Llamar al método de envío del formulario
+      this.$refs.form.requestSubmit(); // Usar requestSubmit() para enviar el formulario
+    }
+  }
 };
 </script>
+
+<style scoped>
+/* Agrega aquí tus estilos personalizados si es necesario */
+</style>

@@ -5,9 +5,9 @@ import ListLanding from '../views/ListLanding.vue';
 import Help from '../views/Help.vue';
 import Reservation from '../views/Reservation.vue';
 import MainLayout from '../views/MainLayout.vue'; 
+import ConfigUser from '../views/ConfigUser.vue';
 import LayoutDesigner from '../views/LayoutDesigner.vue';
 import NotFoundDashboard from '../views/NotFoundDashorad.vue'; // 404 para usuarios autenticados
-import NotFoundPublic from '../views/NotFoundPublic.vue'; // 404 para usuarios no autenticados
 import HistoryLanding from '../views/HistoryLanding.vue';
 import LocationReservation from '../views/LocationReservation.vue';
 const routes = [
@@ -47,6 +47,11 @@ const routes = [
         path:'/location-reservaction ',
         component:LocationReservation,
         meta:{title:'location - Nelly App'}
+      },
+      {
+        path:'/user-config',
+        component:ConfigUser,
+        meta:{title:'user - Nelly App'}
       }
     ],
   },
