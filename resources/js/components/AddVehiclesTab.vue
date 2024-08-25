@@ -8,7 +8,7 @@
           <h2 class="text-2xl font-bold">Vehículos</h2>
           <span
             class="bg-[#F57200] text-white ml-2 px-2 py-1 rounded text-sm"
-            >{{ vehicles.length }}</span
+            >{{0}}</span
           >
         </div>
         <button
@@ -21,7 +21,14 @@
       <p class="text-gray-500 mt-2 ml-60">
         Agregar los vehículos para esta landing
       </p>
+
+     <div>
+      <!-- Aqui va el vehicle TabVehicle -->
+     </div>
+     
+
     </div>
+     
 
     <!-- Formulario para Agregar Vehículo -->
     <div v-else-if="step === 2">
@@ -36,7 +43,7 @@
         <form
           @submit.prevent="addVehicle"
           class="grid grid-cols-1 md:grid-cols-2 gap-5"
-        >
+        enctype="multipart/form-data" >
           <div class="pl-10">
             <!-- Contenedor de carga de imágenes -->
             <div
@@ -49,6 +56,7 @@
                 accept="image/*"
                 @change="handleImageUpload"
                 class="absolute inset-0 opacity-0 cursor-pointer"
+                required
               />
               <label
                 for="vehicle-images"
@@ -134,8 +142,8 @@
                 <div class="relative inline-block">
                   <select
                     class="appearance-none pl-10 pr-6 py-2 border text-sm rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
-                  >
-                    <option>Equipaje</option>
+                  required>
+                    <option disabled>Equipaje</option>
                     <option>Maletero</option>
                     <option>Carga</option>
                   </select>
@@ -153,8 +161,8 @@
                 <div class="relative inline-block">
                   <select
                     class="appearance-none pl-10 pr-6 py-2 border text-sm rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
-                  >
-                    <option>Capacidad</option>
+                   required>
+                    <option disabled>Capacidad</option>
                     <option>2 Personas</option>
                     <option>4 Personas</option>
                     <option>6 Personas</option>
@@ -173,8 +181,8 @@
                 <div class="relative inline-block">
                   <select
                     class="appearance-none pl-10 pr-6 py-2 border text-sm rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
-                  >
-                    <option>Tipo</option>
+                  required >
+                    <option disabled>Tipo</option>
                     <option>Sedan</option>
                     <option>SUV</option>
                     <option>Camioneta</option>
@@ -188,12 +196,95 @@
                     <i class="fas fa-chevron-down text-gray-500"></i>
                   </div>
                 </div>
+
+                <!-- Select Tipo -->
+                <div class="relative inline-block">
+                  <select
+                    class="appearance-none pl-10 pr-6 py-2 border text-sm rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
+                 required >
+                    <option disabled>Transmision</option>
+                    <option>automática</option>
+                    <option>CVT</option>
+                    <option>secuencial</option>
+                  </select>
+                  <div class="absolute inset-y-0 left-0 flex items-center pl-2">
+                    <i class="fa-solid fa-gears text-gray-500"></i>
+                  </div>
+                  <div
+                    class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
+                  >
+                    <i class="fas fa-chevron-down text-gray-500"></i>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div class="mb-4">
+              <h3 class="text-lg font-bold mb-4">
+                Seleccione características adicionales
+              </h3>
+              <div class="flex space-x-4">
+                <div class="flex items-center">
+                  <input
+                    checked
+                    id="checked-checkbox"
+                    type="checkbox"
+                    value=""
+                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <label
+                    for="checked-checkbox"
+                    class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                    >Bluetooth</label
+                  >
+                </div>
+                <div class="flex items-center">
+                  <input
+                    checked
+                    id="checked-checkbox"
+                    type="checkbox"
+                    value=""
+                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <label
+                    for="checked-checkbox"
+                    class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                    >SiriusXM</label
+                  >
+                </div>
+                <div class="flex items-center">
+                  <input
+                    checked
+                    id="checked-checkbox"
+                    type="checkbox"
+                    value=""
+                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <label
+                    for="checked-checkbox"
+                    class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                    >GPS</label
+                  >
+                </div>
+                <div class="flex items-center">
+                  <input
+                    checked
+                    id="checked-checkbox"
+                    type="checkbox"
+                    value=""
+                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
+                  />
+                  <label
+                    for="checked-checkbox"
+                    class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
+                    >Apple Car</label
+                  >
+                </div>
               </div>
             </div>
 
             <button
               type="submit"
-              class="px-4 py-2 text-white bg-[#F57200] font-bold border border-[#F57200] rounded hover:bg-[#F57200] hover:text-white transition-colors"
+              class="px-4 py-2 ml-80 mt-5 text-white bg-[#F57200] font-bold border border-[#F57200] rounded hover:bg-[#F57200] hover:text-white transition-colors"
             >
               Agregar Vehículo
             </button>
@@ -205,16 +296,14 @@
 </template>
 
 <script>
+import TabVehicle from './TabVehicle.vue';
+import Axios from '../axios';
 export default {
+
   data() {
     return {
       step: 1,
-      vehicles: [], // Array de vehículos
-      newVehicle: {
-        name: "",
-        description: "",
-        price: "",
-      },
+      
       vehicleImages: [], // Array para almacenar las imágenes cargadas
       currentImage: null, // Imagen seleccionada para previsualización
     };
@@ -248,20 +337,10 @@ export default {
       this.vehicleImages.splice(index, 1);
     },
     addVehicle() {
-      // Aquí agregarías el código para agregar el vehículo
-      this.vehicles.push({
-        ...this.newVehicle,
-        images: this.vehicleImages,
-      });
-      // Resetear campos
-      this.newVehicle = { name: "", description: "", price: "" };
-      this.vehicleImages = [];
-      this.step = 1; // Regresar al paso inicial
+      //chatgpt aqui pon una codicion para mostrar el componente vehicle
+     
     },
   },
 };
 </script>
 
-<style scoped>
-/* Estilos adicionales si es necesario */
-</style>

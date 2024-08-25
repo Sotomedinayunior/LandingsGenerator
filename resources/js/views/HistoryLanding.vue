@@ -1,5 +1,5 @@
 <template>
-    <section class="lg:ml-64 p-4">
+  <section class="lg:ml-64 p-4">
     <div class="flex flex-col sm:flex-row items-center justify-between mb-6 px-4">
       <h1 class="font-semibold text-xl sm:text-sm md:text-2xl lg:text-4xl xl:text-5xl">
         Landings borradas
@@ -9,7 +9,7 @@
         <div class="relative">
           <input
             type="text"
-            placeholder="Buscar un landing eliminada"
+            placeholder="Buscar una landing eliminada"
             v-model="searchTerm"
             class="p-2 pr-5 border border-gray-500 rounded-md focus:outline-none placeholder:text-sm w-full sm:w-auto"
           />
@@ -32,71 +32,77 @@
       </div>
     </div>
       
-      <!-- Mostrar el componente CardDeleteLanding o un mensaje si no hay resultados -->
-      <div v-if="filteredLandings.length > 0" class="mt-6 grid grid-cols-1 gap-4">
-        <CardDeleteLanding 
-          v-for="landing in filteredLandings" 
-          :key="landing.id" 
-          :landing="landing"
-          @restore="restoreLanding"
-          @delete="deleteLanding"
-        />
-      </div>
-      <p v-else class="mt-6 text-red-500">No se encontraron landings eliminadas.</p>
-    </section>
-  </template>
-  
-  <script>
-  import CardDeleteLanding from '../components/CardDeleteLanding.vue';
-  import Axios from '../axios';
-  
-  export default {
-    components: { CardDeleteLanding },
-    data() {
-      return {
-        landings: [], // Array para almacenar las landings eliminadas
-        searchTerm: '', // Término de búsqueda
-      };
+    <!-- Mostrar el componente CardDeleteLanding o un mensaje si no hay resultados -->
+    <div v-if="filteredLandings.length > 0" class="mt-6 grid grid-cols-1 gap-4">
+      <CardDeleteLanding 
+        v-for="landing in filteredLandings" 
+        :key="landing.id" 
+        :landing="landing"
+        @restore="handleRestore"
+        @delete="handleDelete"
+      />
+    </div>
+    <p v-else class="mt-6 text-red-500">No se encontraron landings eliminadas.</p>
+  </section>
+</template>
+
+<script>
+import CardDeleteLanding from '../components/CardDeleteLanding.vue';
+import Axios from '../axios';
+
+export default {
+  components: { CardDeleteLanding },
+  data() {
+    return {
+      landings: [], // Array para almacenar las landings eliminadas
+      searchTerm: '', // Término de búsqueda
+    };
+  },
+  computed: {
+    filteredLandings() {
+      return this.landings.filter(landing => 
+        landing.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+      );
     },
-    computed: {
-      filteredLandings() {
-        // Filtrar las landings según el término de búsqueda
-        return this.landings.filter(landing => 
-          landing.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-        );
-      },
+  },
+  methods: {
+    fetchDeletedLandings() {
+      let userId = localStorage.getItem('NellyUserId');
+      Axios.get(`api/landing/deleted/${userId}`)
+        .then(response => {
+          this.landings = response.data;
+        })
+        .catch(error => {
+          console.error('Error fetching deleted landings:', error);
+        });
     },
-    methods: {
-      fetchDeletedLandings() {
-        // Realizar la petición GET para obtener las landings eliminadas
-        let userId = localStorage.getItem('NellyUserId');
-        Axios.get(`/landings/trashed/${userId}`)
-          .then(response => {
-            this.landings = response.data;
-          })
-          .catch(error => {
-            console.error('Error fetching deleted landings:', error);
-          });
-      },
-      restoreLanding(landingId) {
-        // Lógica para restaurar la landing
-        console.log("Restaurar landing con ID:", landingId);
-        // Aquí puedes hacer una petición POST o PUT para restaurar la landing
-      },
-      deleteLanding(landingId) {
-        // Lógica para eliminar permanentemente la landing
-        console.log("Eliminar landing con ID:", landingId);
-        // Aquí puedes hacer una petición DELETE para eliminar la landing
-      },
+    handleRestore(id) {
+      Axios.post(`/landing/restore/${id}`)
+        .then(() => {
+          // Actualizar la lista después de restaurar
+          this.landings = this.landings.filter(landing => landing.id !== id);
+        })
+        .catch(error => {
+          console.error('Error restoring landing:', error);
+        });
     },
-    mounted() {
-      // Llamar a la función para obtener las landings eliminadas cuando el componente se monta
-      this.fetchDeletedLandings();
+    handleDelete(id) {
+      Axios.delete(`/landing/${id}`)
+        .then(() => {
+          // Actualizar la lista después de eliminar
+          this.landings = this.landings.filter(landing => landing.id !== id);
+        })
+        .catch(error => {
+          console.error('Error deleting landing:', error);
+        });
     },
-  };
-  </script>
-  
-  <style>
-  /* Aquí puedes agregar tus estilos personalizados */
-  </style>
-  
+  },
+  mounted() {
+    this.fetchDeletedLandings();
+  },
+};
+</script>
+
+<style scoped>
+/* Aquí puedes agregar tus estilos personalizados */
+</style>

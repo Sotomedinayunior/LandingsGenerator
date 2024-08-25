@@ -8,6 +8,10 @@ use Illuminate\Database\Eloquent\Model;
 class Reservation extends Model
 {
     use HasFactory;
+    protected $fillable=[
+        
+    ];
+    
 
     // Definir la relación inversa uno a muchos con Vehicle
     public function vehicle()

@@ -1,5 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import store from '../global/store'; // Asegúrate de que esta ruta sea correcta
+import store from '../global/store';
 import Login from '../views/Login.vue';
 import ListLanding from '../views/ListLanding.vue';
 import Help from '../views/Help.vue';

@@ -61,7 +61,7 @@ const store = createStore({
       }
     },
     logout({ commit }) {
-      axios.post('/api/logout', {}, {
+      axios.post('/api/nelly-logout', {}, {
         headers: {
           Authorization: `Bearer ${store.state.token}`
         }

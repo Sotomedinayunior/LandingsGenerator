@@ -34,12 +34,14 @@
     </div>
 
     <!-- Iterar sobre los landings y mostrar CardLanding para cada uno -->
-     <div class="grid grid-cols-3 gap-2"> <CardLanding 
-      v-for="landing in filteredLandings" 
-      :key="landing.id" 
-      :landing="landing" 
-    /></div>
-   
+    <div class="grid grid-cols-3 gap-2">
+      <CardLanding 
+        v-for="landing in filteredLandings" 
+        :key="landing.id" 
+        :landing="landing" 
+        @deleted="handleDeleted" 
+      />
+    </div>
   </section>
 </template>
 
@@ -61,11 +63,6 @@ export default {
   },
   computed: {
     filteredLandings() {
-      // Asegúrate de que 'landings' es un array antes de filtrar
-      if (!Array.isArray(this.landings)) {
-        console.error("landings no es un array:", this.landings);
-        return [];
-      }
       return this.landings.filter(landing =>
         landing.name.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
@@ -76,16 +73,16 @@ export default {
       let userId = localStorage.getItem('NellyUserId');
       Axios.get(`/api/landing/${userId}`)
         .then(response => {
-          // Asegúrate de que response.data sea un array
-           console.log(response.data)
-            this.landings = response.data;
-         
+          this.landings = response.data;
         })
         .catch(error => {
-          
+          console.error("Error al obtener landings:", error);
         });
     },
-   
+    handleDeleted(id) {
+      // Actualiza la lista después de eliminar un landing
+      this.landings = this.landings.filter(landing => landing.id !== id);
+    },
   },
 };
 </script>

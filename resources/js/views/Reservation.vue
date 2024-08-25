@@ -1,6 +1,6 @@
 <template>
-    <section class="lg:ml-64 p-4">
-        <div class="flex flex-col sm:flex-row items-center justify-between mb-6 px-4">
+  <section class="lg:ml-64 p-4">
+    <div class="flex flex-col sm:flex-row items-center justify-between mb-6 px-4">
       <h1 class="font-semibold text-xl sm:text-sm md:text-2xl lg:text-4xl xl:text-5xl">
         Reservas
       </h1>
@@ -9,13 +9,13 @@
         <div class="relative">
           <input
             type="text"
-            placeholder="Buscar un reserva"
+            placeholder="Buscar una reserva"
             v-model="searchTerm"
-            class="p-2 pr-5 border border-gray-500 rounded-md focus:outline-none placeholder:text-sm w-full sm:w-auto"
+            class="p-2 pr-10 border border-gray-300 rounded-md focus:outline-none placeholder:text-sm w-full sm:w-auto"
           />
           <!-- SVG de lupa -->
           <svg
-            class="absolute inset-y-2 right-1 w-6 h-6 text-gray-500"
+            class="absolute inset-y-2 right-2 w-5 h-5 text-gray-500"
             fill="none"
             stroke="currentColor"
             viewBox="0 0 24 24"
@@ -31,12 +31,26 @@
         </div>
       </div>
     </div>
-    
-    </section>
-  
+
+    <!-- Componente TableReservation -->
+    <TableReservation :searchTerm="searchTerm" />
+
+  </section>
 </template>
+
 <script>
+import TableReservation from '../components/TableReservation.vue';
 
-
- 
+export default {
+  components: { TableReservation },
+  data() {
+    return {
+      searchTerm: '', // Para la búsqueda de reservas
+    };
+  },
+};
 </script>
+
+<style scoped>
+/* Puedes añadir estilos específicos si es necesario */
+</style>

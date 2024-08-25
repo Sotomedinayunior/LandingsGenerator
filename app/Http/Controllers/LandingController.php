@@ -13,9 +13,10 @@ class LandingController extends Controller
     public function index($userId)
     {
         try {
-            // Obtén todas las landings asociadas a ese usuario, incluyendo vehículos y reservas
+            // Obtén todas las landings asociadas a ese usuario, excluyendo las eliminadas soft delete
             $landings = Landing::with(['vehicles', 'reservations'])
                 ->where('id_users_landing', $userId)
+                ->whereNull('deleted_at') // Excluye landings eliminadas
                 ->get();
 
             if ($landings->isEmpty()) {
@@ -29,28 +30,29 @@ class LandingController extends Controller
             return response()->json(['error' => 'Server Error'], 500);
         }
     }
-      // Mostrar una landing especifica por su id
-      public function onelanding($userId, $landingId)
-      {
-          try {
-              // Obtén la landing específica por su ID y que pertenezca al usuario, incluyendo vehículos y reservas
-              $landing = Landing::with(['vehicles', 'reservations'])
-                  ->where('id', $landingId)
-                  ->where('id_users_landing', $userId)
-                  ->first();
-      
-              if (!$landing) {
-                  return response()->json(['message' => 'Landing not found or unauthorized'], 404);
-              }
-      
-              // Devuelve la respuesta en formato JSON
-              return response()->json($landing);
-          } catch (\Exception $e) {
-              // Devuelve un error 500 en caso de cualquier excepción
-              return response()->json(['error' => 'Server Error'], 500);
-          }
-      }
-      
+
+    // Mostrar una landing especifica por su id
+    public function onelanding($userId, $landingId)
+    {
+        try {
+            // Obtén la landing específica por su ID y que pertenezca al usuario, incluyendo vehículos y reservas
+            $landing = Landing::with(['vehicles', 'reservations'])
+                ->where('id', $landingId)
+                ->where('id_users_landing', $userId)
+                ->first();
+
+            if (!$landing) {
+                return response()->json(['message' => 'Landing not found or unauthorized'], 404);
+            }
+
+            // Devuelve la respuesta en formato JSON
+            return response()->json($landing);
+        } catch (\Exception $e) {
+            // Devuelve un error 500 en caso de cualquier excepción
+            return response()->json(['error' => 'Server Error'], 500);
+        }
+    }
+
 
     // Guardar un nuevo landing en la base de datos
     public function store(Request $request)
@@ -171,26 +173,53 @@ class LandingController extends Controller
             ], 500);
         }
     }
+
+
+
+
     //Landing que se eliminaron suavemente
-    public function trashed($userId)
+    public function restore($id)
     {
         try {
-            // Obtén todas las landings eliminadas asociadas a ese usuario
-            $landings = Landing::onlyTrashed() // Solo las eliminadas
-                ->where('id_users_landing', $userId)
-                ->get();
+            // Encuentra la landing eliminada utilizando onlyTrashed()
+            $landing = Landing::onlyTrashed()->find($id);
 
-            if ($landings->isEmpty()) {
-                return response()->json(['message' => 'No deleted landings found'], 404);
+            if (!$landing) {
+                return response()->json(['message' => 'Landing no encontrada o ya restaurada'], 404);
             }
 
-            // Devuelve la respuesta en formato JSON
-            return response()->json([$landings]);
+            // Restaura la landing
+            $landing->restore();
+
+            return response()->json(['message' => 'Landing restaurada con éxito']);
         } catch (\Exception $e) {
-            // Devuelve un error 500 en caso de cualquier excepción
-            return response()->json(['error' => 'Server Error'], 500);
+            return response()->json(['error' => 'Error al restaurar la landing'], 500);
         }
     }
+    public function getDeletedLandings($userId)
+    {
+        try {
+            // Obtener todas las landings eliminadas asociadas a ese usuario, incluyendo vehículos y reservas
+            $deletedLandings = Landing::onlyTrashed()
+                ->with(['vehicles', 'reservations']) // Relaciones
+                ->where('id_users_landing', $userId) // Filtrar por usuario
+                ->get();
+
+            if ($deletedLandings->isEmpty()) {
+                return response()->json(['message' => 'No se ha borrado ninguna landing'], 404);
+            }
+
+            // Devolver la respuesta en formato JSON
+            return response()->json($deletedLandings);
+        } catch (\Exception $e) {
+            // Manejar cualquier excepción y devolver un error 500
+            return response()->json(['error' => 'Error en el servidor'], 500);
+        }
+    }
+
+
+
+
 
 
 

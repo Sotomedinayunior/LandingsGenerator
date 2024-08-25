@@ -49,7 +49,6 @@
           </button>
         </div>
       </div>
-    
     </div>
   </div>
 </template>
@@ -75,14 +74,13 @@ export default {
       this.$router.push(`/view-landing/${id}`);
     },
     deleteLanding(id) {
-      Axios.delete(`/landing/${id}`)
+      Axios.delete(`api/landing/${id}`)
         .then((response) => {
-          // Maneja la respuesta después de eliminar, por ejemplo, emite un evento para actualizar la lista
-          this.$emit('deleted', id);
-          this.showModal = false; // Cierra el modal después de eliminar
+          this.$emit('deleted', id); // Emite un evento cuando se elimina el landing
+          this.showModal = false;
         })
         .catch((error) => {
-          console.error("Error al eliminar el landing:", error);
+          console.error("Error al eliminar el landing:", error.response ? error.response.data : error.message);
         });
     }
   }

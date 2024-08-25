@@ -24,7 +24,7 @@ class AuthController extends Controller
                 'phone' => 'nullable|string|max:15',
                 'theme' => 'nullable|string|max:255',
                 'role' => 'required|string|in:admin,user',
-                'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048', // Validar la imagen del avatar si se proporciona
+                'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048', 
             ]);
 
             // Manejar la carga de archivo del avatar
