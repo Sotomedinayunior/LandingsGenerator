@@ -1,18 +1,25 @@
 <template>
   <section>
     <!-- button and logo -->
-    <div class="flex  justify-between  w-[570px] p-6 mb-8 ml-[198px]">
-      <button @click="()=>{ 
-      this.$router.push('/dashboard');
-    }"  class="bg-transparent border border-gray-500 text-gray-500 text-sm px-6 py-3 rounded"
+    <div class="flex justify-between w-[570px] p-6 mb-8 ml-[198px]">
+      <button
+        @click="HandleClick()"
+        class="bg-transparent border border-gray-500 text-gray-500 text-sm px-6 py-3 rounded"
       >
         Cancelar proceso
       </button>
-      <img src="../static/asset/Logo.webp" alt="Logo nelly" lazy="loading" class="w-[120px]"  height="auto" title="nelly app"/>
+      <img
+        src="../static/asset/Logo.webp"
+        alt="Logo nelly"
+        lazy="loading"
+        class="w-[120px]"
+        height="auto"
+        title="nelly app"
+      />
     </div>
 
     <!-- Header with Tabs -->
-    <div class="w-full flex justify-evenly  border-b-2">
+    <div class="w-full flex justify-evenly border-b-2">
       <button
         @click="setActiveTab(1)"
         :class="[
@@ -96,6 +103,18 @@ export default {
         this.activeTab = 3;
       }
     },
+    HandleClick(){
+       // Verificar si existe "NellyLandinCreate" en localStorage
+    if (localStorage.getItem("NellyLandinCreate")) {
+      // Si existe, eliminarlo
+      localStorage.removeItem("NellyLandinCreate");
+
+    }
+
+    // Redirigir al dashboard
+    this.$router.push('/dashboard');
+  }
+    
   },
 };
 </script>

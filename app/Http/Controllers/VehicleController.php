@@ -7,6 +7,9 @@ use App\Models\Vehicle;
 use App\Models\VehicleImage;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
+
+
 class VehicleController extends Controller
 {
     /**
@@ -32,37 +35,61 @@ class VehicleController extends Controller
             'vehicles' => $vehicles
         ]);
     }
-    public function store(Request $request)
+    /**
+     * Actualiza un vehículo por su ID, verificando que pertenezca a una landing específica.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function update(Request $request, $id)
     {
         // Validar la solicitud
         $request->validate([
-            'name' => 'required|string|max:255',
-            'id_landing'=>'required|integer',
-            'description' => 'required|string',
-            'price' => 'required|numeric',
-            'luggage' => 'required|integer',
-            'people' => 'required|integer',
-            'type_of_car' => 'required|string',
+            'name' => 'sometimes|required|string|max:255',
+            'id_landing' => 'required|integer',
+            'description' => 'sometimes|required|string',
+            'price' => 'sometimes|required|numeric',
+            'luggage' => 'sometimes|required|integer',
+            'people' => 'sometimes|required|integer',
+            'type_of_car' => 'sometimes|required|string',
             'bluetooth' => 'boolean',
             'siriusxm' => 'boolean',
             'manual' => 'boolean',
             'automatic' => 'boolean',
             'cvt' => 'boolean',
-            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048', // Validar imágenes
+            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ]);
 
-        // Crear el vehículo
-        $vehicle = Vehicle::create($request->except('images'));
+        // Verificar que el vehículo existe
+        $vehicle = Vehicle::find($id);
+        if (!$vehicle) {
+            return response()->json(['message' => 'Vehículo no encontrado'], 404);
+        }
 
-        // Manejar las imágenes
+        // Verificar que el vehículo pertenece a la landing especificada
+        if ($vehicle->id_landing !== $request->id_landing) {
+            return response()->json(['message' => 'El vehículo no pertenece a la landing especificada'], 403);
+        }
+
+        // Actualizar los campos del vehículo
+        $vehicle->update($request->except(['images']));
+
+        // Manejar la actualización de las imágenes si hay nuevas
         if ($request->hasFile('images')) {
+            // Eliminar imágenes anteriores si es necesario
+            $oldImages = $vehicle->images; // Asumimos que tiene una relación con VehicleImage
+            foreach ($oldImages as $oldImage) {
+                if (Storage::exists('public/' . $oldImage->path_images)) {
+                    Storage::delete('public/' . $oldImage->path_images);
+                }
+                $oldImage->delete();
+            }
+
+            // Guardar las nuevas imágenes
             $images = $request->file('images');
-
             foreach ($images as $image) {
-                // Guardar la imagen en el almacenamiento público
                 $imagePath = $image->store('vehicle_images', 'public');
-
-                // Guardar la ruta de la imagen en la base de datos
                 VehicleImage::create([
                     'vehicle_id' => $vehicle->id,
                     'path_images' => $imagePath,
@@ -70,8 +97,94 @@ class VehicleController extends Controller
             }
         }
 
-        return response()->json(['message' => 'Vehículo creado con éxito.'], 201);
+        return response()->json(['message' => 'Vehículo actualizado con éxito.'], 200);
     }
+
+    public function store(Request $request)
+    {
+        try {
+            // Validar la solicitud
+            $validatedData = $request->validate([
+                'name' => 'required|string|max:255',
+                'id_landing' => 'required|integer',
+                'description' => 'required|string',
+                'price' => 'required|numeric',
+                'luggage' => 'required|integer',
+                'people' => 'required|integer',
+                'type_of_car' => 'required|string',
+                'bluetooth' => 'required|boolean',
+                'siriusxm' => 'required|boolean',
+                'manual' => 'required|boolean',
+                'automatic' => 'required|boolean',
+                'cvt' => 'required|boolean',
+                'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            ]);
+
+            // Crear el vehículo, excluyendo las imágenes del request
+            $vehicle = Vehicle::create($request->except('images'));
+
+            // Manejar las imágenes si existen
+            if ($request->hasFile('images')) {
+                $images = $request->file('images');
+
+                foreach ($images as $image) {
+                    if ($image->isValid()) {
+                        $imagePath = $image->store('vehicle_images', 'public');
+                        VehicleImage::create([
+                            'vehicle_id' => $vehicle->id,
+                            'path_images' => $imagePath,
+                        ]);
+                    }
+                }
+            }
+
+            return response()->json(['message' => 'Vehículo creado con éxito.'], 201);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Ha ocurrido un error: ' . $e->getMessage()], 500);
+        }
+    }
+
+
+
+
+
+    /**
+     * Agrega un campo dinámico a un vehículo específico.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @param  int  $id
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function addDynamicField(Request $request, $id)
+    {
+        // Validar la solicitud
+        $request->validate([
+            'key' => 'required|string', // Clave del campo dinámico
+            'value' => 'required', // Valor del campo dinámico (puede ser cualquier tipo)
+        ]);
+
+        // Buscar el vehículo por ID
+        $vehicle = Vehicle::find($id);
+        if (!$vehicle) {
+            return response()->json(['message' => 'Vehículo no encontrado'], 404);
+        }
+
+        // Obtener los campos dinámicos actuales (si existen) y convertir a array
+        $dynamicFields = $vehicle->dynamic_fields ? json_decode($vehicle->dynamic_fields, true) : [];
+
+        // Añadir el nuevo campo dinámico al array
+        $dynamicFields[$request->key] = $request->value;
+
+        // Actualizar el campo dynamic_fields en el vehículo
+        $vehicle->dynamic_fields = json_encode($dynamicFields);
+        $vehicle->save();
+
+        return response()->json([
+            'message' => 'Campo dinámico agregado exitosamente.',
+            'dynamic_fields' => $dynamicFields
+        ], 200);
+    }
+
     public function destroy($id)
     {
         // Buscar el vehículo por ID
@@ -100,5 +213,4 @@ class VehicleController extends Controller
 
         return response()->json(['message' => 'Vehículo y sus imágenes eliminadas con éxito.'], 200);
     }
-    
 }

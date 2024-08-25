@@ -11,14 +11,14 @@ class VehicleImage extends Model
     use HasFactory, SoftDeletes;
 
     protected $fillable = [
-        'id_vehicle',   // Ajustado para coincidir con el nombre del campo en el esquema
+        'vehicle_id',  
         'path_images',
     ];
 
     // Define la relación con el modelo Vehicle
     public function vehicle()
     {
-        return $this->belongsTo(Vehicle::class, 'id_vehicle'); // Ajustado para coincidir con el nombre del campo en el esquema
+        return $this->belongsTo(Vehicle::class, 'vehicle_id'); 
     }
 }
 

@@ -40,4 +40,9 @@ class Vehicle extends Model
     {
         return $this->hasMany(Reservation::class, 'id_vehicle');
     }
+    public function images()
+    {
+        return $this->hasMany(VehicleImage::class, 'vehicle_id');
+    }
 }
+

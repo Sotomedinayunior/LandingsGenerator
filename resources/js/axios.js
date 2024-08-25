@@ -21,7 +21,7 @@ axios.interceptors.response.use(response => {
   return response;
 }, error => {
   if (error.response && error.response.status === 401) {
-    store.dispatch('logout'); // Cerrar sesión si hay error de autenticación
+    store.dispatch('nelly-logout'); // Cerrar sesión si hay error de autenticación
   }
   return Promise.reject(error);
 });

@@ -9,11 +9,13 @@ use Illuminate\Http\Request;
 
 class ReservationController extends Controller
 {
-    // Mostrar una lista de todas las reservaciones
-    public function index()
+    public function index($landing_id)
     {
-        // Obtener todas las reservaciones con las relaciones correspondientes
-        $reservations = Reservation::with(['landing', 'vehicle'])->get();
+        // Obtener todas las reservaciones que pertenezcan a la landing específica
+        $reservations = Reservation::with(['landing', 'vehicle'])
+            ->where('landing_id', $landing_id)
+            ->get();
+
         return response()->json($reservations, 200);
     }
 
