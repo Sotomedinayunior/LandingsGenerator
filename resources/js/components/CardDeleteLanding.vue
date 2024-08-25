@@ -5,13 +5,13 @@
     <!-- Botones para restaurar o eliminar -->
     <div class="flex justify-end space-x-4 mt-4">
       <button 
-        @click="restoreLanding(landing.id)"
+        @click="$emit('restore', landing.id)"
         class="px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600"
       >
         Restaurar
       </button>
       <button 
-        @click="deleteLanding(landing.id)"
+        @click="$emit('delete', landing.id)"
         class="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
       >
         Eliminar
@@ -31,27 +31,7 @@ export default {
       required: true
     }
   },
-  methods: {
-    restoreLanding(id) {
-      Axios.post(`api/landing/restore/${id}`)
-        .then(() => {
-          this.$emit('restore', id);
-        })
-        .catch(error => {
-          console.error("Error al restaurar la landing:", error.response ? error.response.data : error.message);
-        });
-    },
-    deleteLanding(id) {
-      Axios.delete(`/landing/${id}`)
-        .then(() => {
-          this.$emit('delete', id);
-        })
-        .catch(error => {
-          console.error("Error al eliminar la landing:", error.response ? error.response.data : error.message);
-        });
-    }
-  }
-}
+};
 </script>
 
 <style scoped>

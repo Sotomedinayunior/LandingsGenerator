@@ -1,16 +1,5 @@
 <template>
   <div>
-    <TableReservation />
-   
+      <h1>eeee</h1>
   </div>
 </template>
-<script>
-import TableReservation from "./TableReservation.vue";
-export default {
-  components: { TableReservation },
-  data() {
-    return {};
-  },
-  methods: {},
-};
-</script>

@@ -31,70 +31,147 @@
         </div>
       </div>
     </div>
-      
+
     <!-- Mostrar el componente CardDeleteLanding o un mensaje si no hay resultados -->
     <div v-if="filteredLandings.length > 0" class="mt-6 grid grid-cols-1 gap-4">
-      <CardDeleteLanding 
-        v-for="landing in filteredLandings" 
-        :key="landing.id" 
+      <CardDeleteLanding
+        v-for="landing in filteredLandings"
+        :key="landing.id"
         :landing="landing"
-        @restore="handleRestore"
-        @delete="handleDelete"
+        @restore="openRestoreModal"
+        @delete="openDeleteModal"
       />
     </div>
-    <p v-else class="mt-6 text-red-500">No se encontraron landings eliminadas.</p>
+    <p v-else class="mt-6 text-red-500">
+      No se encontraron landings eliminadas.
+    </p>
+
+    <!-- Modal de restauración -->
+    <div
+      v-if="showRestoreModal"
+      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+    >
+      <div class="bg-white p-6 rounded-md shadow-md">
+        <p class="text-lg mb-4">Landing restaurada con éxito</p>
+        <button
+          @click="closeRestoreModal"
+          class="px-4 py-2 bg-blue-500 text-white rounded-md"
+        >
+          Cerrar
+        </button>
+      </div>
+    </div>
+
+    <!-- Modal de confirmación para eliminación -->
+    <div
+      v-if="showDeleteModal"
+      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+    >
+      <div class="bg-white p-6 rounded-md shadow-md">
+        <p class="text-lg mb-4">
+          ¿Estás seguro de eliminar esta landing? Este proceso es irreversible.
+        </p>
+        <div class="flex justify-end space-x-4">
+          <button
+            @click="confirmDelete"
+            class="px-4 py-2 bg-red-500 text-white rounded-md"
+          >
+            Eliminar
+          </button>
+          <button
+            @click="closeDeleteModal"
+            class="px-4 py-2 bg-gray-500 text-white rounded-md"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
+    </div>
   </section>
 </template>
 
 <script>
-import CardDeleteLanding from '../components/CardDeleteLanding.vue';
-import Axios from '../axios';
+import CardDeleteLanding from "../components/CardDeleteLanding.vue";
+import Axios from "../axios";
 
 export default {
   components: { CardDeleteLanding },
   data() {
     return {
       landings: [], // Array para almacenar las landings eliminadas
-      searchTerm: '', // Término de búsqueda
+      searchTerm: "", // Término de búsqueda
+      showRestoreModal: false, // Modal de restauración
+      showDeleteModal: false, // Modal de confirmación de eliminación
+      selectedLandingId: null, // ID de la landing seleccionada
     };
   },
   computed: {
     filteredLandings() {
-      return this.landings.filter(landing => 
-        landing.name.toLowerCase().includes(this.searchTerm.toLowerCase())
+      return this.landings.filter(
+        (landing) =>
+          landing.name &&
+          landing.name.toLowerCase().includes(this.searchTerm.toLowerCase())
       );
     },
   },
   methods: {
     fetchDeletedLandings() {
-      let userId = localStorage.getItem('NellyUserId');
-      Axios.get(`api/landing/deleted/${userId}`)
-        .then(response => {
-          this.landings = response.data;
+      let userId = localStorage.getItem("NellyUserId");
+      if (userId) {
+        Axios.get(`/api/landing/deleted/${userId}`)
+          .then((response) => {
+            this.landings = response.data;
+          })
+          .catch((error) => {
+            console.error("Error fetching deleted landings:", error);
+          });
+      } else {
+        console.error("User ID is missing from localStorage.");
+      }
+    },
+
+    openRestoreModal(id) {
+      this.selectedLandingId = id;
+      this.restoreLanding(id);
+    },
+
+    restoreLanding(id) {
+      Axios.post(`/api/landing/restore/${id}`)
+        .then(() => {
+          this.showRestoreModal = true;
+          this.fetchDeletedLandings(); // Actualizar la lista después de restaurar
         })
-        .catch(error => {
-          console.error('Error fetching deleted landings:', error);
+        .catch((error) => {
+          console.error("Error restoring landing:", error);
         });
     },
-    handleRestore(id) {
-      Axios.post(`/landing/restore/${id}`)
+
+    closeRestoreModal() {
+      this.showRestoreModal = false;
+    },
+
+    openDeleteModal(id) {
+      this.selectedLandingId = id;
+      this.showDeleteModal = true;
+    },
+
+    confirmDelete() {
+      this.deleteLanding(this.selectedLandingId);
+    },
+
+    deleteLanding(id) {
+      Axios.delete(`/api/landing/delete/${id}`)
         .then(() => {
-          // Actualizar la lista después de restaurar
-          this.landings = this.landings.filter(landing => landing.id !== id);
+          this.showDeleteModal = false;
+          this.fetchDeletedLandings(); // Actualizar la lista después de eliminar
         })
-        .catch(error => {
-          console.error('Error restoring landing:', error);
+        .catch((error) => {
+          console.error("Error deleting landing:", error);
         });
     },
-    handleDelete(id) {
-      Axios.delete(`/landing/${id}`)
-        .then(() => {
-          // Actualizar la lista después de eliminar
-          this.landings = this.landings.filter(landing => landing.id !== id);
-        })
-        .catch(error => {
-          console.error('Error deleting landing:', error);
-        });
+
+    closeDeleteModal() {
+      this.showDeleteModal = false;
     },
   },
   mounted() {
