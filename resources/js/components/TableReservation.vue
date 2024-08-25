@@ -59,9 +59,9 @@ export default {
   methods: {
     async fetchReservations() {
       try {
-        const landingId = 2;  // Obtiene el landing_id de la URL
+        const landingId = this.$route.params.id; // Obtiene el landing_id de la URL
         if (landingId) {
-          const response = await Axios.get(`reservations/${landingId}`);
+          const response = await Axios.get(`/api/reservations/${landingId}`);
           this.items = response.data; // Asigna los datos de la API a 'items'
         } else {
           console.error('No landingId found in the URL');

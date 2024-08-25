@@ -4,7 +4,6 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\ReservationController;
-use App\Models\Landing;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -31,7 +30,9 @@ Route::middleware('auth:sanctum')->group(function () {
     //delete soft landing o barrado suave
     Route::delete('/landing/{id}', [LandingController::class, 'destroy']);
 
-    Route::delete('/vehicle/{id}', [VehicleController::class, 'destroy']);
+    Route::delete('/landing/delete/{id}' , [LandingController::class , 'deletefinal']);
+
+  
     //cambiar la landing de status
     Route::patch('/landing/status', [LandingController::class, 'status']);
     // Ruta para restaurar una landing eliminada
@@ -41,13 +42,16 @@ Route::middleware('auth:sanctum')->group(function () {
     
     //obtener la landing de un usuario especifico
     Route::get('/landings/{userId}/{landingId}', [LandingController::class, 'onelanding']);
-
+    //borrado suave de un vehicle
+    Route::delete('/vehicle/{id}', [VehicleController::class, 'destroy']);
     //crear el vehicle
     Route::post('/vehicle', [VehicleController::class, 'store']);
     //obtener todos los vehiculos y sus relaciones nota:optimizar esto
     Route::get('/vehicles/{landingId}', [VehicleController::class, 'index']);
     //obtener las reservaciones 
     route::get('/reservations/{landing_id}', [ReservationController::class, 'index']);
+
+
 
 
 

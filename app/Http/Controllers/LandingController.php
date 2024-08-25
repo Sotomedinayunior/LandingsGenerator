@@ -224,6 +224,7 @@ class LandingController extends Controller
 
 
 
+
     // Eliminar un landing y sus vehículos relacionados
     public function destroy($id)
     {
@@ -239,5 +240,26 @@ class LandingController extends Controller
         $landing->delete();
 
         return response()->json(['message' => 'Landing deleted successfully']);
+    }
+
+    public function deletefinal($id)
+    {
+        // Busca la landing por su ID
+        $landing = Landing::with('vehicles')->find($id);
+
+        // Verifica si la landing existe
+        if (!$landing) {
+            return response()->json(['message' => 'Landing not found'], 404);
+        }
+
+        // Elimina los vehículos relacionados
+        foreach ($landing->vehicles as $vehicle) {
+            $vehicle->delete(); // Elimina los vehículos directamente
+        }
+
+        // Elimina la landing
+        $landing->forceDelete(); // Elimina la landing permanentemente
+
+        return response()->json(['message' => 'Landing and related vehicles deleted successfully']);
     }
 }

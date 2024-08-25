@@ -25,16 +25,19 @@ class VehicleController extends Controller
         if (!$landing) {
             return response()->json(['message' => 'Landing no encontrada'], 404);
         }
-
-        // Obtener todos los vehículos asociados a la landing
-        $vehicles = Vehicle::where('id_landing', $landingId)->get();
-
+    
+        // Obtener todos los vehículos asociados a la landing, incluyendo las imágenes
+        $vehicles = Vehicle::where('id_landing', $landingId)
+            ->with('images')  // Incluir las imágenes relacionadas
+            ->get();
+    
         // Devolver una respuesta en formato JSON
         return response()->json([
             'message' => $vehicles->isEmpty() ? 'No se encontraron vehículos para esta landing' : 'Vehículos encontrados',
             'vehicles' => $vehicles
         ]);
     }
+    
     /**
      * Actualiza un vehículo por su ID, verificando que pertenezca a una landing específica.
      *
@@ -117,10 +120,11 @@ class VehicleController extends Controller
                 'manual' => 'required|boolean',
                 'automatic' => 'required|boolean',
                 'cvt' => 'required|boolean',
-                'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+                'images' => 'required|array', // Asegurarse de que es un array
+                'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048', // Validar cada archivo en el array
             ]);
 
-            // Crear el vehículo, excluyendo las imágenes del request
+            // Crear el vehículo
             $vehicle = Vehicle::create($request->except('images'));
 
             // Manejar las imágenes si existen
@@ -143,7 +147,6 @@ class VehicleController extends Controller
             return response()->json(['error' => 'Ha ocurrido un error: ' . $e->getMessage()], 500);
         }
     }
-
 
 
 

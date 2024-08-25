@@ -6,6 +6,7 @@
           <i
             class="fas fa-arrow-left text-gray-800 cursor-pointer"
             @click="goBack"
+            aria-label="Volver"
           ></i>
         </div>
         <div class="flex items-center ml-4">
@@ -24,7 +25,7 @@
       <div class="flex space-x-6 items-center">
         <div class="flex flex-col items-center">
           <div class="flex items-center">
-            <i class="fas fa-car text-gray-800"></i>
+            <i class="fas fa-car text-gray-800" aria-label="Vehículos"></i>
             <span class="ml-1">{{ landing.vehicles.length }}</span>
           </div>
           <span class="text-sm text-gray-600">Vehículos</span>
@@ -32,7 +33,7 @@
         <div class="border-l h-12 mx-4"></div>
         <div class="flex flex-col items-center">
           <div class="flex items-center">
-            <i class="fas fa-book text-gray-800"></i>
+            <i class="fas fa-book text-gray-800" aria-label="Reservas"></i>
             <span class="ml-1">{{ landing.reservations.length }}</span>
           </div>
           <span class="text-sm text-gray-600">Reservas</span>
@@ -44,36 +45,33 @@
     <div class="w-full flex mt-8">
       <button
         @click="activeTab = 'reservations'"
-        :class="[
-          'py-2 px-4',
-          activeTab === 'reservations'
-            ? 'text-orange-500 border-b-2 border-orange-500 font-bold'
-            : 'text-gray-500',
-        ]"
+        :class="{
+          'py-2 px-4': true,
+          'text-orange-500 border-b-2 border-orange-500 font-bold': activeTab === 'reservations',
+          'text-gray-500': activeTab !== 'reservations'
+        }"
       >
         Reservas ({{ landing.reservations.length }})
       </button>
 
       <button
         @click="activeTab = 'vehicles'"
-        :class="[
-          'py-2 px-4',
-          activeTab === 'vehicles'
-            ? 'text-orange-500 border-b-2 border-orange-500 font-bold'
-            : 'text-gray-500',
-        ]"
+        :class="{
+          'py-2 px-4': true,
+          'text-orange-500 border-b-2 border-orange-500 font-bold': activeTab === 'vehicles',
+          'text-gray-500': activeTab !== 'vehicles'
+        }"
       >
         Vehículos ({{ landing.vehicles.length }})
       </button>
 
       <button
         @click="activeTab = 'config'"
-        :class="[
-          'py-2 px-4',
-          activeTab === 'config'
-            ? 'text-orange-500 border-b-2 border-orange-500 font-bold'
-            : 'text-gray-500',
-        ]"
+        :class="{
+          'py-2 px-4': true,
+          'text-orange-500 border-b-2 border-orange-500 font-bold': activeTab === 'config',
+          'text-gray-500': activeTab !== 'config'
+        }"
       >
         Configuración
       </button>
@@ -81,17 +79,29 @@
 
     <!-- Tab Content -->
     <div class="container mx-auto mt-4 flex justify-center items-center">
+      <!-- Loading State -->
+      <div v-if="isLoading">Cargando datos...</div>
+
+      <!-- Reservations Tab -->
       <TabReservation
-        v-if="activeTab === 'reservations' && landing.reservations.length > 0"
+        v-if="!isLoading && activeTab === 'reservations' && landing.reservations.length > 0"
         :reservations="landing.reservations"
       />
+      <div v-if="!isLoading && activeTab === 'reservations' && landing.reservations.length === 0">
+        No hay reservas disponibles.
+      </div>
 
+      <!-- Vehicles Tab -->
       <TabVehicle
-        v-if="activeTab === 'vehicles' && landing.vehicles.length > 0"
+        v-if="!isLoading && activeTab === 'vehicles' && landing.vehicles.length > 0"
         :vehicles="landing.vehicles"
       />
+      <div v-if="!isLoading && activeTab === 'vehicles' && landing.vehicles.length === 0">
+        No hay vehículos disponibles.
+      </div>
 
-      <TabConfig v-if="activeTab === 'config'" />
+      <!-- Config Tab -->
+      <TabConfig v-if="!isLoading && activeTab === 'config'" />
     </div>
   </section>
 </template>
@@ -113,6 +123,7 @@ export default {
         name: "",
       },
       activeTab: "vehicles",
+      isLoading: true, // Estado para manejar la carga
     };
   },
   created() {
@@ -132,6 +143,8 @@ export default {
         this.landing = response.data;
       } catch (error) {
         console.error("Error fetching landing:", error);
+      } finally {
+        this.isLoading = false; // Finaliza el estado de carga
       }
     },
     goBack() {
