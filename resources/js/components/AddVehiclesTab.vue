@@ -142,6 +142,7 @@
                 <div class="relative inline-block">
                   <select
                     class="appearance-none pl-10 pr-6 py-2 border text-sm rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
+                    v-model="newVehicle.luggage" name="luggage"
                   required>
                     <option disabled>Equipaje</option>
                     <option>Maletero</option>
@@ -161,6 +162,7 @@
                 <div class="relative inline-block">
                   <select
                     class="appearance-none pl-10 pr-6 py-2 border text-sm rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
+                    v-model="newVehicle.people" name="people"
                    required>
                     <option disabled>Capacidad</option>
                     <option>2 Personas</option>
@@ -181,6 +183,7 @@
                 <div class="relative inline-block">
                   <select
                     class="appearance-none pl-10 pr-6 py-2 border text-sm rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
+                    v-model="newVehicle.type_of_car" name="type_of_car"
                   required >
                     <option disabled>Tipo</option>
                     <option>Sedan</option>
@@ -201,7 +204,7 @@
                 <div class="relative inline-block">
                   <select
                     class="appearance-none pl-10 pr-6 py-2 border text-sm rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
-                 required >
+                 required  v-model="newVehicle.transmision" name="transmision"  >
                     <option disabled>Transmision</option>
                     <option>automática</option>
                     <option>CVT</option>
@@ -229,6 +232,8 @@
                     id="checked-checkbox"
                     type="checkbox"
                     value=""
+                    v-model="newVehicle.bluetooh"
+                    name="bluetooh"
                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   />
                   <label
@@ -243,6 +248,8 @@
                     id="checked-checkbox"
                     type="checkbox"
                     value=""
+                    name="siriuxmx"
+                    v-model="newVehicle.siriuxmx"
                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   />
                   <label
@@ -257,6 +264,8 @@
                     id="checked-checkbox"
                     type="checkbox"
                     value=""
+                    name="gps"
+                    v-model="newVehicle.gps"
                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   />
                   <label
@@ -271,6 +280,7 @@
                     id="checked-checkbox"
                     type="checkbox"
                     value=""
+                    
                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   />
                   <label
@@ -296,16 +306,28 @@
 </template>
 
 <script>
+// import TabVehicle from './TabVehicle.vue';
 import TabVehicle from './TabVehicle.vue';
 import Axios from '../axios';
-export default {
 
+export default {
   data() {
     return {
       step: 1,
-      
       vehicleImages: [], // Array para almacenar las imágenes cargadas
       currentImage: null, // Imagen seleccionada para previsualización
+      newVehicle: {
+        name: '',
+        description: '',
+        price: '',
+        luggage: '',
+        people: '',
+        type_of_car: '',
+        transmision: '',
+        bluetooh: false,
+        siriuxmx: false,
+        gps: false,
+      },
     };
   },
   methods: {
@@ -323,24 +345,48 @@ export default {
       }
       Array.from(files).forEach((file) => {
         if (file.type.startsWith("image/")) {
-          const reader = new FileReader();
-          reader.onload = (e) => {
-            this.vehicleImages.push(e.target.result);
-          };
-          reader.readAsDataURL(file);
-        } else {
-          alert("Por favor, selecciona solo imágenes.");
+          this.vehicleImages.push(URL.createObjectURL(file)); // Previsualización
         }
       });
     },
     removeImage(index) {
       this.vehicleImages.splice(index, 1);
     },
-    addVehicle() {
-      //chatgpt aqui pon una codicion para mostrar el componente vehicle
-     
+    async addVehicle() {
+      // Crear instancia de FormData para enviar el formulario y las imágenes
+      const formData = new FormData();
+
+      // Agregar las imágenes al FormData
+      const imageInput = document.getElementById('vehicle-images').files;
+      Array.from(imageInput).forEach((file) => {
+        formData.append('images[]', file);
+      });
+
+      // Agregar los datos del vehículo al FormData
+      for (const key in this.newVehicle) {
+        formData.append(key, this.newVehicle[key]);
+      }
+
+      try {
+        // Realizar la petición POST al endpoint
+        const response = await Axios.post('/api/vehicles', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+          },
+        });
+
+        // Si se envió correctamente, haz algo aquí (por ejemplo, resetear el formulario)
+        console.log(response.data);
+        alert("Vehículo agregado con éxito");
+        this.previousStep(); // Volver al contador de vehículos
+
+      } catch (error) {
+        console.error("Error al agregar el vehículo:", error);
+        alert("Hubo un error al enviar los datos del vehículo.");
+      }
     },
   },
 };
+
 </script>
 

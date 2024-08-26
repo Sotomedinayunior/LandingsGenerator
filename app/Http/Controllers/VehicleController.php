@@ -120,8 +120,8 @@ class VehicleController extends Controller
                 'manual' => 'required|boolean',
                 'automatic' => 'required|boolean',
                 'cvt' => 'required|boolean',
-                'images' => 'required|array', // Asegurarse de que es un array
-                'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048', // Validar cada archivo en el array
+                'images' => 'required|array', 
+                'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048', //el error era el bendito array
             ]);
 
             // Crear el vehículo
