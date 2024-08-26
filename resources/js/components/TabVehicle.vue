@@ -1,5 +1,8 @@
 <template>
     <div>
+        <div class="flex">
+            
+        </div>
         <TableVehicle />
     </div>
 </template>

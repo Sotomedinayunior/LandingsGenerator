@@ -1,7 +1,8 @@
 <template>
-    <div>
-        <h1>gyuv</h1>
-    </div>
+    <section class="lg:ml-64 p-4">
+        <h2>idks</h2>
+      
+    </section>
 </template>
 <script>
 
