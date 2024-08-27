@@ -15,12 +15,12 @@ class Vehicle extends Model
         'price',
         'luggage',
         'people',
-        'type_of_car',       
+        'type_of_car',   
+        'transmision',      
         'bluetooth',
         'siriusxm',
-        'manual',
-        'automatic',
-        'cvt',
+        'gps',
+        'apple_car',
         'id_image',
         'dynamic_fields'
     ];

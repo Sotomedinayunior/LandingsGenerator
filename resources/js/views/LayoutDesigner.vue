@@ -86,6 +86,7 @@ export default {
   },
   methods: {
     setActiveTab(tab) {
+      console.log('Attempting to set tab:', tab);
       if (tab === 2 && this.canActivateAddVehicles) {
         this.activeTab = tab;
       } else if (tab === 3 && this.canActivateReview) {
@@ -93,8 +94,10 @@ export default {
       } else if (tab === 1) {
         this.activeTab = tab;
       }
+      console.log('Active tab now:', this.activeTab);
     },
     handleNext(nextTab) {
+      console.log('Handling next tab:', nextTab);
       if (nextTab === "addVehicles") {
         this.canActivateAddVehicles = true;
         this.activeTab = 2;
@@ -102,19 +105,18 @@ export default {
         this.canActivateReview = true;
         this.activeTab = 3;
       }
+      console.log('Next tab activated:', this.activeTab);
     },
-    HandleClick(){
-       // Verificar si existe "NellyLandinCreate" en localStorage
-    if (localStorage.getItem("NellyLandinCreate")) {
-      // Si existe, eliminarlo
-      localStorage.removeItem("NellyLandinCreate");
+    HandleClick() {
+      // Verificar si existe "NellyLandinCreate" en localStorage
+      if (localStorage.getItem("NellyLandinCreate")) {
+        // Si existe, eliminarlo
+        localStorage.removeItem("NellyLandinCreate");
+      }
 
+      // Redirigir al dashboard
+      this.$router.push('/dashboard');
     }
-
-    // Redirigir al dashboard
-    this.$router.push('/dashboard');
-  }
-    
   },
 };
 </script>

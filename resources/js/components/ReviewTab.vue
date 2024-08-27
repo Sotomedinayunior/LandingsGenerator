@@ -11,36 +11,39 @@
     </div>
   </section>
 </template>
+
 <script>
 import Axios from "../axios";
+
 export default {
-  data() {},
   methods: {
     Publicar() {
-        let  UserId = localStorage.getItem('NellyUserId');
-        let  landingId = localStorage.getItem('NellyLandinCreate');
+      let userId = localStorage.getItem('NellyUserId');
+      let landingId = localStorage.getItem('NellyLandinCreate');
 
-      Axios
-        .patch(
-          "/landing/status",
-          {
-            landing_id: landingId,
-            user_id: userId,
+      Axios.patch(
+        "/landing/status",
+        {
+          landing_id: landingId,
+          user_id: userId,
+        },
+        {
+          headers: {
+            "Content-Type": "application/json",
           },
-          {
-            headers: {
-              "Content-Type": "application/json",
-            },
-          }
-        )
-        .then((response) => {
-          
-        })
-        .catch((error) => {
-          console.error("Error updating status:", error);
-        });
+        }
+      )
+      .then((response) => {
+        console.log("Status updated successfully");
+      })
+      .catch((error) => {
+        console.error("Error updating status:", error);
+      });
     },
   },
 };
 </script>
-<style></style>
+
+<style scoped>
+/* Agrega estilos si es necesario */
+</style>

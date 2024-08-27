@@ -15,7 +15,7 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
+<style  lang="scss">
 .btn-new {
   background-color: $color-background-secondary;
   font-size: clamp(12px, 1vw, 1.5rem);

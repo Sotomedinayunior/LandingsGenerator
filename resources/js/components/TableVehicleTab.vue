@@ -19,7 +19,15 @@
           <tr v-for="vehiculo in vehicles" :key="vehiculo.id">
             <td>
               <!-- Mostrar solo la primera imagen -->
-              <img :src="vehiculo.images.length ? vehiculo.images[0].path_images : 'default.jpg'" alt="Imagen del vehículo" width="100" />
+              <img
+                :src="
+                  vehiculo.images.length
+                    ? vehiculo.images[0].path_images
+                    : 'default.jpg'
+                "
+                alt="Imagen del vehículo"
+                width="100"
+              />
             </td>
             <td>{{ vehiculo.name }}</td>
             <td>{{ vehiculo.price }}</td>
@@ -29,13 +37,43 @@
             <td>{{ vehiculo.transmision }}</td>
             <td class="actions-cell">
               <i class="fa-solid fa-pencil"></i>
-              <i class="fa-solid fa-trash"></i>
+              <i
+                class="fa-solid fa-trash"
+                @click="confirmarEliminacion(vehiculo.id)"
+              ></i>
             </td>
           </tr>
         </tbody>
       </table>
       <div v-if="error" class="error">Error al cargar los datos</div>
     </div>
+
+    <!-- Modal de Confirmación -->
+    <transition name="fade">
+      <div
+        v-if="showModal"
+        class="fixed inset-0 bg-gray-500 bg-opacity-75 flex justify-center items-center z-50"
+      >
+        <div class="bg-white p-6 rounded-lg shadow-lg max-w-sm mx-auto">
+          <h3 class="text-lg font-semibold mb-4">Confirmar Eliminación</h3>
+          <p>¿Estás seguro de que quieres eliminar este vehículo?</p>
+          <div class="mt-4 flex justify-end">
+            <button
+              class="bg-gray-500 text-white px-4 py-2 rounded mr-2"
+              @click="cerrarModal"
+            >
+              Cancelar
+            </button>
+            <button
+              class="bg-red-500 text-white px-4 py-2 rounded"
+              @click="eliminarVehiculo"
+            >
+              Eliminar
+            </button>
+          </div>
+        </div>
+      </div>
+    </transition>
   </div>
 </template>
 
@@ -48,6 +86,8 @@ export default {
       vehicles: [],
       loading: true,
       error: false,
+      showModal: false, // Controla la visibilidad del modal
+      vehicleToDelete: null, // Almacena el vehículo a eliminar
     };
   },
   mounted() {
@@ -55,19 +95,19 @@ export default {
   },
   methods: {
     Obtener() {
-      const landingId = this.$route.params.id; // Obtiene el landingId de los parámetros de la URL
+      const landingId = localStorage.getItem("NellyLandingCreate"); // Obtiene el landingId de la localstorage
       console.log(landingId);
       Axios.get(`/api/vehicles/${landingId}`)
         .then((response) => {
           console.table(response.data);
-          
+
           // Verifica que la estructura de datos es correcta antes de asignar
           if (response.data.vehicles) {
             this.vehicles = response.data.vehicles;
           } else {
             this.vehicles = [];
           }
-          
+
           this.loading = false;
         })
         .catch((err) => {
@@ -75,6 +115,30 @@ export default {
           this.error = true;
           this.loading = false;
         });
+    },
+    confirmarEliminacion(vehicleId) {
+      this.vehicleToDelete = vehicleId; // Guarda el ID del vehículo a eliminar
+      this.showModal = true; // Muestra el modal
+    },
+    cerrarModal() {
+      this.showModal = false; // Oculta el modal
+    },
+    eliminarVehiculo() {
+      if (this.vehicleToDelete) {
+        Axios.delete(`/api/vehicle/${this.vehicleToDelete}`)
+          .then(() => {
+            // Eliminar el vehículo de la lista local
+            this.vehicles = this.vehicles.filter(
+              (vehiculo) => vehiculo.id !== this.vehicleToDelete
+            );
+            this.vehicleToDelete = null; // Limpia el ID del vehículo
+            this.cerrarModal(); // Cierra el modal
+          })
+          .catch((err) => {
+            console.error("Error al eliminar el vehículo:", err);
+            this.error = true;
+          });
+      }
     },
   },
 };

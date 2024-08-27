@@ -160,7 +160,7 @@ export default {
     },
 
     deleteLanding(id) {
-      Axios.delete(`/api/landing/delete/${id}`)
+      Axios.delete(`/api/landing/deletedFinal/${id}`)
         .then(() => {
           this.showDeleteModal = false;
           this.fetchDeletedLandings(); // Actualizar la lista después de eliminar
