@@ -1,21 +1,24 @@
 <template>
   <section class="lg:ml-64 p-4">
     <div class="flex flex-col sm:flex-row items-center justify-between mb-6 px-4">
-      <h1 class="font-semibold text-xl sm:text-sm md:text-2xl lg:text-4xl xl:text-5xl">
+      <h1 class="font-bold text-3xl">
         Localizaciones
       </h1>
     </div>
     
     <div class="flex flex-col items-center">
       <select v-model="selectedLanding" class="mb-4 p-2 border border-gray-300 rounded">
-        <option disabled value="">Selecciona una landing</option>
+        <option disabled value="">Selecciona una landing para tus localizaciones</option>
         <option v-for="landing in landings" :key="landing.id" :value="landing">
           {{ landing.name }}
         </option>
       </select>
 
       <div v-if="selectedLanding" class="flex flex-col items-center">
-        <img :src="selectedLanding.logo" alt="Landing Image" class="w-64 h-64 object-cover" />
+        <img :src="selectedLanding.logo" alt="Landing Image" class="w-70 h-70 object-cover" />
+        <form>
+          
+        </form>
       </div>
     </div>
   </section>

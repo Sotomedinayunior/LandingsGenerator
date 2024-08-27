@@ -1,7 +1,7 @@
 <template>
   <section class="lg:ml-64 p-4">
     <div class="flex flex-col sm:flex-row items-center justify-between mb-6 px-4">
-      <h1 class="font-semibold text-xl sm:text-sm md:text-2xl lg:text-4xl xl:text-5xl">
+      <h1 class="font-bold text-3xl">
         Landings borradas
       </h1>
       <div class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-4 sm:mt-0">
@@ -32,19 +32,26 @@
       </div>
     </div>
 
-    <!-- Mostrar el componente CardDeleteLanding o un mensaje si no hay resultados -->
-    <div v-if="filteredLandings.length > 0" class="mt-6 grid grid-cols-1 gap-4">
-      <CardDeleteLanding
-        v-for="landing in filteredLandings"
-        :key="landing.id"
-        :landing="landing"
-        @restore="openRestoreModal"
-        @delete="openDeleteModal"
-      />
+    <!-- Mostrar un spinner mientras los landings se están cargando -->
+    <div v-if="isLoading" class="mt-6 text-center">
+      <p>Cargando landings eliminadas...</p>
     </div>
-    <p v-else class="mt-6 text-red-500">
-      No se encontraron landings eliminadas.
-    </p>
+
+    <!-- Mostrar el componente CardDeleteLanding o un mensaje si no hay resultados y la carga terminó -->
+    <div v-else>
+      <div v-if="filteredLandings.length > 0" class="mt-6 grid grid-cols-1 gap-4">
+        <CardDeleteLanding
+          v-for="landing in filteredLandings"
+          :key="landing.id"
+          :landing="landing"
+          @restore="openRestoreModal"
+          @delete="openDeleteModal"
+        />
+      </div>
+      <p v-else class="mt-6 text-red-500">
+        No se encontraron landings eliminadas.
+      </p>
+    </div>
 
     <!-- Modal de restauración -->
     <div
@@ -100,6 +107,7 @@ export default {
     return {
       landings: [], // Array para almacenar las landings eliminadas
       searchTerm: "", // Término de búsqueda
+      isLoading: true, // Indicador de carga
       showRestoreModal: false, // Modal de restauración
       showDeleteModal: false, // Modal de confirmación de eliminación
       selectedLandingId: null, // ID de la landing seleccionada
@@ -121,12 +129,15 @@ export default {
         Axios.get(`/api/landing/deleted/${userId}`)
           .then((response) => {
             this.landings = response.data;
+            this.isLoading = false; // La carga ha terminado
           })
           .catch((error) => {
             console.error("Error fetching deleted landings:", error);
+            this.isLoading = false; // Aún si hay error, se deja de cargar
           });
       } else {
         console.error("User ID is missing from localStorage.");
+        this.isLoading = false;
       }
     },
 

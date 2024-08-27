@@ -26,7 +26,7 @@
         <!-- Aqui va el vehicle TabVehicle -->
 
         <TableVehicleTab />
-        <div><button class="btn-new" @click="NextTab">Continuar</button></div>
+        <div><button class="btn-new" @click="handleNext">Continuar</button></div>
       </div>
     </div>
 
@@ -351,7 +351,7 @@ export default {
     previousStep() {
       this.step = 1;
     },
-    NextTab() {
+    handleNext() {
       this.$emit("next", "review");
     },
     handleImageUpload(event) {
