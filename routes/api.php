@@ -4,12 +4,11 @@ use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LandingController;
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\ReservationController;
-use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
-Route::get('/user', function (Request $request) {
-    return $request->user();
-})->middleware('auth:sanctum');
+// Route::get('/user', function (Request $request) {
+//     return $request->user();
+// })->middleware('auth:sanctum');
 
 
 
@@ -22,15 +21,18 @@ Route::middleware('auth:sanctum')->get('/protected', function () {
     return response()->json(['message' => 'You are authenticated!']);
 });
 Route::post('/nelly-logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
+route::post('/users-update', [AuthController::class, 'update'])->middleware('auth:sanctum');
 Route::middleware('auth:sanctum')->group(function () {
+    
+    
     //landing create
     Route::post('/landing', [LandingController::class, 'store']);
     //get landing
     Route::get('/landing/{id}', [LandingController::class, 'index']);
     //delete soft landing o barrado suave
     Route::delete('/landing/{id}', [LandingController::class, 'destroy']);
-
-    Route::delete('/landing/delete/{id}' , [LandingController::class , 'deletefinal']);
+    //borrado permanente
+    Route::delete('/landing/deletedFinal/{id}' , [LandingController::class , 'deletefinal']);
 
   
     //cambiar la landing de status
@@ -49,7 +51,10 @@ Route::middleware('auth:sanctum')->group(function () {
     //obtener todos los vehiculos y sus relaciones nota:optimizar esto
     Route::get('/vehicles/{landingId}', [VehicleController::class, 'index']);
     //obtener las reservaciones 
-    route::get('/reservations/{landing_id}', [ReservationController::class, 'index']);
+    Route::get('/reservations/{landing_id}', [ReservationController::class, 'index']);
+    //borrar un vehicles de una landing
+    Route::delete('/vehicle/{landing_id}' , [VehicleController::class , 'destroy']);
+
 
 
 
@@ -57,5 +62,5 @@ Route::middleware('auth:sanctum')->group(function () {
 
 
     //update users info
-    Route::post('/users', [AuthController::class, 'update']);
+    // Route::post('/users', [AuthController::class, 'update']);
 });

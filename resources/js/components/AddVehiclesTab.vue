@@ -8,7 +8,7 @@
           <h2 class="text-2xl font-bold">Vehículos</h2>
           <span
             class="bg-[#F57200] text-white ml-2 px-2 py-1 rounded text-sm"
-            >{{0}}</span
+            >{{ vehicle.vehicles.length }}</span
           >
         </div>
         <button
@@ -22,13 +22,13 @@
         Agregar los vehículos para esta landing
       </p>
 
-     <div>
-      <!-- Aqui va el vehicle TabVehicle -->
-     </div>
-     
+      <div v-if="vehicle.vehicles.length > 0" class="flex flex-col">
+        <!-- Aqui va el vehicle TabVehicle -->
 
+        <TableVehicleTab />
+        <div><button class="btn-new" @click="handleNext">Continuar</button></div>
+      </div>
     </div>
-     
 
     <!-- Formulario para Agregar Vehículo -->
     <div v-else-if="step === 2">
@@ -43,7 +43,8 @@
         <form
           @submit.prevent="addVehicle"
           class="grid grid-cols-1 md:grid-cols-2 gap-5"
-        enctype="multipart/form-data" >
+          enctype="multipart/form-data"
+        >
           <div class="pl-10">
             <!-- Contenedor de carga de imágenes -->
             <div
@@ -142,11 +143,14 @@
                 <div class="relative inline-block">
                   <select
                     class="appearance-none pl-10 pr-6 py-2 border text-sm rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
-                    v-model="newVehicle.luggage" name="luggage"
-                  required>
+                    v-model="newVehicle.luggage"
+                    name="luggage"
+                    required
+                  >
                     <option disabled>Equipaje</option>
-                    <option>Maletero</option>
-                    <option>Carga</option>
+                    <option value="2">2</option>
+                    <option value="4">4</option>
+                    <option value="8">8</option>
                   </select>
                   <div class="absolute inset-y-0 left-0 flex items-center pl-2">
                     <i class="fa-solid fa-suitcase text-gray-500"></i>
@@ -162,12 +166,14 @@
                 <div class="relative inline-block">
                   <select
                     class="appearance-none pl-10 pr-6 py-2 border text-sm rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
-                    v-model="newVehicle.people" name="people"
-                   required>
+                    v-model="newVehicle.people"
+                    name="people"
+                    required
+                  >
                     <option disabled>Capacidad</option>
-                    <option>2 Personas</option>
-                    <option>4 Personas</option>
-                    <option>6 Personas</option>
+                    <option value="2">2 Personas</option>
+                    <option value="4">4 Personas</option>
+                    <option value="6">6 Personas</option>
                   </select>
                   <div class="absolute inset-y-0 left-0 flex items-center pl-2">
                     <i class="fa-solid fa-users text-gray-500"></i>
@@ -183,12 +189,14 @@
                 <div class="relative inline-block">
                   <select
                     class="appearance-none pl-10 pr-6 py-2 border text-sm rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
-                    v-model="newVehicle.type_of_car" name="type_of_car"
-                  required >
+                    v-model="newVehicle.type_of_car"
+                    name="type_of_car"
+                    required
+                  >
                     <option disabled>Tipo</option>
-                    <option>Sedan</option>
-                    <option>SUV</option>
-                    <option>Camioneta</option>
+                    <option value="sedan">Sedan</option>
+                    <option value="suv">SUV</option>
+                    <option value="camioneta">Camioneta</option>
                   </select>
                   <div class="absolute inset-y-0 left-0 flex items-center pl-2">
                     <i class="fas fa-car text-gray-500"></i>
@@ -204,11 +212,14 @@
                 <div class="relative inline-block">
                   <select
                     class="appearance-none pl-10 pr-6 py-2 border text-sm rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
-                 required  v-model="newVehicle.transmision" name="transmision"  >
+                    required
+                    v-model="newVehicle.transmision"
+                    name="transmision"
+                  >
                     <option disabled>Transmision</option>
-                    <option>automática</option>
-                    <option>CVT</option>
-                    <option>secuencial</option>
+                    <option value="automatica">automática</option>
+                    <option value="cvt">CVT</option>
+                    <option value="secuencial">secuencial</option>
                   </select>
                   <div class="absolute inset-y-0 left-0 flex items-center pl-2">
                     <i class="fa-solid fa-gears text-gray-500"></i>
@@ -228,12 +239,10 @@
               <div class="flex space-x-4">
                 <div class="flex items-center">
                   <input
-                    checked
-                    id="checked-checkbox"
+                    id="checked-bluetooth"
                     type="checkbox"
-                    value=""
-                    v-model="newVehicle.bluetooh"
-                    name="bluetooh"
+                    v-model="newVehicle.bluetooth"
+                    name="bluetooth"
                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   />
                   <label
@@ -244,12 +253,10 @@
                 </div>
                 <div class="flex items-center">
                   <input
-                    checked
-                    id="checked-checkbox"
+                    id="checked-siriuxmx"
                     type="checkbox"
-                    value=""
-                    name="siriuxmx"
-                    v-model="newVehicle.siriuxmx"
+                    name="siriusxm"
+                    v-model="newVehicle.siriusxm"
                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   />
                   <label
@@ -260,10 +267,8 @@
                 </div>
                 <div class="flex items-center">
                   <input
-                    checked
-                    id="checked-checkbox"
+                    id="checked-gps"
                     type="checkbox"
-                    value=""
                     name="gps"
                     v-model="newVehicle.gps"
                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
@@ -276,11 +281,9 @@
                 </div>
                 <div class="flex items-center">
                   <input
-                    checked
                     id="checked-checkbox"
                     type="checkbox"
-                    value=""
-                    
+                    v-model="newVehicle.apple_car"
                     class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                   />
                   <label
@@ -306,29 +309,40 @@
 </template>
 
 <script>
-// import TabVehicle from './TabVehicle.vue';
-import TabVehicle from './TabVehicle.vue';
-import Axios from '../axios';
+import Axios from "../axios";
+import TableVehicleTab from "./TableVehicleTab.vue";
 
 export default {
+  components: { TableVehicleTab },
   data() {
     return {
       step: 1,
+      vehicle: [],
       vehicleImages: [], // Array para almacenar las imágenes cargadas
       currentImage: null, // Imagen seleccionada para previsualización
       newVehicle: {
-        name: '',
-        description: '',
-        price: '',
-        luggage: '',
-        people: '',
-        type_of_car: '',
-        transmision: '',
-        bluetooh: false,
-        siriuxmx: false,
+        name: "",
+        description: "",
+        id_landing: 0,
+        price: 0,
+        luggage: null,
+        people: null,
+        type_of_car: null,
+        transmision: null,
+        apple_car: false,
+        bluetooth: false,
+        siriusxm: false,
         gps: false,
       },
+      loading: false,
     };
+  },
+  created() {
+    const storedId = localStorage.getItem("NellyLandingCreate");
+    if (storedId) {
+      this.newVehicle.id_landing = parseInt(storedId, 10);
+    }
+    this.getLanding();
   },
   methods: {
     nextStep() {
@@ -336,6 +350,9 @@ export default {
     },
     previousStep() {
       this.step = 1;
+    },
+    handleNext() {
+      this.$emit("next", "review");
     },
     handleImageUpload(event) {
       const files = event.target.files;
@@ -349,37 +366,48 @@ export default {
         }
       });
     },
+    async getLanding() {
+      const storedId = localStorage.getItem("NellyLandingCreate");
+      this.loading = true; // Indicar que está cargando
+      try {
+        const response = await Axios.get(`/api/vehicles/${storedId}`);
+        this.vehicle = response.data;
+        console.log(response.data);
+      } catch (err) {
+        console.error(`Error al obtener los datos: ${err}`);
+      } finally {
+        this.loading = false; // Finalizar el estado de carga
+      }
+    },
     removeImage(index) {
       this.vehicleImages.splice(index, 1);
     },
     async addVehicle() {
-      // Crear instancia de FormData para enviar el formulario y las imágenes
       const formData = new FormData();
 
-      // Agregar las imágenes al FormData
-      const imageInput = document.getElementById('vehicle-images').files;
-      Array.from(imageInput).forEach((file) => {
-        formData.append('images[]', file);
-      });
-
-      // Agregar los datos del vehículo al FormData
       for (const key in this.newVehicle) {
-        formData.append(key, this.newVehicle[key]);
+        const value = this.newVehicle[key];
+        formData.append(
+          key,
+          typeof value === "boolean" ? (value ? 1 : 0) : value
+        );
       }
 
+      const imageInput = document.getElementById("vehicle-images").files;
+      Array.from(imageInput).forEach((file, index) => {
+        formData.append(`images[${index}]`, file);
+      });
+
       try {
-        // Realizar la petición POST al endpoint
-        const response = await Axios.post('/api/vehicles', formData, {
+        await Axios.post("/api/vehicle", formData, {
           headers: {
-            'Content-Type': 'multipart/form-data',
+            "Content-Type": "multipart/form-data",
           },
         });
 
-        // Si se envió correctamente, haz algo aquí (por ejemplo, resetear el formulario)
-        console.log(response.data);
         alert("Vehículo agregado con éxito");
+        this.getLanding(); // Actualizar la lista de vehículos
         this.previousStep(); // Volver al contador de vehículos
-
       } catch (error) {
         console.error("Error al agregar el vehículo:", error);
         alert("Hubo un error al enviar los datos del vehículo.");
@@ -387,6 +415,14 @@ export default {
     },
   },
 };
-
 </script>
 
+<style scoped lang="scss">
+.btn-new {
+  background-color: $color-background-secondary;
+  font-size: clamp(12px, 1vw, 1.5rem);
+  border-radius: 8px;
+  padding: 14px 25px;
+  color: $color-font-tertiary;
+}
+</style>

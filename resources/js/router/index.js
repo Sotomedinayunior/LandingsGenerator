@@ -10,6 +10,7 @@ import LayoutDesigner from '../views/LayoutDesigner.vue';
 import NotFoundDashboard from '../views/NotFoundDashorad.vue'; // 404 para usuarios autenticados
 import HistoryLanding from '../views/HistoryLanding.vue';
 import LocationReservation from '../views/LocationReservation.vue';
+import Published from '../views/Published.vue';
 import ViewConfigLanding from '../views/ViewConfigLanding.vue';
 const routes = [
   { 
@@ -66,6 +67,14 @@ const routes = [
     name: 'LayoutDesigner',
     component: LayoutDesigner,
     meta: { title: 'Layout Designer - Nelly App', requiresAuth: true } 
+  },
+  {
+    path:'/published',
+    component: Published,
+    meta:{title:'Layout published - Nelly app' , requiresAuth:true ,
+
+    }
+
   },
   // Ruta catch-all para usuarios autenticados
   {

@@ -19,12 +19,12 @@ return new class extends Migration
             $table->double('price');
             $table->integer('luggage');
             $table->integer('people');
-            $table->string('type_of_car');
-            $table->boolean('bluetooth');
-            $table->boolean('siriusxm');
-            $table->boolean('manual');
-            $table->boolean('automatic');
-            $table->boolean('cvt');
+            $table->string('type_of_car');            
+            $table->string('transmision');
+            $table->boolean('bluetooth')->default(false);
+            $table->boolean('siriusxm')->default(false);
+            $table->boolean('gps')->default(false);
+            $table->boolean('apple_car')->default(false);
             $table->json('dynamic_fields')->nullable(); // Campo para datos dinámicos
             $table->timestamps();
             $table->softDeletes();

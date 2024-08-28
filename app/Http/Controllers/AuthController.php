@@ -24,7 +24,7 @@ class AuthController extends Controller
                 'phone' => 'nullable|string|max:15',
                 'theme' => 'nullable|string|max:255',
                 'role' => 'required|string|in:admin,user',
-                'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048', 
+                'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             ]);
 
             // Manejar la carga de archivo del avatar
@@ -120,45 +120,47 @@ class AuthController extends Controller
         try {
             // Validar los datos
             $fields = $request->validate([
-                'name' => 'nullable|string|max:255',
-                'email' => 'nullable|string|email|max:255|unique:users,email,' . $request->user()->id,
-                'phone' => 'nullable|string|max:15',
-                'theme' => 'nullable|string|max:255',
-                'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048', // Validar la imagen del avatar si se proporciona
+                'name' => 'required|string|max:255',
+                'email' => 'required|string|email|max:255|unique:users,email,' . $request->user()->id,
+                'phone' => 'required|string|max:15',
+                'theme' => 'required|string|max:255',
+                'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048', // Avatar opcional
             ]);
-
+    
             // Obtener el usuario autenticado
             $user = $request->user();
-
+    
             // Manejar la carga de archivo del avatar
             if ($request->hasFile('avatar')) {
-                // Eliminar el avatar antiguo si existe
+                // Eliminar el avatar antiguo si no es el predeterminado
                 if ($user->avatar && filter_var($user->avatar, FILTER_VALIDATE_URL) === false) {
                     $oldAvatarPath = str_replace(asset('storage/') . '/', '', $user->avatar);
                     Storage::disk('public')->delete($oldAvatarPath);
                 }
-
+    
                 // Almacenar el nuevo avatar
-                $avatarPath = $request->file('avatar')->store('users', 'public'); // Almacena el archivo en public/users
-                $avatar = asset('storage/' . $avatarPath); // Genera la URL pública
+                $avatarPath = $request->file('avatar')->store('users', 'public');
+                $avatar = asset('storage/' . $avatarPath); // Generar la URL pública
             } else {
                 // Mantener el avatar actual si no se proporciona uno nuevo
                 $avatar = $user->avatar;
             }
-
+    
             // Actualizar los datos del usuario
             $user->update([
-                'name' => $fields['name'] ?? $user->name,
-                'email' => $fields['email'] ?? $user->email,
-                'phone' => $fields['phone'] ?? $user->phone,
-                'theme' => $fields['theme'] ?? $user->theme,
+                'name' => $fields['name'],
+                'email' => $fields['email'],
+                'phone' => $fields['phone'],
+                'theme' => $fields['theme'],
                 'avatar' => $avatar,
             ]);
-
-            // Retornar la respuesta con el usuario actualizado
+    
+            // Retornar la respuesta con el usuario actualizado y mensaje de éxito
             return response()->json([
+                'message' => 'Usuario actualizado con éxito',
                 'user' => $user
             ]);
+    
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Manejar errores de validación
             return response()->json(['error' => $e->errors()], 422);
@@ -167,6 +169,8 @@ class AuthController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
+    
+    
 
 
 

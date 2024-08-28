@@ -1,7 +1,7 @@
 <template>
   <section class="lg:ml-64 p-4">
     <div class="flex flex-col sm:flex-row items-center justify-between mb-6 px-4">
-      <h1 class="font-semibold text-xl sm:text-sm md:text-2xl lg:text-4xl xl:text-5xl">
+      <h1 class="font-bold text-3xl">
         Tus Landings
       </h1>
       <div class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-4 sm:mt-0">

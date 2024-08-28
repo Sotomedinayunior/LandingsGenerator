@@ -6,6 +6,7 @@ use App\Models\Landing;
 use App\Models\Vehicle;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class LandingController extends Controller
 {
@@ -177,6 +178,7 @@ class LandingController extends Controller
 
 
 
+
     //Landing que se eliminaron suavemente
     public function restore($id)
     {
@@ -244,22 +246,30 @@ class LandingController extends Controller
 
     public function deletefinal($id)
     {
-        // Busca la landing por su ID
-        $landing = Landing::with('vehicles')->find($id);
+        try {
+            // Primero, busca la landing en las eliminadas (soft deleted)
+            $landing = Landing::onlyTrashed()->find($id);
 
-        // Verifica si la landing existe
-        if (!$landing) {
-            return response()->json(['message' => 'Landing not found'], 404);
+            // Verifica si la landing fue encontrada en la papelera
+            if (!$landing) {
+                return response()->json(['message' => 'Landing not found or not deleted'], 404);
+            }
+
+            // Elimina los vehículos relacionados si existen
+            foreach ($landing->vehicles as $vehicle) {
+                $vehicle->forceDelete(); // Elimina los vehículos permanentemente
+            }
+
+            // Elimina la landing (permanentemente)
+            $landing->forceDelete();
+
+            return response()->json(['message' => 'Landing and related vehicles deleted successfully']);
+        } catch (\Exception $e) {
+            // Manejo de errores en caso de fallo
+            return response()->json([
+                'message' => 'Error deleting landing and related vehicles',
+                'error' => $e->getMessage()
+            ], 500);
         }
-
-        // Elimina los vehículos relacionados
-        foreach ($landing->vehicles as $vehicle) {
-            $vehicle->delete(); // Elimina los vehículos directamente
-        }
-
-        // Elimina la landing
-        $landing->forceDelete(); // Elimina la landing permanentemente
-
-        return response()->json(['message' => 'Landing and related vehicles deleted successfully']);
     }
 }

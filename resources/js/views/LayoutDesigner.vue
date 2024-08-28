@@ -1,24 +1,24 @@
 <template>
   <section>
-    <!-- button and logo -->
+    <!-- Botón y Logo -->
     <div class="flex justify-between w-[570px] p-6 mb-8 ml-[198px]">
       <button
-        @click="HandleClick()"
+        @click="handleClick"
         class="bg-transparent border border-gray-500 text-gray-500 text-sm px-6 py-3 rounded"
       >
         Cancelar proceso
       </button>
       <img
         src="../static/asset/Logo.webp"
-        alt="Logo nelly"
-        lazy="loading"
+        alt="Logo Nelly"
+        loading="lazy"
         class="w-[120px]"
         height="auto"
-        title="nelly app"
+        title="Nelly app"
       />
     </div>
 
-    <!-- Header with Tabs -->
+    <!-- Cabecera con Tabs -->
     <div class="w-full flex justify-evenly border-b-2">
       <button
         @click="setActiveTab(1)"
@@ -79,22 +79,20 @@ export default {
   },
   data() {
     return {
-      activeTab: 1,
-      canActivateAddVehicles: false,
-      canActivateReview: false,
+      activeTab: 1, // Inicia en la primera pestaña
+      canActivateAddVehicles: false, // Control para activar la pestaña 2
+      canActivateReview: false, // Control para activar la pestaña 3
     };
   },
   methods: {
     setActiveTab(tab) {
-      if (tab === 2 && this.canActivateAddVehicles) {
-        this.activeTab = tab;
-      } else if (tab === 3 && this.canActivateReview) {
-        this.activeTab = tab;
-      } else if (tab === 1) {
+      // Controlar el cambio de tabs con condiciones
+      if (tab === 1 || (tab === 2 && this.canActivateAddVehicles) || (tab === 3 && this.canActivateReview)) {
         this.activeTab = tab;
       }
     },
     handleNext(nextTab) {
+      // Controlar los pasos entre pestañas
       if (nextTab === "addVehicles") {
         this.canActivateAddVehicles = true;
         this.activeTab = 2;
@@ -103,18 +101,15 @@ export default {
         this.activeTab = 3;
       }
     },
-    HandleClick(){
-       // Verificar si existe "NellyLandinCreate" en localStorage
-    if (localStorage.getItem("NellyLandinCreate")) {
-      // Si existe, eliminarlo
-      localStorage.removeItem("NellyLandinCreate");
+    handleClick() {
+      // Elimina el item de localStorage si existe
+      if (localStorage.getItem("NellyLandinCreate")) {
+        localStorage.removeItem("NellyLandinCreate");
+      }
 
-    }
-
-    // Redirigir al dashboard
-    this.$router.push('/dashboard');
-  }
-    
+      // Redirige al dashboard
+      this.$router.push("/dashboard");
+    },
   },
 };
 </script>
