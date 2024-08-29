@@ -133,35 +133,37 @@ class VehicleController extends Controller
             // Crear el vehículo sin imágenes
             $vehicle = Vehicle::create($request->except('images'));
 
-            // Variable para almacenar las rutas de las imágenes
-            $imagePaths = [];
+            // Variable para almacenar las URLs de las imágenes
+            $imageUrls = [];
 
             // Manejo de imágenes
             if ($request->hasFile('images')) {
                 foreach ($request->file('images') as $image) {
                     if ($image->isValid()) {
                         $imagePath = $image->store('vehicle_images', 'public');
+                        $imageUrl = asset('storage/' . $imagePath); // Generar URL completa
                         // Guardar cada imagen asociada al vehículo
                         $vehicleImage = VehicleImage::create([
                             'vehicle_id' => $vehicle->id,
                             'path_images' => $imagePath,
                         ]);
-                        // Agregar la ruta de la imagen al array para incluir en la respuesta
-                        $imagePaths[] = $vehicleImage->path_images;
+                        // Agregar la URL de la imagen al array para incluir en la respuesta
+                        $imageUrls[] = $imageUrl;
                     }
                 }
             }
 
-            // Devolver el vehículo junto con las imágenes
+            // Devolver el vehículo junto con las URLs de las imágenes
             return response()->json([
                 'message' => 'Vehículo creado con éxito.',
                 'vehicle' => $vehicle,
-                'images' => $imagePaths
+                'images' => $imageUrls
             ], 201);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Ha ocurrido un error: ' . $e->getMessage()], 500);
         }
     }
+
 
 
 

@@ -19,7 +19,7 @@
           <tr v-for="vehiculo in vehicles" :key="vehiculo.id">
             <td>
               <!-- Mostrar solo la primera imagen -->
-              <img :src="vehiculo.images.length ? vehiculo.images[0].path_images : 'default.jpg'" alt="Imagen del vehículo" width="100" />
+              <img :src="`/storage/${vehiculo.images[0].path_images}`" alt="Imagen del vehículo" width="100" />
             </td>
             <td>{{ vehiculo.name }}</td>
             <td>{{ vehiculo.price }}</td>

@@ -21,7 +21,7 @@ Route::middleware('auth:sanctum')->get('/protected', function () {
     return response()->json(['message' => 'You are authenticated!']);
 });
 Route::post('/nelly-logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-route::post('/users-update', [AuthController::class, 'update'])->middleware('auth:sanctum');
+Route::patch('/users-update', [AuthController::class, 'update'])->middleware('auth:sanctum');
 Route::middleware('auth:sanctum')->group(function () {
     
     

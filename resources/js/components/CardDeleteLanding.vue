@@ -1,6 +1,6 @@
 <template>
   <div
-    class="w-full flex flex-row	 items-center justify-between	p-3 bg-white border border-gray-200 rounded-lg shadow dark:bg-gray-800 dark:border-gray-700"
+    class="w-full flex flex-row	 items-center justify-between	p-2 bg-white border border-gray-100 rounded-lg shadow dark:bg-gray-400 dark:border-gray-300"
   >
     <div class="flex items-center gap-2	">
       <img :src="landing.logo" :alt="landing.name" class="w-12 h-12">
@@ -8,16 +8,16 @@
     </div>
 
     <!-- Botones para restaurar o eliminar -->
-    <div class="flex justify-end space-x-3 mt-4">
+    <div class="flex justify-end  items-center space-x-3">
       <button
         @click="$emit('restore', landing.id)"
-        class="px-4 py-2 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-600"
+        class="px-3 py-1 bg-blue-600 text-white text-sm rounded-md hover:bg-blue-600"
       >
         Restaurar
       </button>
       <button
         @click="$emit('delete', landing.id)"
-        class="px-4 py-2 bg-red-600 text-white text-sm rounded-md hover:bg-red-600"
+        class="px-3 py-1 bg-red-600 text-white text-sm rounded-md hover:bg-red-600"
       >
         Eliminar
       </button>
@@ -26,7 +26,7 @@
 </template>
 
 <script>
-import Axios from "../axios";
+
 
 export default {
   name: "CardDeleteLanding",

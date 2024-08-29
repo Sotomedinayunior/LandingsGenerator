@@ -18,7 +18,7 @@
       </div>
       <div class="flex justify-between mt-4">
         <!-- Expand Icon -->
-        <img src="../static/asset/click.svg" alt="click expan nelly app" class="w-4 h-4">
+        <img src="../static/asset/click.svg" alt="click expan nelly app" class="w-4 h-4 mt-2">
         <div class="flex  items-center space-x-2">
           <!-- Truck Icon -->
           <img src="../static/asset/cart.svg" alt="cart nelly app" class="w-4 h-4"> <span class="font-xs">{{ landing.vehicles.length }}</span>

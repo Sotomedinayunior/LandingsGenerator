@@ -118,18 +118,21 @@ class AuthController extends Controller
     public function update(Request $request)
     {
         try {
-            // Validar los datos
+            // Obtener el ID del usuario autenticado
+            $userId = $request->user()->id;
+
+            // Validar los datos con la regla de email que ignore el email actual del usuario
             $fields = $request->validate([
                 'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users,email,' . $request->user()->id,
+                'email' => 'required|string|email|max:255|unique:users,email,' . $userId, // Ignorar el email del usuario actual
                 'phone' => 'required|string|max:15',
                 'theme' => 'required|string|max:255',
                 'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048', // Avatar opcional
             ]);
-    
+
             // Obtener el usuario autenticado
             $user = $request->user();
-    
+
             // Manejar la carga de archivo del avatar
             if ($request->hasFile('avatar')) {
                 // Eliminar el avatar antiguo si no es el predeterminado
@@ -137,7 +140,7 @@ class AuthController extends Controller
                     $oldAvatarPath = str_replace(asset('storage/') . '/', '', $user->avatar);
                     Storage::disk('public')->delete($oldAvatarPath);
                 }
-    
+
                 // Almacenar el nuevo avatar
                 $avatarPath = $request->file('avatar')->store('users', 'public');
                 $avatar = asset('storage/' . $avatarPath); // Generar la URL pública
@@ -145,7 +148,7 @@ class AuthController extends Controller
                 // Mantener el avatar actual si no se proporciona uno nuevo
                 $avatar = $user->avatar;
             }
-    
+
             // Actualizar los datos del usuario
             $user->update([
                 'name' => $fields['name'],
@@ -154,13 +157,12 @@ class AuthController extends Controller
                 'theme' => $fields['theme'],
                 'avatar' => $avatar,
             ]);
-    
+
             // Retornar la respuesta con el usuario actualizado y mensaje de éxito
             return response()->json([
                 'message' => 'Usuario actualizado con éxito',
                 'user' => $user
             ]);
-    
         } catch (\Illuminate\Validation\ValidationException $e) {
             // Manejar errores de validación
             return response()->json(['error' => $e->errors()], 422);
@@ -169,8 +171,6 @@ class AuthController extends Controller
             return response()->json(['error' => $e->getMessage()], 500);
         }
     }
-    
-    
 
 
 

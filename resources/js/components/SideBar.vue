@@ -104,7 +104,7 @@ export default {
       loggingOut: false, // Estado para mostrar el mensaje de salida
       links: [
         { name: "Landings", route: "/landings", icon: NewspaperIcon },
-        { name: "Reservacion", route: "/reservation", icon: BookOpenIcon },
+        { name: "Reservaciones", route: "/reservation", icon: BookOpenIcon },
         { name: "Papeleria", route: "/history", icon: TrashIcon },
         {name:'Localizaciones' , route:'/location-reservaction ',icon:MapPinIcon},
         { name: "Ayuda", route: "/help", icon: QuestionMarkCircleIcon },

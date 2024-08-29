@@ -18,14 +18,14 @@
         <tbody>
           <tr v-for="vehiculo in vehicles" :key="vehiculo.id">
             <td>
-              <!-- Mostrar solo la primera imagen -->
+              <!-- Mostrar solo la primera imagen yugfyfud-->
               <img
                 :src="
-                  vehiculo.images.length
+                 'storage/'.vehiculo.images.length
                     ? vehiculo.images[0].path_images
                     : 'default.jpg'
                 "
-                alt="Imagen del vehículo"
+                :alt="vehiculo.name"
                 width="100"
               />
             </td>
