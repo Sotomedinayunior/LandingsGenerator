@@ -5,28 +5,35 @@
       <table class="table">
         <thead>
           <tr>
-            <th>Imágenes</th>
+            
+            <th style="opacity: 0;">imagen</th>
             <th>Nombre</th>
             <th>Precio por día</th>
             <th>Tipo de Carro</th>
             <th>Equipaje</th>
             <th>Personas</th>
             <th>Transmisión</th>
+            <th>Acomodaciones</th>
+            <th>Comisiones</th>
             <th>Acciones</th>
           </tr>
         </thead>
         <tbody>
           <tr v-for="vehiculo in vehicles" :key="vehiculo.id">
-            <td>
-              <!-- Mostrar solo la primera imagen -->
-              <img :src="vehiculo.images.length ? vehiculo.images[0].path_images : 'default.jpg'" alt="Imagen del vehículo" width="100" />
+            
+            
+            <td class="vehiculo-nombre">
+              <img :src="`/storage/${vehiculo.images[0].path_images}`" :alt="vehiculo.name" class="vehicle-image" />
+              
             </td>
-            <td>{{ vehiculo.name }}</td>
+            <td>{{ vehiculo.name  }}</td>
             <td>{{ vehiculo.price }}</td>
             <td>{{ vehiculo.type_of_car }}</td>
             <td>{{ vehiculo.luggage }}</td>
             <td>{{ vehiculo.people }}</td>
             <td>{{ vehiculo.transmision }}</td>
+            <td>{{ vehiculo.bluetooth }}</td>
+            <td>{{ vehiculo.commissions }}</td>
             <td class="actions-cell">
               <i class="fa-solid fa-pencil"></i>
               <i class="fa-solid fa-trash"></i>
@@ -40,7 +47,7 @@
 </template>
 
 <script>
-import Axios from "../axios"; // Asegúrate de que la importación sea correcta
+import Axios from "../axios";
 
 export default {
   data() {
@@ -51,27 +58,21 @@ export default {
     };
   },
   mounted() {
-    this.Obtener(); // Llama al método para obtener los datos cuando se monta el componente
+    this.Obtener();
   },
   methods: {
     Obtener() {
-      const landingId = this.$route.params.id; // Obtiene el landingId de los parámetros de la URL
-      console.log(landingId);
+      const landingId = this.$route.params.id;
       Axios.get(`/api/vehicles/${landingId}`)
         .then((response) => {
-          console.table(response.data);
-          
-          // Verifica que la estructura de datos es correcta antes de asignar
           if (response.data.vehicles) {
             this.vehicles = response.data.vehicles;
           } else {
             this.vehicles = [];
           }
-          
           this.loading = false;
         })
         .catch((err) => {
-          console.log(err);
           this.error = true;
           this.loading = false;
         });
@@ -85,31 +86,40 @@ export default {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
+  border-radius: 8px 8px 0 0; /* Añadir borde redondeado superior */
+  overflow: hidden; /* Asegurar que el borde redondeado se aplique correctamente */
 }
 
 .table thead {
   background-color: #fdf0e9;
   color: #222;
-  font-size: 14px;
-  border-bottom: 2px solid #fc8b46;
+  font-size: 10px !important;
+  border: 2px solid #fc8b46;
+  border-radius: 8px 8px 0 0; /* Añadir borde redondeado superior */
 }
 
-.table th,
-.table td {
-  padding: 10px;
+.table th, .table td {
+  padding: 7px;
   text-align: left;
-  font-size: 13px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1.2px solid #ddd;
+  vertical-align: middle;
+}
+.table td{
+  font-size: 12px
 }
 
 .table th {
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  text-transform:capitalize;
+  letter-spacing: 0.04em;
+  font-weight: 300;
+  font-size: 12px; /* text-xs */
 }
 
-/* Alineación del contenido de las celdas */
-.table td {
-  vertical-align: middle;
+.table td img {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  border-radius: 5px;
 }
 
 .actions-cell {
@@ -118,18 +128,31 @@ export default {
   align-items: center;
 }
 
-/* Estilo de los íconos en acciones */
-.actions-cell i {
-  cursor: pointer;
-  transition: opacity 0.2s ease;
+/* Ocultar íconos por defecto */
+.actions-cell {
+  opacity: 0;
+  transition: opacity 0.3s ease;
 }
 
-.actions-cell i:hover {
-  opacity: 0.7;
+/* Mostrar íconos al hacer hover en la fila */
+tr:hover .actions-cell {
+  opacity: 1;
 }
 
 .error {
   color: red;
   font-size: 14px;
 }
+
+.vehicle-image {
+  border-radius: 5px;
+  width: 40px;
+  height: 40px;
+}
+
+.vehiculo-nombre {
+  display: flex;
+  align-items: center;
+}
+
 </style>

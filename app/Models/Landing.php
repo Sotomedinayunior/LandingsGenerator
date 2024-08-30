@@ -19,7 +19,7 @@ class Landing extends Model
         'color_secondary',
         'place_of_departure',
         'arrival_place',
-        'number_of_persons',
+        'seats',
         'date_of_departure',
         'time_of_departure',
         'date_of_arrival',

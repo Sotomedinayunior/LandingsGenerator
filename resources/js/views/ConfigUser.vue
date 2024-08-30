@@ -143,7 +143,11 @@ export default {
         })
         .catch((error) => {
           console.error("Error al actualizar la información:", error);
-          alert("Hubo un problema al actualizar la información.");
+          if (error.response && error.response.data) {
+            this.errors = error.response.data.errors || {};
+          } else {
+            alert("Hubo un problema al actualizar la información.");
+          }
         })
         .finally(() => {
           this.loading = false;

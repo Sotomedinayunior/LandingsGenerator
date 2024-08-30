@@ -20,7 +20,7 @@ return new class extends Migration
             $table->string('color_secondary', 7);
             $table->string('place_of_departure')->nullable();
             $table->string('arrival_place')->nullable();
-            $table->integer('number_of_persons')->nullable();
+            $table->integer('seats')->nullable();
             $table->date('date_of_departure')->nullable();
             $table->time('time_of_departure')->nullable();
             $table->date('date_of_arrival')->nullable();
@@ -29,7 +29,7 @@ return new class extends Migration
             $table->boolean('published')->default(false);
           
             $table->timestamps();
-            $table->softDeletes();
+            $table->softDeletes();//borrado suave
 
             // Foreign key constraint
             $table->foreign('id_users_landing')->references('id')->on('users')->onDelete('cascade');

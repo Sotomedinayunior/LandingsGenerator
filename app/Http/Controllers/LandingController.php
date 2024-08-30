@@ -99,17 +99,16 @@ class LandingController extends Controller
     {
         // Validar los datos entrantes
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
+            'name' => 'nullable|string|max:255',
             'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
             'color_primary' => 'nullable|string|max:7',
             'color_secondary' => 'nullable|string|max:7',
-            'color_tertiary' => 'nullable|string|max:7',
-            'published' => 'boolean',
+            'published' => 'nullable|boolean',
         ]);
-
+    
         // Buscar la landing que se va a actualizar
         $landing = Landing::findOrFail($id);
-
+    
         try {
             // Si se sube un nuevo logo, guardar la imagen y actualizar la URL en la base de datos
             if ($request->hasFile('logo')) {
@@ -120,15 +119,18 @@ class LandingController extends Controller
                         throw new \Exception('No se pudo eliminar el logo anterior');
                     }
                 }
-
+    
                 // Guardar el nuevo logo
                 $logoPath = $request->file('logo')->store('logos', 'public');
                 $validatedData['logo'] = $logoPath;
             }
-
+    
             // Actualizar los datos de la landing
             $landing->update($validatedData);
-
+    
+            // Recargar la instancia de la landing para obtener los datos actualizados
+            $landing->refresh();
+    
             return response()->json([
                 'message' => 'Landing actualizada con éxito',
                 'landing' => $landing,
@@ -141,6 +143,7 @@ class LandingController extends Controller
             ], 500);
         }
     }
+
     public function status(Request $request)
     {
         try {
@@ -219,7 +222,30 @@ class LandingController extends Controller
         }
     }
 
+    public function addLocation(Request $request, $id)
+    {
+        // Validar los datos recibidos
+        $validatedData = $request->validate([
+            'place_of_departure' => 'required|string|max:255',
+            'arrival_place' => 'required|string|max:255',
+        ]);
 
+        try {
+            // Buscar la landing por ID
+            $landing = Landing::findOrFail($id);
+
+            // Agregar las nuevas localizaciones
+            $landing->place_of_departure = $validatedData['place_of_departure'];
+            $landing->arrival_place = $validatedData['arrival_place'];
+            $landing->save();
+
+            return response()->json(['message' => 'Places added successfully'], 200);
+        } catch (\Exception $e) {
+            // Manejar errores y devolver una respuesta adecuada
+            return response()->json(['error' => 'Error adding places', 'details' => $e->getMessage()], 500);
+        }
+    
+    }
 
 
 

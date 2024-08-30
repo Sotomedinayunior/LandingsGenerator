@@ -46,39 +46,65 @@
       <button
         @click="activeTab = 'reservations'"
         :class="{
-          'py-2 px-4': true,
-          'text-orange-500 border-b-2 border-orange-500 font-bold': activeTab === 'reservations',
-          'text-gray-500': activeTab !== 'reservations'
+          'py-2 px-4 flex items-center text-sm': true,
+          'text-orange-500 border-b-2 border-orange-500 font-bold text-sm': activeTab === 'reservations',
+          'text-gray-500 text-sm': activeTab !== 'reservations'
         }"
       >
-        Reservas ({{ landing.reservations.length }})
+        Reservas
+        <span
+          :class="{
+            'flex justify-center items-center w-5 h-5 rounded-full ml-2 text-sm': true,
+            'bg-orange-500 text-white text-sm': activeTab === 'reservations',
+            'border border-gray-500 text-gray-500 text-sm': activeTab !== 'reservations'
+          }"
+        >
+          {{ landing.reservations.length }}
+        </span>
       </button>
 
       <button
         @click="activeTab = 'vehicles'"
         :class="{
-          'py-2 px-4': true,
-          'text-orange-500 border-b-2 border-orange-500 font-bold': activeTab === 'vehicles',
-          'text-gray-500': activeTab !== 'vehicles'
+          'py-2 px-4 flex items-center text-sm': true,
+          'text-orange-500 border-b-2 border-orange-500 font-bold text-sm': activeTab === 'vehicles',
+          'text-gray-500 text-sm': activeTab !== 'vehicles'
         }"
       >
-        Vehículos ({{ landing.vehicles.length }})
+        Vehículos
+        <span
+          :class="{
+            'flex justify-center items-center w-5 h-5 rounded-full ml-2 text-xs': true,
+            'bg-orange-500 text-white': activeTab === 'vehicles',
+            'border border-gray-500 text-gray-500': activeTab !== 'vehicles'
+          }"
+        >
+          {{ landing.vehicles.length }}
+        </span>
       </button>
 
       <button
         @click="activeTab = 'config'"
         :class="{
-          'py-2 px-4': true,
+          'py-2 px-4 flex items-center': true,
           'text-orange-500 border-b-2 border-orange-500 font-bold': activeTab === 'config',
           'text-gray-500': activeTab !== 'config'
         }"
       >
         Configuración
+        <!-- <span
+          :class="{
+            'flex justify-center items-center w-5 h-5 rounded-full ml-2 text-xs': true,
+            'bg-orange-500 text-white': activeTab === 'config',
+            'border border-gray-500 text-gray-500': activeTab !== 'config'
+          }"
+        >
+        </span> -->
       </button>
     </div>
 
     <!-- Tab Content -->
-    <div class="container mx-auto mt-4 flex justify-center items-center">
+    <div class="container mx-auto mt-4 flex ">
       <!-- Loading State -->
       <div v-if="isLoading">Cargando datos...</div>
 
