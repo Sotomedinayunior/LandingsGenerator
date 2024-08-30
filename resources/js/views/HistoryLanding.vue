@@ -129,11 +129,11 @@ export default {
         Axios.get(`/api/landing/deleted/${userId}`)
           .then((response) => {
             this.landings = response.data;
-            this.isLoading = false; // La carga ha terminado
+            this.isLoading = false; 
           })
           .catch((error) => {
             console.error("Error fetching deleted landings:", error);
-            this.isLoading = false; // Aún si hay error, se deja de cargar
+            this.isLoading = false; 
           });
       } else {
         console.error("User ID is missing from localStorage.");
@@ -149,8 +149,9 @@ export default {
     restoreLanding(id) {
       Axios.post(`/api/landing/restore/${id}`)
         .then(() => {
+          // Eliminar manualmente la landing restaurada del array local
+          this.landings = this.landings.filter(landing => landing.id !== id);
           this.showRestoreModal = true;
-          this.fetchDeletedLandings(); // Actualizar la lista después de restaurar
         })
         .catch((error) => {
           console.error("Error restoring landing:", error);

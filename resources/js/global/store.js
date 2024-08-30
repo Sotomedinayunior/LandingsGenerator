@@ -48,7 +48,7 @@ const store = createStore({
         commit('setToken', { token, iduser: user.id }); // Guardar solo el id del usuario
         commit('setUser', user);
 
-        // Redirigir al dashboard
+        // Redirigir a la landing
         router.push('/landings');
       } catch (error) {
         if (error.response && error.response.status === 422) {

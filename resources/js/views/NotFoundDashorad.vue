@@ -14,7 +14,7 @@
         ></span>
 
         <span class="relative block px-8 py-3 bg-[#1A2238] border border-current">
-          <router-link to="/dashboard">Volver al dashboard</router-link>
+          <router-link to="/landings">Volver al dashboard</router-link>
         </span>
       </a>
     </button>

@@ -130,9 +130,9 @@ export default {
     getTabClass(tab) {
       // Devuelve las clases CSS para los botones de las pestañas
       return [
-        "py-2 px-4",
+        "py-4 px-10",
         this.activeTab === tab
-          ? "text-orange-500 border-b-2 text-xl font-semibold border-orange-500"
+          ? "text-orange-500 border-b-2	 text-xl font-semibold border-orange-500"
           : "text-gray-500 text-xl font-semibold",
       ];
     },
