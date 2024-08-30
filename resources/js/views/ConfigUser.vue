@@ -1,8 +1,6 @@
 <template>
   <div class="max-w-3xl lg:ml-64 p-4 p-6 bg-white shadow-md rounded-md">
-    <h2 class="text-2xl font-semibold mb-6 text-[#f16822]">
-      Configuración del Usuario
-    </h2>
+    <h2 class="text-2xl font-semibold mb-6 text-[#f16822]">Configuración del Usuario</h2>
 
     <form @submit.prevent="updateUser">
       <div class="mb-4 flex justify-center">
@@ -14,9 +12,7 @@
             name="avatar"
             class="absolute inset-0 opacity-0 cursor-pointer"
           />
-          <div
-            class="flex items-center justify-center w-20 h-20 border-2 border-[#f16822] border-dashed rounded-full bg-gray-100"
-          >
+          <div class="flex items-center justify-center w-20 h-20 border-2 border-[#f16822] border-dashed rounded-full bg-gray-100">
             <img
               v-if="user.avatar"
               :src="user.avatar"
@@ -29,71 +25,60 @@
       </div>
 
       <div class="mb-4">
-        <label
-          for="name"
-          class="block text-base font-bold text-orange-600 text-[#f16822]"
-          >Nombre</label
-        >
+        <label for="name" class="block text-base font-bold text-[#f16822]">Nombre</label>
         <input
           type="text"
-          name="name"
           v-model="user.name"
           id="name"
+          name="name"
           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none sm:text-sm"
         />
+        <span v-if="errors.name" class="text-red-500">{{ errors.name }}</span>
       </div>
 
       <div class="mb-4">
-        <label
-          for="email"
-          class="block text-base font-bold text-orange-600 text-[#f16822]"
-          >Correo Electrónico</label
-        >
+        <label for="email" class="block text-base font-bold text-[#f16822]">Correo Electrónico</label>
         <input
           type="email"
-          name="email"
           v-model="user.email"
           id="email"
+          name="email"
           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none sm:text-sm"
         />
+        <span v-if="errors.email" class="text-red-500">{{ errors.email }}</span>
       </div>
 
       <div class="mb-4">
-        <label
-          for="phone"
-          class="block text-base font-bold text-orange-600 text-[#f16822]"
-          >Teléfono</label
-        >
+        <label for="phone" class="block text-base font-bold text-[#f16822]">Teléfono</label>
         <input
           type="text"
-          name="phone"
           v-model="user.phone"
           id="phone"
+          name="phone"
           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none sm:text-sm"
         />
+        <span v-if="errors.phone" class="text-red-500">{{ errors.phone }}</span>
       </div>
 
       <div class="mb-4">
-        <label
-          for="theme"
-          class="block text-base font-bold text-orange-600 text-[#f16822]"
-          >Tema</label
-        >
+        <label for="theme" class="block text-base font-bold text-[#f16822]">Tema</label>
         <input
           type="text"
-          name="theme"
           v-model="user.theme"
           id="theme"
+          name="theme"
           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none sm:text-sm"
         />
+        <span v-if="errors.theme" class="text-red-500">{{ errors.theme }}</span>
       </div>
 
       <div class="flex justify-end">
         <button
           type="submit"
           class="px-4 py-2 mt-5 text-white bg-[#F57200] font-bold border border-[#F57200] rounded hover:bg-[#F57200] hover:text-white transition-colors"
+          :disabled="loading"
         >
-          Actualizar
+          {{ loading ? 'Actualizando...' : 'Actualizar' }}
         </button>
       </div>
     </form>
@@ -101,23 +86,47 @@
 </template>
 
 <script>
-import Axios from '../axios'; // Importa la instancia de Axios configurada
+import Axios from '../axios';
 import { mapState } from 'vuex';
 
 export default {
   name: "UserConfig",
+  data() {
+    return {
+      errors: {},
+      loading: false
+    };
+  },
   computed: {
-    ...mapState(['user']) // Usa Vuex store para acceder a la información del usuario
+    ...mapState(['user']),
   },
   methods: {
     onFileChange(e) {
       const file = e.target.files[0];
       if (file) {
         this.user.avatar = URL.createObjectURL(file);
-        this.user.avatarFile = file; // Guarda el archivo real para el envío
+        this.user.avatarFile = file;
       }
     },
+    validateForm() {
+      this.errors = {};
+
+      if (!this.user.name) this.errors.name = 'El nombre es obligatorio.';
+      if (!this.user.email) {
+        this.errors.email = 'El correo electrónico es obligatorio.';
+      } else if (!/\S+@\S+\.\S+/.test(this.user.email)) {
+        this.errors.email = 'El correo electrónico no es válido.';
+      }
+
+      if (!this.user.phone) this.errors.phone = 'El teléfono es obligatorio.';
+      if (!this.user.theme) this.errors.theme = 'El tema es obligatorio.';
+
+      return Object.keys(this.errors).length === 0;
+    },
     updateUser() {
+      if (!this.validateForm()) return;
+
+      this.loading = true;
       const formData = new FormData();
       formData.append("name", this.user.name);
       formData.append("email", this.user.email);
@@ -127,18 +136,24 @@ export default {
         formData.append("avatar", this.user.avatarFile);
       }
 
-      Axios.patch('/api/users-update', formData)
+      Axios.post('/api/users-update', formData)
         .then(() => {
-          this.$store.dispatch('fetchUser'); // Actualiza el usuario en el store después de la actualización
+          this.$store.dispatch('fetchUser');
           alert("Información actualizada con éxito");
         })
         .catch((error) => {
           console.error("Error al actualizar la información:", error);
-          alert("Hubo un problema al actualizar la información. Por favor, intenta de nuevo.");
+          if (error.response && error.response.data) {
+            this.errors = error.response.data.errors || {};
+          } else {
+            alert("Hubo un problema al actualizar la información.");
+          }
+        })
+        .finally(() => {
+          this.loading = false;
         });
-    },
-  },
- 
+    }
+  }
 };
 </script>
 

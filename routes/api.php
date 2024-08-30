@@ -21,27 +21,29 @@ Route::middleware('auth:sanctum')->get('/protected', function () {
     return response()->json(['message' => 'You are authenticated!']);
 });
 Route::post('/nelly-logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-Route::patch('/users-update', [AuthController::class, 'update'])->middleware('auth:sanctum');
+Route::post('/users-update', [AuthController::class, 'update'])->middleware('auth:sanctum');
 Route::middleware('auth:sanctum')->group(function () {
-    
-    
+
+
     //landing create
     Route::post('/landing', [LandingController::class, 'store']);
     //get landing
     Route::get('/landing/{id}', [LandingController::class, 'index']);
+    //actualizar una landing
+    Route::put('/landing/updated/{id}' , [LandingController::class , 'update']);
     //delete soft landing o barrado suave
     Route::delete('/landing/{id}', [LandingController::class, 'destroy']);
     //borrado permanente
-    Route::delete('/landing/deletedFinal/{id}' , [LandingController::class , 'deletefinal']);
-
-  
+    Route::delete('/landing/deletedFinal/{id}', [LandingController::class, 'deletefinal']);
+    // Definir la ruta para agregar los campos place_of_departure y arrival_place
+    Route::post('/landings/{id}/addLocation', [LandingController::class, 'addLocation']);
     //cambiar la landing de status
     Route::patch('/landing/status', [LandingController::class, 'status']);
     // Ruta para restaurar una landing eliminada
     Route::post('/landing/restore/{id}', [LandingController::class, 'restore']);
-   //obtener landing borradas por el usuario
+    //obtener landing borradas por el usuario
     Route::get('/landing/deleted/{userId}', [LandingController::class, 'getDeletedLandings']);
-    
+
     //obtener la landing de un usuario especifico
     Route::get('/landings/{userId}/{landingId}', [LandingController::class, 'onelanding']);
     //borrado suave de un vehicle
@@ -53,7 +55,7 @@ Route::middleware('auth:sanctum')->group(function () {
     //obtener las reservaciones 
     Route::get('/reservations/{landing_id}', [ReservationController::class, 'index']);
     //borrar un vehicles de una landing
-    Route::delete('/vehicle/{landing_id}' , [VehicleController::class , 'destroy']);
+    Route::delete('/vehicle/{landing_id}', [VehicleController::class, 'destroy']);
 
 
 

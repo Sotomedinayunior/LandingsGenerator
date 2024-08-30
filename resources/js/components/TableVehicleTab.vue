@@ -18,7 +18,7 @@
         <tbody>
           <tr v-for="vehiculo in vehicles" :key="vehiculo.id">
             <td>
-              <!-- Mostrar solo la primera imagen yugfyfud-->
+              <!-- Mostrar solo la primera imagen -->
               <img
                 :src="
                  'storage/'.vehiculo.images.length
@@ -180,16 +180,13 @@ export default {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
+  opacity: 0; /* Ocultar íconos por defecto */
+  transition: opacity 0.3s ease; /* Transición para la opacidad */
 }
 
-/* Estilo de los íconos en acciones */
-.actions-cell i {
-  cursor: pointer;
-  transition: opacity 0.2s ease;
-}
-
-.actions-cell i:hover {
-  opacity: 0.7;
+/* Mostrar íconos al pasar el mouse sobre la fila */
+ .actions-cell {
+  opacity: 1;
 }
 
 .error {

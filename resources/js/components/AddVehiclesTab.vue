@@ -310,7 +310,7 @@
 
 <script>
 import Axios from "../axios";
-import TableVehicleTab from "./TableVehicleTab.vue";
+import TableVehicleTab from "./TableVehicle.vue";
 
 export default {
   components: { TableVehicleTab },
@@ -352,7 +352,7 @@ export default {
       this.step = 1;
     },
     handleNext() {
-      this.$emit("next", "review");
+      this.$emit('next', 'review');
     },
     handleImageUpload(event) {
       const files = event.target.files;

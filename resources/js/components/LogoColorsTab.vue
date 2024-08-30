@@ -1,18 +1,19 @@
 <template>
-  <div class="grid grid-cols-2 gap-8">
-    <div class="p-5 w-full flex flex-col justify-center">
+  <div class="grid grid-cols-2 gap-1">
+    <div class=" flex flex-col justify-center items-center">
       <form
         ref="form"
         @submit.prevent="handleSubmit"
         enctype="multipart/form-data"
+        class="ml-27"
       >
         <div class="mb-7">
-          <h2 class="text-2xl font-semibold text-slate-950 mb-2">
+          <h2 class="text-xl text-slate-950 font-semibold mb-2">
             1- Name your website
           </h2>
           <input
             type="text"
-            class="w-full px-4 py-2 border border-slate-300 rounded outline-none focus:ring-0"
+            class="text-sm px-9 py-2 border border-slate-300 rounded outline-none focus:ring-0"
             v-model="name"
             name="name"
             placeholder="Enter your website name"
@@ -20,11 +21,11 @@
           />
         </div>
         <div class="mb-4">
-          <h2 class="text-2xl font-semibold text-slate-950 mb-2">
+          <h2 class="text-xl text-slate-950 font-semibold mb-2">
             2- Upload the logo
           </h2>
           <div
-            class="border-2 border-dashed border-[#F2994A] bg-[#F2994A0D] p-4 w-full h-40 flex items-center justify-center relative"
+            class="border-2 border-dashed border-[#F2994A] bg-[#F2994A0D] p-4  h-40 flex items-center justify-center relative"
           >
             <input
               type="file"
@@ -55,7 +56,7 @@
           </div>
         </div>
         <div class="mb-8">
-          <h2 class="text-2xl font-semibold text-slate-950 mb-2">
+          <h2 class="text-xl text-slate-950 font-semibold mb-2">
             3- Choose Primary & Secondary Color
           </h2>
           <div class="flex space-x-4">

@@ -49,7 +49,7 @@ const store = createStore({
         commit('setUser', user);
 
         // Redirigir al dashboard
-        router.push('/dashboard');
+        router.push('/landings');
       } catch (error) {
         if (error.response && error.response.status === 422) {
           // Si hay errores de validación (422), los devolvemos para manejarlos en el componente
