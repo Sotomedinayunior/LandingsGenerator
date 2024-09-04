@@ -7,7 +7,7 @@
           <i class="fa fa-car mr-2"></i>
           <h2 class="text-2xl font-bold">Vehículos</h2>
           <span
-            class="bg-[#F57200] text-white ml-2 px-2 py-1 rounded text-sm"
+            class="bg-[#F57200] text-white ml-2 px-2 py-1 rounded-full text-sm"
             >{{ vehicle.vehicles.length }}</span
           >
         </div>

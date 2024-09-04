@@ -1,12 +1,8 @@
 <template>
     <div>
-      <header>
-        <h1>{{ message }}</h1>
-      
-      </header>
-      <main>
+      <div>
         <router-view></router-view>
-      </main>
+      </div>
     </div>
   </template>
   

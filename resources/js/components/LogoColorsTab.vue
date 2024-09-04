@@ -196,7 +196,9 @@ export default {
         .then((response) => {
           if (response.data && response.data.id) {
             localStorage.setItem("NellyLandingCreate", response.data.id);
+            localStorage.setItem("NellyLandingName", response.data.name);
             console.log("ID de la landing creada:", response.data.id);
+            console.log("name de la landing creada:", response.data.name);
           } else {
             console.error(
               "El ID de la landing no está en la respuesta:",

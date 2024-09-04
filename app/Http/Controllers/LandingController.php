@@ -89,6 +89,7 @@ class LandingController extends Controller
             'message' => 'Landing page created successfully',
             'id' => $landing->id,
             'landing' => $landing,
+            'name'=>$landing->name,
         ]);
     }
 
@@ -168,6 +169,7 @@ class LandingController extends Controller
             return response()->json([
                 'message' => 'Landing status updated successfully',
                 'landing' => $landing,
+                'LandingName'=>$landing->name,
             ], 200);
         } catch (\Throwable $e) {
             // Manejo de errores y respuestas HTTP

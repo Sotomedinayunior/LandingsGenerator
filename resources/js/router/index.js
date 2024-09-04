@@ -92,8 +92,9 @@ const routes = [
     meta: { title: 'Not Found - Nelly App', requiresAuth: true }
   },
   {
-    path:'/:name/:id/:id',
+    path:'/:userid/:landingid',
     component:LayoutLanding,
+    meta:{title:'Home pages'},
     children:[
       {
         path:'',
@@ -139,7 +140,7 @@ router.beforeEach(async (to, from, next) => {
   if (requiresAuth && !isAuthenticated) {
     next({ name: 'login' });
   } else if (to.name === 'login' && isAuthenticated) {
-    next({ name: 'dashboard' }); 
+    next({ name: 'landings' }); 
   } else {
     // Establecer el título de la página
     const title = to.meta.title || 'Nelly App'; // Título predeterminado si no se especifica

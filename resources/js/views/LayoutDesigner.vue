@@ -62,8 +62,8 @@ export default {
   data() {
     return {
       activeTab: 1, // Inicia en la primera pestaña
-      canActivateAddVehicles: true, // Control para activar la pestaña 2
-      canActivateReview: true, // Control para activar la pestaña 3
+      canActivateAddVehicles: false, // Control para activar la pestaña 2
+      canActivateReview: false, // Control para activar la pestaña 3
     };
   },
   computed: {
@@ -124,7 +124,7 @@ export default {
         console.log("Elemento no encontrado en localStorage.");
       }
 
-      // Redirige al dashboard
+      // Redirige a las landings
       this.$router.push("/landings");
     },
     getTabClass(tab) {
