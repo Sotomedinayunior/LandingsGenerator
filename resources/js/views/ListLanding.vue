@@ -33,8 +33,13 @@
       </div>
     </div>
 
+    <!-- Mostrar indicador de carga mientras se obtienen los datos -->
+    <div v-if="loading" class="flex justify-center items-center">
+      Cargando...
+    </div>
+
     <!-- Iterar sobre los landings y mostrar CardLanding para cada uno -->
-    <div class="grid grid-cols-3 gap-2">
+    <div v-else class="grid grid-cols-3 gap-2">
       <CardLanding 
         v-for="landing in filteredLandings" 
         :key="landing.id" 
@@ -56,6 +61,7 @@ export default {
     return {
       searchTerm: "", // Término de búsqueda
       landings: [], // Array vacío para almacenar los landings
+      loading: true, // Estado de carga
     };
   },
   created() {
@@ -74,9 +80,11 @@ export default {
       Axios.get(`/api/landing/${userId}`)
         .then(response => {
           this.landings = response.data;
+          this.loading = false; // Desactivar estado de carga
         })
         .catch(error => {
           console.error("Error al obtener landings:", error);
+          this.loading = false; // Desactivar estado de carga incluso en caso de error
         });
     },
     handleDeleted(id) {

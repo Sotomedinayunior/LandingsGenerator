@@ -2,7 +2,7 @@
   <div>
     <!-- Card Component -->
     <div 
-      class="max-w-sm p-6   rounded-lg cursor-pointer  rounded-2xl bg-[#FAF8F6]" 
+      class="max-w-sm p-6    cursor-pointer  rounded-2xl bg-[#FAF8F6]" 
       @click="handle(landing.id)"
     >
       <div class="flex justify-between">

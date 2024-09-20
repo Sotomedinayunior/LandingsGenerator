@@ -18,18 +18,21 @@ return new class extends Migration
             $table->string('logo')->nullable();
             $table->string('color_primary', 7);
             $table->string('color_secondary', 7);
-            $table->string('place_of_departure')->nullable();
-            $table->string('arrival_place')->nullable();
-            $table->integer('seats')->nullable();
-            $table->date('date_of_departure')->nullable();
-            $table->time('time_of_departure')->nullable();
-            $table->date('date_of_arrival')->nullable();
-            $table->time('time_of_arrival')->nullable(); 
             $table->json('dynamic_fields')->nullable(); // Campo para datos dinámicos
             $table->boolean('published')->default(false);
-          
+
+            // Campos de etiquetas meta para SEO
+            $table->string('meta_title', 255)->nullable(); // Título SEO
+            $table->string('meta_description', 255)->nullable(); // Descripción SEO
+            $table->string('meta_keywords', 255)->nullable(); // Palabras clave SEO
+            $table->string('og_title', 255)->nullable(); // Título Open Graph
+            $table->string('og_description', 255)->nullable(); // Descripción Open Graph
+            $table->string('og_image', 255)->nullable(); // Imagen Open Graph
+            $table->string('canonical_url', 255)->nullable(); // URL canónica
+            $table->string('robots', 50)->default('index, follow')->nullable(); // Control de indexación y seguimiento
+
             $table->timestamps();
-            $table->softDeletes();//borrado suave
+            $table->softDeletes(); // Borrado suave
 
             // Foreign key constraint
             $table->foreign('id_users_landing')->references('id')->on('users')->onDelete('cascade');

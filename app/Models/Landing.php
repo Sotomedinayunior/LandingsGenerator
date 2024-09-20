@@ -48,5 +48,9 @@ class Landing extends Model
     {
         return $this->hasMany(Reservation::class, 'id_landing');
     }
+    public function locations()
+    {
+        return $this->hasMany(Location::class, 'id_landing');
+    }
 }
 

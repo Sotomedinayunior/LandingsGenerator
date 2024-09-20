@@ -7,7 +7,7 @@ const store = createStore({
     return {
       token: localStorage.getItem('NellyToken') || null,
       iduser: localStorage.getItem('NellyUserId') || null,
-      user: null,
+      user: JSON.parse(localStorage.getItem('NellyUser')) || null, // Cargar el usuario desde localStorage
       sessionExpiry: localStorage.getItem('sessionExpiry') || null,
     };
   },
@@ -29,9 +29,11 @@ const store = createStore({
       localStorage.removeItem('NellyToken');
       localStorage.removeItem('NellyUserId'); // Remover iduser de localStorage
       localStorage.removeItem('sessionExpiry');
+      localStorage.removeItem('NellyUser'); // Remover usuario de localStorage
     },
     setUser(state, user) {
       state.user = user;
+      localStorage.setItem('NellyUser', JSON.stringify(user)); // Guardar usuario en localStorage
     }
   },
   actions: {
@@ -48,7 +50,7 @@ const store = createStore({
         commit('setToken', { token, iduser: user.id }); // Guardar solo el id del usuario
         commit('setUser', user);
 
-        // Redirigir al dashboard
+        // Redirigir a la landing
         router.push('/landings');
       } catch (error) {
         if (error.response && error.response.status === 422) {

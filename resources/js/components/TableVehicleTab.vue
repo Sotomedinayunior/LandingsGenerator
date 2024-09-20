@@ -18,11 +18,10 @@
         <tbody>
           <tr v-for="vehiculo in vehicles" :key="vehiculo.id">
             <td>
-              <!-- Mostrar solo la primera imagen -->
               <img
                 :src="
-                 'storage/'.vehiculo.images.length
-                    ? vehiculo.images[0].path_images
+                  vehiculo.images.length
+                    ? 'storage/' + vehiculo.images[0].path_images
                     : 'default.jpg'
                 "
                 :alt="vehiculo.name"
@@ -96,7 +95,15 @@ export default {
   methods: {
     Obtener() {
       const landingId = localStorage.getItem("NellyLandingCreate"); // Obtiene el landingId de la localstorage
-      console.log(landingId);
+      console.log("Landing ID:", landingId);
+
+      if (!landingId) {
+        console.error("No se encontró el ID de la landing page en localStorage.");
+        this.error = true;
+        this.loading = false;
+        return;
+      }
+
       Axios.get(`/api/vehicles/${landingId}`)
         .then((response) => {
           console.table(response.data);
@@ -111,7 +118,7 @@ export default {
           this.loading = false;
         })
         .catch((err) => {
-          console.log(err);
+          console.error("Error al obtener los datos:", err);
           this.error = true;
           this.loading = false;
         });
@@ -123,21 +130,37 @@ export default {
     cerrarModal() {
       this.showModal = false; // Oculta el modal
     },
-    eliminarVehiculo() {
+    async eliminarVehiculo() {
       if (this.vehicleToDelete) {
-        Axios.delete(`/api/vehicle/${this.vehicleToDelete}`)
-          .then(() => {
+        const landingId = localStorage.getItem("NellyLandingCreate"); // Obtener el landingId
+        if (!landingId) {
+          alert("No se encontró el ID de la landing en la localStorage.");
+          return;
+        }
+
+        try {
+          const response = await Axios.delete(`/api/vehicle/${this.vehicleToDelete}`, {
+            data: { landingId } // Enviar el landingId junto con la solicitud
+          });
+
+          console.log("Vehículo eliminado:", response.data);
+
+          if (response.status === 200) {
             // Eliminar el vehículo de la lista local
             this.vehicles = this.vehicles.filter(
               (vehiculo) => vehiculo.id !== this.vehicleToDelete
             );
-            this.vehicleToDelete = null; // Limpia el ID del vehículo
-            this.cerrarModal(); // Cierra el modal
-          })
-          .catch((err) => {
-            console.error("Error al eliminar el vehículo:", err);
-            this.error = true;
-          });
+          } else {
+            console.error("No se pudo eliminar el vehículo en el servidor.");
+            alert("Error al eliminar el vehículo. Intente nuevamente.");
+          }
+
+          this.vehicleToDelete = null; // Limpia el ID del vehículo
+          this.cerrarModal(); // Cierra el modal
+        } catch (error) {
+          console.error("Error al eliminar el vehículo:", error);
+          alert("Error al eliminar el vehículo.");
+        }
       }
     },
   },
@@ -146,51 +169,77 @@ export default {
 
 <style scoped>
 .table {
-  width: 100%;
+  width: 75%;
   border-collapse: collapse;
-  margin-bottom: 20px;
+  margin: 0 auto;
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
 }
 
 .table thead {
   background-color: #fdf0e9;
   color: #222;
-  font-size: 14px;
-  border-bottom: 2px solid #fc8b46;
+  font-size: 10px !important;
+  border: 2px solid #fc8b46;
+  border-radius: 8px 8px 0 0;
 }
 
 .table th,
 .table td {
-  padding: 10px;
+  padding: 7px;
   text-align: left;
-  font-size: 13px;
-  border-bottom: 1px solid #ddd;
+  border-bottom: 1.2px solid #ddd;
+  vertical-align: middle;
+}
+
+.table td {
+  font-size: 12px;
 }
 
 .table th {
-  text-transform: uppercase;
-  letter-spacing: 0.05em;
+  text-transform: capitalize;
+  letter-spacing: 0.04em;
+  font-weight: 300;
+  font-size: 12px;
 }
 
-/* Alineación del contenido de las celdas */
-.table td {
-  vertical-align: middle;
+.table td img {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  border-radius: 5px;
 }
 
 .actions-cell {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-  opacity: 0; /* Ocultar íconos por defecto */
-  transition: opacity 0.3s ease; /* Transición para la opacidad */
 }
 
-/* Mostrar íconos al pasar el mouse sobre la fila */
- .actions-cell {
+/* Ocultar íconos por defecto */
+.actions-cell {
+  opacity: 0;
+  transition: opacity 0.3s ease;
+}
+
+/* Mostrar íconos al hacer hover en la fila */
+tr:hover .actions-cell {
   opacity: 1;
 }
 
 .error {
   color: red;
   font-size: 14px;
+}
+
+.vehicle-image {
+  border-radius: 5px;
+  width: 40px;
+  height: 40px;
+}
+
+.vehiculo-nombre {
+  display: flex;
+  align-items: center;
 }
 </style>

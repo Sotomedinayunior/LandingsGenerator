@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\LandingController;
+use App\Http\Controllers\PublicLandingController;
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\ReservationController;
 use Illuminate\Support\Facades\Route;
@@ -15,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register-nelly', [AuthController::class, 'register']);
 Route::post('/login-nelly', [AuthController::class, 'login']);
 
+Route::get('/publicLanding/{id}/{name}',[PublicLandingController::class , 'index']);
 
 
 Route::middleware('auth:sanctum')->get('/protected', function () {
@@ -23,8 +25,6 @@ Route::middleware('auth:sanctum')->get('/protected', function () {
 Route::post('/nelly-logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
 Route::post('/users-update', [AuthController::class, 'update'])->middleware('auth:sanctum');
 Route::middleware('auth:sanctum')->group(function () {
-
-
     //landing create
     Route::post('/landing', [LandingController::class, 'store']);
     //get landing
@@ -56,13 +56,4 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/reservations/{landing_id}', [ReservationController::class, 'index']);
     //borrar un vehicles de una landing
     Route::delete('/vehicle/{landing_id}', [VehicleController::class, 'destroy']);
-
-
-
-
-
-
-
-    //update users info
-    // Route::post('/users', [AuthController::class, 'update']);
 });

@@ -7,7 +7,7 @@
           <i class="fa fa-car mr-2"></i>
           <h2 class="text-2xl font-bold">Vehículos</h2>
           <span
-            class="bg-[#F57200] text-white ml-2 px-2 py-1 rounded text-sm"
+            class="bg-[#F57200] text-white ml-2 px-2 py-1 rounded-full text-sm"
             >{{ vehicle.vehicles.length }}</span
           >
         </div>
@@ -22,11 +22,11 @@
         Agregar los vehículos para esta landing
       </p>
 
-      <div v-if="vehicle.vehicles.length > 0" class="flex flex-col">
+      <div v-if="vehicle.vehicles.length > 0" class="flex flex-col mt-10">
         <!-- Aqui va el vehicle TabVehicle -->
 
         <TableVehicleTab />
-        <div><button class="btn-new" @click="handleNext">Continuar</button></div>
+        <div class="flex justify-end mr-40	 mt-14"><button class="btn-new mr" @click="handleNext">Continuar</button></div>
       </div>
     </div>
 
@@ -310,7 +310,7 @@
 
 <script>
 import Axios from "../axios";
-import TableVehicleTab from "./TableVehicle.vue";
+import TableVehicleTab from "./TableVehicleTab.vue";
 
 export default {
   components: { TableVehicleTab },
@@ -368,9 +368,11 @@ export default {
     },
     async getLanding() {
       const storedId = localStorage.getItem("NellyLandingCreate");
+      console.log(storedId)
       this.loading = true; // Indicar que está cargando
       try {
         const response = await Axios.get(`/api/vehicles/${storedId}`);
+
         this.vehicle = response.data;
         console.log(response.data);
       } catch (err) {

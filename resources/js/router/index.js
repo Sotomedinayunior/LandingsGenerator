@@ -12,6 +12,12 @@ import HistoryLanding from '../views/HistoryLanding.vue';
 import LocationReservation from '../views/LocationReservation.vue';
 import Published from '../views/Published.vue';
 import ViewConfigLanding from '../views/ViewConfigLanding.vue';
+import LayoutLanding from '../views/Landing/LayoutLanding.vue';
+import HomeLanding from '../views/Landing/HomeLanding.vue';
+import CartLanding from '../views/Landing/CartLanding.vue';
+import AdditionsLanding from '../views/Landing/AdditionsLanding.vue';
+import ReviewLanding from '../views/Landing/ReviewLanding.vue';
+import ThanksLanding from '../views/Landing/ThanksLanding.vue';
 const routes = [
   { 
     path: '/', 
@@ -28,7 +34,7 @@ const routes = [
       { 
         path: '/landings', 
         component: ListLanding, 
-        meta: { title: 'List of Landings - Nelly App' } 
+        meta: { title: 'List of Landings - Nelly App'  } 
       },
       { 
         path: '/reservation', 
@@ -61,7 +67,9 @@ const routes = [
         meta: { title: 'View-landing - Nelly App' }
       }
     ],
+  
   },
+
   {
     path: '/layout-designer',
     name: 'LayoutDesigner',
@@ -83,6 +91,35 @@ const routes = [
     component: NotFoundDashboard,
     meta: { title: 'Not Found - Nelly App', requiresAuth: true }
   },
+  {
+    path:'/:id/:name',
+    component:LayoutLanding,
+    meta:{title:'Home pages'},
+    children:[
+      {
+        path:'',
+        component:HomeLanding,
+        
+      },
+      {
+        path:'vehicle',
+        component:CartLanding,
+      },
+      {
+        path:'additions',
+        component:AdditionsLanding,
+      },
+      {
+        path:'review',
+        component:ReviewLanding,
+      },
+      {
+        path:'thanks-you',
+        component:ThanksLanding,
+      }
+    ]
+    
+  },
 
 
 ];
@@ -103,7 +140,7 @@ router.beforeEach(async (to, from, next) => {
   if (requiresAuth && !isAuthenticated) {
     next({ name: 'login' });
   } else if (to.name === 'login' && isAuthenticated) {
-    next({ name: 'dashboard' }); 
+    next({ name: 'landings' }); 
   } else {
     // Establecer el título de la página
     const title = to.meta.title || 'Nelly App'; // Título predeterminado si no se especifica

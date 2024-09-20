@@ -78,7 +78,7 @@ export default {
         .then(() => {
           this.loading = false;
           // Redirigir al dashboard
-          this.$router.push("/dashboard");
+          this.$router.push("landings");
         })
         .catch((error) => {
           this.loading = false;
