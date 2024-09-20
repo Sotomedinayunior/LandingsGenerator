@@ -16,6 +16,7 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register-nelly', [AuthController::class, 'register']);
 Route::post('/login-nelly', [AuthController::class, 'login']);
 
+Route::get('/publicLanding/{id}/{name}',[PublicLandingController::class , 'index']);
 
 
 Route::middleware('auth:sanctum')->get('/protected', function () {
@@ -56,5 +57,3 @@ Route::middleware('auth:sanctum')->group(function () {
     //borrar un vehicles de una landing
     Route::delete('/vehicle/{landing_id}', [VehicleController::class, 'destroy']);
 });
-
-Route::get('/publicLanding/{id}/{name}',[PublicLandingController::class , 'index']);

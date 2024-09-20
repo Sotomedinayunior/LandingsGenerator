@@ -3,9 +3,9 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use App\Models\Landing;     // Modelo de Landing
-use App\Models\Reservation; // Si es necesario para futuras funcionalidades
-use App\Models\Vehicle;     // Modelo de Vehicle
+use App\Models\Landing;   
+use App\Models\Reservation; 
+use App\Models\Vehicle; 
 
 class PublicLandingController extends Controller
 {
@@ -16,16 +16,17 @@ class PublicLandingController extends Controller
      * @param int $IdLanding - ID de la landing.
      * @return \Illuminate\Http\JsonResponse
      */
-    public function index($IdUser , $name)
+    public function index($iduser , $name)
     {
         try {
             // Consultar la landing que pertenece al usuario, no ha sido eliminada (soft delete), y está publicada
             // Incluyendo los vehículos relacionados
-            $landing = Landing::with('vehicles') // Cargar los vehículos relacionados
-                ->where('id_users_landing', $IdUser)    // Filtro por usuario
-                ->where('name', $name)      // Filtro por ID de landing
+            $landing = Landing::with(['vehicles' , 'locations']) // Cargar los vehículos relacionados
+                ->where('id_users_landing', $iduser)    // Filtro por usuario
+                ->where('name',$name)      // Filtro por nombre de landing
                 ->whereNull('deleted_at')      // Verificar que no esté eliminada suavemente
                 ->where('published', true)     // Verificar que esté publicada
+
                 ->first();                     // Obtener el primer resultado
 
             // Si no se encuentra la landing, retornar una respuesta de error
@@ -39,7 +40,8 @@ class PublicLandingController extends Controller
             return response()->json([
                 'message' => 'Landing encontrada.',
                 'landing' => $landing,             // Información de la landing
-                'vehicles' => $landing->vehicles   // Vehículos relacionados con la landing
+                'vehicles' => $landing->vehicles,   // Vehículos relacionados con la landing
+                'locations'=> $landing->locations,
             ], 200);
         } catch (\Throwable $e) {
             // Manejar cualquier error que ocurra durante la consulta

@@ -92,7 +92,7 @@ const routes = [
     meta: { title: 'Not Found - Nelly App', requiresAuth: true }
   },
   {
-    path:'/:userid/:landingid',
+    path:'/:id/:name',
     component:LayoutLanding,
     meta:{title:'Home pages'},
     children:[

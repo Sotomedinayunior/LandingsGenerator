@@ -21,7 +21,7 @@ class AuthController extends Controller
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users',
                 'password' => 'required|string|confirmed|min:3',
-                'phone' => 'nullable|string|max:15',
+                'phone' => 'nullable|string|max:25',
                 'theme' => 'nullable|string|max:255',
                 'role' => 'required|string|in:admin,user',
                 'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
@@ -122,7 +122,7 @@ class AuthController extends Controller
             $fields = $request->validate([
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users,email,' . $request->user()->id,
-                'phone' => 'required|string|max:15',
+                'phone' => 'required|string|max:25',
                 'theme' => 'required|string|max:255',
                 'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048', // Avatar opcional
             ]);
