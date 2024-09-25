@@ -2,97 +2,76 @@
   <div class="container">
     <!-- Mostrar los detalles de la landing si fue encontrada -->
     <div v-if="landing">
-      <header
-        class="container max-w-screen-lg mx-auto flex justify-between items-center p-4 bg-white"
-      >
-        <!-- Logo -->
-        <div class="flex">
-          <img
-            :src="landing.logo"
-            :alt="landing.name"
-            :title="landing.name"
-            class="w-[112px] h-auto"
-          />
-        </div>
+      <HeaderComponents
+        
+        :logo="landing.logo"
+        :name="landing.name"
+        :primaryColor="landing.color_primary"
+        :secondaryColor="landing.color_secondary"
+        @language-change="changeLanguage"
+      />
 
-        <!-- Menú de navegación (oculto en pantallas pequeñas) -->
-        <nav
-          :class="isMenuOpen ? 'block' : 'hidden'"
-          class="absolute top-full left-0 w-full bg-white md:relative md:block md:w-auto md:bg-transparent"
-        >
-          <ul class="flex flex-col items-center md:flex-row md:space-x-4 font-bold text-xs">
-            <li>
-              <a href="#" class="p-2 hover:underline">{{ $t("overview") }}</a>
-            </li>
-            <li>
-              <a href="#vehicle" class="p-2 hover:underline">{{
-                $t("vehicle")
-              }}</a>
-            </li>
-            <li>
-              <a href="#about" class="p-2 hover:underline">{{ $t("about_us") }}</a>
-            </li>
-            <div class="relative inline-block text-left">
-              <select
-                v-model="currentLanguage"
-                @change="changeLanguage($event.target.value)"
-                :style="{'background-color': landing.color_primary , 'color':landing.color_secondary}"
-
-                class="block w-full px-4 py-2 text-sm font-medium  border rounded-md shadow-sm focus:outline-none focus:ring-2  transition duration-300 ease-in-out"
-              >
-                <option value="en">EN</option>
-                <option value="es">ES</option>
-              </select>
-            </div>
-          </ul>
-        </nav>
-      </header>
-
-      <section class="slider">
+      <section class="slider fade-in">
         <div class="d-flex justify-center items-center flex-col">
-          <h1 class="text-center text-5xl font-bold text-white">
+          <h1 class="text-center text-6xl bold text-white text-wrap mb-8">
             {{ $t("Rent") }}
           </h1>
-          <p class="text-center text-3xl font-normal text-white">
+          <p
+            class="text-center text-3xl font-normal text-white text-wrap mb-10"
+          >
             {{ $t("Find") }}
           </p>
           <div class="pickup">
-            <form @submit="enviar">
+            <form @submit="SubmitForm">
               <div class="flex flex-row justify-between">
-                <select
-                  class="p-1 rounded-lg text-xs text-gray-300 focus:outline-none"
-                  v-model="formValidate.departure"
-                >
-                  <option disabled selected>{{ $t("selected_location") }}</option>
-                  <option
-                    v-for="location in locations.place_of_departure"
-                    :key="location.id"
-                    :value="location.place_of_departure"
-                    name="place_of_departure"
-                    
-                    
-                  ></option>
-                </select>
-                <select
-                  class="p-3 rounded-lg text-sm text-gray-300 focus:outline-none"
-                >
-                  <option disabled selected
-                    >Add Different Return Location</option
+                <div class="flex-col">
+                  <label
+                    for="Lugar de salida"
+                    class="text-xs font-semibold text-gray-900 mb-5"
+                    >{{ $t("pick_up_and_return") }}</label
                   >
-                  <option
-                    v-for="location in locations.arrival_place"
-                    :key="location.id"
-                    :value="location.arrival_place"
-                  ></option>
-                </select>
-                <div class="flex flex-col">
-                  <label for="Asientos" class="text-sm font-bold text-gray-400"
-                    >Asientos</label
+                  <div class="flex">
+                    <select
+                      class="px-5 rounded-lg text-xs text-gray-500 focus:outline-none bg-gray-200 cursor-pointer"
+                      v-model="formValidate.place_of_departure"
+                    >
+                      <option disabled value>{{
+                        $t("selected_location")
+                      }}</option>
+                      <option
+                        v-for="location in locations.place_of_departure"
+                        :key="location.id"
+                        :value="location.place_of_departure"
+                        name="place_of_departure"
+                      ></option>
+                    </select>
+                    <select
+                      class="p-3 rounded-lg text-sm text-gray-300 focus:outline-none cursor-pointer"
+                      v-model="formValidate.arrival_place"
+                    >
+                      <option disabled value="">{{
+                        $t("add_different_return_location")
+                      }}</option>
+
+                      <option
+                        v-for="location in locations.arrival_place"
+                        :key="location.id"
+                        :value="location.arrival_place"
+                      ></option>
+                    </select>
+                  </div>
+                </div>
+                <div class="flex flex-col mx-2">
+                  <label
+                    for="Asientos"
+                    class="text-xs font-semibold text-gray-900 mb-1"
+                    >{{ $t("seats") }}</label
                   >
                   <select
-                    class="p-3 rounded-lg text-sm text-gray-300 focus:outline-none"
+                    class="p-3 rounded-lg text-sm text-gray-500 focus:outline-none bg-gray-200 cursor-pointer"
+                    v-model="formValidate.number_of_persons"
                   >
-                    <option disabled selected>4</option>
+                    <option disabled value="">4</option>
                     <option
                       v-for="location in locations.number_of_persons"
                       :key="location.id"
@@ -104,64 +83,74 @@
                 <div class="flex flex-col">
                   <label
                     for="Fecha de salida"
-                    class="text-sm font-bold text-gray-400"
-                    >Fecha de salida</label
+                    class="text-xs font-semibold text-gray-900 mb-1"
+                  >
+                    {{ $t("departure_date") }}</label
                   >
                   <div>
                     <input
                       type="date"
-                      class="p-3 rounded-lg text-sm text-gray-300 focus:outline-none"
+                      class="px-3 rounded-lg text-xs text-gray-300 focus:outline-none"
                       value="2024-02-12"
+                      v-model="formValidate.date_of_departure"
                     />
                     <input
                       type="time"
                       class="p-3 rounded-lg text-sm text-gray-300 focus:outline-none"
                       value="10:00"
+                      v-bind:is="formValidate.time_of_departure"
                     />
                   </div>
                 </div>
                 <div class="flex flex-col">
                   <label
                     for="Fecha de Retorno"
-                    class="text-sm font-bold text-gray-400"
-                    >Fecha de Retorno</label
+                    class="text-xs font-semibold text-gray-900 mb-1"
+                  >
+                    {{ $t("return_date") }}</label
                   >
                   <div>
                     <input
                       type="date"
                       class="p-3 rounded-lg text-sm text-gray-300 focus:outline-none"
                       value="2024-02-12"
-                      v-model=""
+                      v-model="formValidate.date_of_arrival"
                     />
                     <input
                       type="time"
                       class="p-3 rounded-lg text-sm text-gray-300 focus:outline-none"
                       value="10:00"
+                      v-model="formValidate.time_of_arrival"
                     />
                   </div>
                 </div>
-                <button class="bg-gray-600 text-white px-5 py-1 rounded">
-                  <i class="fa-solid fa-magnifying-glass"></i>
-                </button>
+                <div class="flex justify-center items-center mt-6">
+                  <button class="bg-gray-600 text-white px-5 py-1 rounded">
+                    <i class="fa-solid fa-magnifying-glass"></i>
+                  </button>
+                </div>
               </div>
             </form>
           </div>
         </div>
       </section>
-      <section class="container max-w-screen-lg mx-auto p-5 mb-5" id="vehicle">
-        <h2 class="text-2xl font-bold text-slate-950 text-left">
-         {{ $t('About_vehicle') }}
-         
+      <section
+        class="container max-w-screen-lg mx-auto py-5 my-7 fade-in"
+        id="vehicle"
+      >
+        <h2 class="text-4xl font-bold text-slate-950 text-left">
+          {{ $t("About_vehicle") }}
         </h2>
-        <div v-if="vehicles">
-          <div v-for="item in vehicles">
-            <CardVehicle :name />
+        <div v-if="vehicles && vehicles.length">
+          <div v-for="item in vehicles.slice(0, 4)" :key="item.id">
+            <CardVehicle :vehicle="item" />
           </div>
         </div>
-        <h2 v-else>{{ $t('no_vehicle') }}</h2>
+        <h2 v-else>{{ $t("no_vehicle") }}</h2>
       </section>
+
       <section
-        class="container max-w-screen-lg mx-auto p-5 grid grid-cols-2 gap-6 sm:grid-cols-2"
+        class="container max-w-screen-lg mx-auto p-5 grid grid-cols-2 gap-6  fade-in"
         id="about"
       >
         <div class="vehicle"></div>
@@ -210,9 +199,9 @@
           </ul>
         </div>
       </section>
-      <footer class="bg-slate-100 p-5 flex flex-col">
+      <footer class="bg-slate-100 p-5 flex flex-col justify-center item fade-in">
         <p class="text-slate-600 text-center">
-          ©{{ landing.name }}{{ $t('footer_text') }}
+          ©{{ landing.name }}{{ $t("footer_text") }}
         </p>
       </footer>
     </div>
@@ -228,23 +217,31 @@
 
 <script>
 import axios from "axios";
+import HeaderComponents from "./components/HeaderComponents.vue";
 import CardVehicle from "./components/CardVehicle.vue";
 const url = import.meta.env.VUE_APP_API_URL || "http://localhost:8000/api"; // Usar variable de entorno
 
 export default {
-  components: { CardVehicle },
+  components: { CardVehicle, HeaderComponents },
   data() {
     return {
       landing: null, // Para almacenar los datos de la landing si se encuentran
       message: "", // Para almacenar el mensaje de error
       locations: null,
-      formValidate:{
-        departure:'',
-        arrival_place:'',
-        number_of_persons:'',
+      isVisible: false,
+      formValidate: {
+        place_of_departure: "",
+        arrival_place: "",
+        number_of_persons: "",
+        date_of_departure: "",
+        departure_date: "",
+        time_of_departure: "",
+        date_of_arrival: "",
+        time_of_arrival: "",
+        id_landing: "",
       },
 
-      vehicles: {},
+      vehicles: [],
       currentLanguage: "en",
     };
   },
@@ -256,15 +253,15 @@ export default {
   methods: {
     getLanding() {
       const NameLandingId = this.$route.params.name;
-      const userId = this.$route.params.id;
+      
 
       axios
-        .get(`${url}/publicLanding/${userId}/${NameLandingId}`)
+        .get(`${url}/publicLanding/${NameLandingId}`)
         .then((response) => {
           this.landing = response.data.landing;
           this.locations = response.data.landing.locations;
-          this.vehicle = response.data.landing.vehicles;
-          console.log(response.data.landing.vehicles);
+          this.vehicles = response.data.landing.vehicles;
+          console.log(`aqui estan la info de los vehicles`, this.vehicles);
         })
         .catch((err) => {
           // si ocurre un error (como un 404), mostrar el mensaje de error
@@ -275,14 +272,33 @@ export default {
           }
         });
     },
+    SubmitForm(e) {
+      e.preventDefault();
+      this.formValidate.place_of_departure =
+        this.formValidate.place_of_departure || "santiago";
+      this.formValidate.arrival_place =
+        this.formValidate.arrival_place || "La Romana"; // Por ejemplo, La Romana
+      this.formValidate.number_of_persons =
+        this.formValidate.number_of_persons || "2"; // Por ejemplo, 1 persona
+      this.formValidate.date_of_departure =
+        this.formValidate.date_of_departure || "01-01-2024"; // Por ejemplo, una fecha por defecto
+      this.formValidate.time_of_departure =
+        this.formValidate.time_of_departure || "12:00 AM"; // Por ejemplo, 12:00 PM
+      this.formValidate.date_of_arrival =
+        this.formValidate.date_of_arrival || "02-01-2024"; // Otra fecha por defecto
+      this.formValidate.time_of_arrival =
+        this.formValidate.time_of_arrival || "12:00 PM"; // Por ejemplo, 12:00 PM
+
+      //metodo para almacenar los datos del formulario en la localstorage y redirigir CartLanding
+      this.formValidate.id_landing = this.landing.id;
+      localStorage.setItem("formValidate", JSON.stringify(this.formValidate));
+      return this.$router.push( { name: "vehicle" });
+    },
+
     changeLanguage(language) {
       this.$i18n.locale = language;
       this.currentLanguage = language;
     },
-    enviar(e){
-      e.preventDefault();
-      console.log("enviar...")
-    }
   },
   created() {
     this.currentLanguage = this.$i18n.locale;
@@ -291,28 +307,81 @@ export default {
 </script>
 
 <style scoped>
+::selection {
+  background-color: rgba(
+    255,
+    107,
+    107,
+    0.8
+  ); /* Color de fondo semitransparente */
+  color: #fff; /* Color de texto blanco */
+}
+
+::-moz-selection {
+  background-color: rgba(255, 107, 107, 0.8); /* Para Firefox */
+  color: #fff;
+}
+
+/* Para soportar navegadores que no utilizan el selector ::selection */
+::-moz-selection {
+  background: linear-gradient(
+    135deg,
+    #ff6b6b,
+    #f7d94b
+  ); /* Degradado de rojo a amarillo */
+  color: #2c3e50; /* Color de texto oscuro para contraste */
+}
+
 .pickup {
   display: flex;
+  font-family: "Cera Round Pro", sans-serif;
   background-color: white;
-  padding: 15px;
+  padding: 12px;
+  min-width: 100%;
   border-radius: 8px;
 }
 .slider {
   display: flex;
   justify-content: center;
+  font-family: "Cera Round Pro", sans-serif;
   align-items: center;
   background-image: url("./asset/Slider.jpg");
   background-repeat: no-repeat;
   background-size: cover;
-  background-position: center center;
-  min-height: 400px;
+  background-position: center;
+  min-height: 390px;
 }
 .vehicle {
   background-image: url("./asset/vehicle.png");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
-  min-height: 350px;
+  min-height: 380px;
   border-radius: 8px;
+}
+.fade-in {
+  opacity: 0; /* Inicialmente invisible */
+  animation: fadeIn 0.5s forwards; /* Llama a la animación */
+}
+@media only screen and(max-width: 578px) {
+  body{
+    overflow-x: hidden;
+  }
+  .pickup{
+    display:none;
+  } 
+ 
+ 
+}
+
+@keyframes fadeIn {
+  0% {
+    opacity: 0; /* Al inicio, completamente invisible */
+    transform: translateY(20px); /* Desplazado hacia abajo */
+  }
+  100% {
+    opacity: 1; /* Al final, completamente visible */
+    transform: translateY(0); /* Regresa a la posición original */
+  }
 }
 </style>
