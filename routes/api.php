@@ -16,7 +16,8 @@ use Illuminate\Support\Facades\Route;
 Route::post('/register-nelly', [AuthController::class, 'register']);
 Route::post('/login-nelly', [AuthController::class, 'login']);
 
-Route::get('/publicLanding/{id}/{name}',[PublicLandingController::class , 'index']);
+Route::get('/publicLanding/{name}', [PublicLandingController::class, 'index']);
+Route::get('/publicLanding/{name}/vehicle/{id}', [PublicLandingController::class, 'showVehicle']);
 
 
 Route::middleware('auth:sanctum')->get('/protected', function () {

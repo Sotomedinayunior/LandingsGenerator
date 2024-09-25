@@ -18,6 +18,7 @@ import CartLanding from '../views/Landing/CartLanding.vue';
 import AdditionsLanding from '../views/Landing/AdditionsLanding.vue';
 import ReviewLanding from '../views/Landing/ReviewLanding.vue';
 import ThanksLanding from '../views/Landing/ThanksLanding.vue';
+import VehicleDetail from '../views/Landing/VehicleDetail.vue';
 const routes = [
   { 
     path: '/', 
@@ -92,25 +93,34 @@ const routes = [
     meta: { title: 'Not Found - Nelly App', requiresAuth: true }
   },
   {
-    path:'/:id/:name',
+    path:'/:name',
     component:LayoutLanding,
     meta:{title:'Home pages'},
     children:[
       {
         path:'',
+        name:'home-landing',
         component:HomeLanding,
         
       },
       {
         path:'vehicle',
+        name:'vehicle',
         component:CartLanding,
       },
       {
+        path:'vehicles/:idvehicle',
+        name: 'vehicle-pages',
+        component:VehicleDetail,
+      },
+      {
         path:'additions',
+        name:'vehicle-additions',
         component:AdditionsLanding,
       },
       {
         path:'review',
+        name:'vehicle-review',
         component:ReviewLanding,
       },
       {
