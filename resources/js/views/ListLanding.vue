@@ -38,6 +38,11 @@
       Cargando...
     </div>
 
+    <!-- Mostrar mensaje si no hay landings -->
+    <div v-else-if="filteredLandings.length === 0" class="flex justify-center items-center">
+      <p>No hay landings creadas.</p>
+    </div>
+
     <!-- Iterar sobre los landings y mostrar CardLanding para cada uno -->
     <div v-else class="grid grid-cols-3 gap-2">
       <CardLanding 
@@ -69,9 +74,10 @@ export default {
   },
   computed: {
     filteredLandings() {
-      return this.landings.filter(landing =>
+      // Asegurarse de que landings sea un array antes de filtrar
+      return Array.isArray(this.landings) ? this.landings.filter(landing =>
         landing.name.toLowerCase().includes(this.searchTerm.toLowerCase())
-      );
+      ) : [];
     },
   },
   methods: {
@@ -79,12 +85,16 @@ export default {
       let userId = localStorage.getItem('NellyUserId');
       Axios.get(`/api/landing/${userId}`)
         .then(response => {
-          this.landings = response.data;
-          this.loading = false; // Desactivar estado de carga
+          // Asegurarse de que la respuesta es un array
+          this.landings = Array.isArray(response.data) ? response.data : [];
         })
         .catch(error => {
+          // Manejo de errores si es necesario
           console.error("Error al obtener landings:", error);
-          this.loading = false; // Desactivar estado de carga incluso en caso de error
+          this.landings = []; // Asegurarse de que landings sea un array en caso de error
+        })
+        .finally(() => {
+          this.loading = false; // Siempre desactivar el estado de carga al final
         });
     },
     handleDeleted(id) {

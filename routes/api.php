@@ -18,6 +18,7 @@ Route::post('/login-nelly', [AuthController::class, 'login']);
 
 Route::get('/publicLanding/{name}', [PublicLandingController::class, 'index']);
 Route::get('/publicLanding/{name}/vehicle/{id}', [PublicLandingController::class, 'showVehicle']);
+Route::post('/reservations', [ReservationController::class, 'store']);
 
 
 Route::middleware('auth:sanctum')->get('/protected', function () {
@@ -51,6 +52,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/vehicle/{id}', [VehicleController::class, 'destroy']);
     //crear el vehicle
     Route::post('/vehicle', [VehicleController::class, 'store']);
+    //actualizar un vehicle
+    Route::put('/vehicle/{id}', [VehicleController::class, 'update']);
     //obtener todos los vehiculos y sus relaciones nota:optimizar esto
     Route::get('/vehicles/{landingId}', [VehicleController::class, 'index']);
     //obtener las reservaciones 

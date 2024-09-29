@@ -9,7 +9,19 @@ class Reservation extends Model
 {
     use HasFactory;
     protected $fillable=[
-        
+        'name',
+        'last_name',
+        'email',
+        'description',
+        'id_vehicle',
+        'place_of_departure',
+        'arrival_place',
+        'number_of_persons',
+        'date_of_departure',
+        'time_of_departure',
+        'date_of_arrival',
+        'time_of_arrival',
+        'id_landing',
     ];
     
 

@@ -8,6 +8,7 @@
         :src="logo"
         :alt="name"
         :title="name"
+        loading="lazy"
         width="230"
         height="200"
         class="w-[75px] h-auto cursor-pointer mr-7"

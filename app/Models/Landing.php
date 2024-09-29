@@ -17,14 +17,16 @@ class Landing extends Model
         'logo',
         'color_primary',
         'color_secondary',
-        'place_of_departure',
-        'arrival_place',
-        'seats',
-        'date_of_departure',
-        'time_of_departure',
-        'date_of_arrival',
-        'time_of_arrival',
+        'meta_title',
+        'meta_keywords',
+        'meta_description',
+        'og_title',
+        'og_description',
+        'og_image',
+        'canonical_url',
+        'robots',
         'published',
+        
         'dynamic_fields',
     ];
     protected $casts = [

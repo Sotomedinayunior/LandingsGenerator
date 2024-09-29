@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container mt-[95px]">
     <div v-if="landing">
       <NavComponents
         :logo="logoLanding"

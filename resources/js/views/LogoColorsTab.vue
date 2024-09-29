@@ -224,7 +224,7 @@ export default {
     confirmModal() {
       this.isModalVisible = false;
       // Redirigir a la siguiente ventana (por ejemplo, /next-page)
-      this.$emit("next", "addVehicles");
+      return this.$router.push("/layout-designer/add-vehicles");
     },
   },
 };

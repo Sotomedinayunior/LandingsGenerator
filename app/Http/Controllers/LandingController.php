@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Landing;
 use App\Models\Vehicle;
+use App\Models\Location;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
@@ -21,7 +22,7 @@ class LandingController extends Controller
                 ->get();
 
             if ($landings->isEmpty()) {
-                return response()->json(['message' => 'No landings found'], 404);
+                return response()->json(['message' => 'No have landings'], 201);
             }
 
             // Devuelve la respuesta en formato JSON
@@ -230,24 +231,28 @@ class LandingController extends Controller
         $validatedData = $request->validate([
             'place_of_departure' => 'required|string|max:255',
             'arrival_place' => 'required|string|max:255',
+            'number_of_persons' => 'required|integer',
         ]);
-
+    
         try {
             // Buscar la landing por ID
             $landing = Landing::findOrFail($id);
-
-            // Agregar las nuevas localizaciones
-            $landing->place_of_departure = $validatedData['place_of_departure'];
-            $landing->arrival_place = $validatedData['arrival_place'];
-            $landing->save();
-
+    
+            // Crear nuevas localizaciones
+            $location = new Location();
+            $location->place_of_departure = $validatedData['place_of_departure'];
+            $location->arrival_place = $validatedData['arrival_place'];
+            $location->number_of_persons = $request->input('number_of_persons');
+            $location->id_landing = $landing->id; // Suponiendo que la tabla 'locations' tiene una columna 'landing_id'
+            $location->save();
+    
             return response()->json(['message' => 'Places added successfully'], 200);
         } catch (\Exception $e) {
             // Manejar errores y devolver una respuesta adecuada
             return response()->json(['error' => 'Error adding places', 'details' => $e->getMessage()], 500);
         }
-    
     }
+    
 
 
 

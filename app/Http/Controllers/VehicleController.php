@@ -62,7 +62,7 @@ class VehicleController extends Controller
             'manual' => 'boolean',
             'automatic' => 'boolean',
             'cvt' => 'boolean',
-            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'images.*' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
         ]);
 
         // Verificar que el vehículo existe
