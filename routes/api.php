@@ -32,7 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
     //get landing
     Route::get('/landing/{id}', [LandingController::class, 'index']);
     //actualizar una landing
-    Route::put('/landing/{userId}/{landingId}', [LandingController::class, 'update']);
+    Route::post('/landing-update/{userId}/{landingId}', [LandingController::class, 'update']);
     //delete soft landing o barrado suave
     Route::delete('/landing/{id}', [LandingController::class, 'destroy']);
     //borrado permanente
@@ -45,6 +45,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::post('/landing/restore/{id}', [LandingController::class, 'restore']);
     //obtener landing borradas por el usuario
     Route::get('/landing/deleted/{userId}', [LandingController::class, 'getDeletedLandings']);
+   //agregando los metadatos en la landing
+    Route::post('/landings/{userId}/{landingId}/meta', [LandingController::class, 'updateMeta']);
 
     //obtener la landing de un usuario especifico
     Route::get('/landings/{userId}/{landingId}', [LandingController::class, 'onelanding']);
