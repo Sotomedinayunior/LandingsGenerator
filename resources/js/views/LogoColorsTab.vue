@@ -1,6 +1,6 @@
 <template>
-  <div class="grid grid-cols-2 gap-1">
-    <div class=" flex flex-col justify-center items-center">
+  <div class="grid grid-cols-2">
+    <div class="flex flex-col items-center">
       <form
         ref="form"
         @submit.prevent="handleSubmit"
@@ -11,21 +11,27 @@
           <h2 class="text-xl text-slate-950 font-semibold mb-2">
             1- Name your website
           </h2>
+
           <input
             type="text"
-            class="text-sm px-9 py-2 border border-slate-300 rounded outline-none focus:ring-0"
+            class="text-sm px-9 py-2 w-full border border-slate-300 rounded outline-none focus:ring-0"
             v-model="name"
             name="name"
             placeholder="Enter your website name"
             required
+            pattern="^[A-Za-z0-9]+$"
+            title="El nombre debe contener solo letras  sin espacios."
+            maxlength="25"
           />
+
+          <p class="text-gray-600 text-xs mt-1">Este nombre debe ser único.</p>
         </div>
         <div class="mb-4">
           <h2 class="text-xl text-slate-950 font-semibold mb-2">
             2- Upload the logo
           </h2>
           <div
-            class="border-2 border-dashed border-[#F2994A] bg-[#F2994A0D] p-4  h-40 flex items-center justify-center relative"
+            class="border-4 border-orange-400 border-dashed bg-[#F2994A0D] p-4 h-60 flex items-center justify-center relative w-full"
           >
             <input
               type="file"
@@ -93,8 +99,8 @@
     </div>
 
     <!-- Segunda columna -->
-    <div class="p-8 w-full flex justify-center flex-col">
-      <div class="flex justify-around">
+    <div class="p-8 w-full flex flex-col">
+      <div class="flex justify-between">
         <h2 class="text-2xl font-bold text-gray-500">Preview</h2>
         <div class="flex justify-end">
           <button
@@ -110,17 +116,112 @@
           </button>
         </div>
       </div>
-      <p class="ml-[80px] my-1 text-sm text-gray-500">
+      <p class="my-1 mb-2 text-sm text-gray-500">
         Echa un vistazo a cómo se verá y se sentirá
       </p>
 
-      <img
-        src="../static/asset/under-construcion.webp"
-        class="h-61 max-w-lg rounded-lg"
-        alt="underconstrucion"
-        loading="lazy"
-        title="Muy pronto a la luz para el publico"
-      />
+      <!-- Vista previa de la landing -->
+      <div class="p-8 bg-gray-100 rounded-lg">
+        <!-- Header con logo y botón -->
+        <div class="flex justify-between items-center mb-8">
+          <!-- Logo -->
+          <img
+            v-if="logoUrl"
+            :src="logoUrl"
+            alt="Logo"
+            class="h-auto w-14"
+            width="200"
+            height="200"
+          />
+          <img
+            v-else
+            src="../static/asset/Logo.webp"
+            alt="Logo Predeterminado"
+            class="h-auto w-14"
+            width="200"
+            height="200"
+          />
+
+          <!-- Botón superior derecho -->
+          <div
+            class="w-16 h-8 rounded"
+            :style="{ backgroundColor: primaryColor }"
+          ></div>
+        </div>
+
+        <!-- Sección principal con cuadro de búsqueda y caja grande -->
+        <div class="gap-4 mb-8">
+          <!-- Caja grande -->
+          <div
+            class="bg-gray-200 h-24 rounded flex items-center justify-between"
+          >
+            <div class="flex-grow"></div>
+            <!-- Espacio flexible para empujar el input hacia la derecha -->
+            <div>
+              <input
+                type="text"
+                placeholder="Search"
+                class="h-5 p-1 border rounded"
+                :style="{ backgroundColor: primaryColor }"
+              />
+            </div>
+          </div>
+        </div>
+
+        <!-- Caja de precios -->
+        <div class="grid grid-cols-5 gap-4 mb-8">
+          <div
+            class="bg-gray-200 h-16 flex items-center justify-center rounded"
+          >
+            <p class="text-sm" :style="{ color: primaryColor }">$0.00</p>
+          </div>
+          <div
+            class="bg-gray-200 h-16 flex items-center justify-center rounded"
+          >
+            <p class="text-sm" :style="{ color: primaryColor }">$0.00</p>
+          </div>
+          <div
+            class="bg-gray-200 h-16 flex items-center justify-center rounded"
+          >
+            <p class="text-sm" :style="{ color: primaryColor }">$0.00</p>
+          </div>
+          <div
+            class="bg-gray-200 h-16 flex items-center justify-center rounded"
+          >
+            <p class="text-sm" :style="{ color: primaryColor }">$0.00</p>
+          </div>
+          <div
+            class="bg-gray-200 h-16 flex items-center justify-center rounded"
+          >
+            <p class="text-sm" :style="{ color: primaryColor }">$0.00</p>
+          </div>
+        </div>
+
+        <!-- Caja grande y puntos -->
+        <div class="grid grid-cols-12 gap-4">
+          <!-- Caja grande inferior izquierda -->
+          <div class="col-span-9 bg-gray-200 h-24 rounded"></div>
+
+          <!-- Puntos a la derecha -->
+          <div
+            class="col-span-3 flex flex-col space-y-4 items-center justify-center"
+          >
+            <span
+              class="w-3 h-3 rounded-full"
+              :style="{ backgroundColor: primaryColor }"
+            ></span>
+            <span
+              class="w-3 h-3 rounded-full"
+              :style="{ backgroundColor: primaryColor }"
+            ></span>
+            <span
+              class="w-3 h-3 rounded-full"
+              :style="{ backgroundColor: primaryColor }"
+            ></span>
+          </div>
+        </div>
+      </div>
+      <div class="w-full bg-gray-200 h-24 rounded"></div>
     </div>
 
     <!-- Modal -->
@@ -180,9 +281,19 @@ export default {
         console.error("User ID is required");
         return;
       }
+      const formattedName = this.name.trim(); // Eliminar espacios en blanco al principio y final
+
+      // Validar que el nombre solo contenga letras y números
+      if (!/^[A-Za-z0-9]+$/.test(formattedName)) {
+        alert(
+          "El nombre solo puede contener letras y números sin espacios ni caracteres especiales."
+        );
+        return;
+      }
 
       const formData = new FormData();
       formData.append("id_users_landing", userId);
+      formData.append("name", formattedName);
       formData.append("name", this.name);
       formData.append("logo", this.$refs.logoInput.files[0]);
       formData.append("color_primary", this.primaryColor);

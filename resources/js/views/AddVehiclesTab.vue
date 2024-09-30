@@ -1,12 +1,14 @@
 <template>
   <div class="container my-3">
     <div v-if="!error">
-      <!-- Asegúrate de pasar el prop 'vehicles' correctamente -->
+
       <CountVehicles :vehicles="vehicle"/>
 
       <div v-if="vehicle.length" class="flex items-center justify-center flex-col mt-6">
         <TableVehicle
           :vehicles="vehicle"
+          
+         
           
         />
         <button
@@ -45,7 +47,7 @@ export default {
   },
   mounted() {
  
-    const nellyUserId = localStorage.getItem("NellyUserId");
+    const nellyUserId = localStorage.getItem("NellyLandingCreate");
 
     if (!nellyUserId) {
       this.error = true;

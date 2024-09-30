@@ -17,7 +17,7 @@
         <div class="pl-10">
           <!-- Contenedor de carga de imágenes -->
           <div
-            class="border-2 border-dashed border-gray-300 bg-[#DDDDDD33] p-4 w-full h-40 flex items-center justify-center relative"
+            class="border-2 border-dashed border-gray-300 bg-[#DDDDDD33] p-8 w-full h-80 flex items-center justify-center relative"
           >
             <input
               type="file"
@@ -25,6 +25,7 @@
               multiple
               accept="image/*"
               @change="handleImageUpload"
+              maxlength="17"
               class="absolute inset-0 opacity-0 cursor-pointer"
               required
             />
@@ -90,6 +91,7 @@
             <textarea
               v-model="newVehicle.description"
               id="description"
+              maxlength="255"
               placeholder="Describe brevemente el vehículo"
               class="mt-1 block w-[450px] border border-gray-300 outline-none rounded-md p-2"
               required
@@ -205,7 +207,7 @@
             <h3 class="text-lg font-bold mb-4">
               Seleccione características adicionales
             </h3>
-            <div class="flex space-x-4">
+            <div class="flex space-x-3">
               <div class="flex items-center">
                 <input
                   id="checked-bluetooth"
@@ -215,25 +217,27 @@
                   class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
                 <label
-                  for="checked-checkbox"
+                  for="checked-bluetooth"
                   class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                   >Bluetooth</label
                 >
               </div>
+
               <div class="flex items-center">
                 <input
-                  id="checked-siriuxmx"
+                  id="checked-siriusxm"
                   type="checkbox"
                   name="siriusxm"
                   v-model="newVehicle.siriusxm"
                   class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
                 <label
-                  for="checked-checkbox"
+                  for="checked-siriusxm"
                   class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                   >SiriusXM</label
                 >
               </div>
+
               <div class="flex items-center">
                 <input
                   id="checked-gps"
@@ -243,20 +247,21 @@
                   class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
                 <label
-                  for="checked-checkbox"
+                  for="checked-gps"
                   class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                   >GPS</label
                 >
               </div>
+
               <div class="flex items-center">
                 <input
-                  id="checked-checkbox"
+                  id="checked-apple-car"
                   type="checkbox"
                   v-model="newVehicle.apple_car"
                   class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
                 />
                 <label
-                  for="checked-checkbox"
+                  for="checked-apple-car"
                   class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
                   >Apple Car</label
                 >
@@ -266,7 +271,6 @@
 
           <button
             type="submit"
-           
             class="px-4 py-2 ml-80 mt-5 text-white bg-[#F57200] font-bold border border-[#F57200] rounded hover:bg-[#F57200] hover:text-white transition-colors"
           >
             Agregar Vehículo
@@ -307,7 +311,6 @@ export default {
     if (storedId) {
       this.newVehicle.id_landing = parseInt(storedId, 10);
     }
-
   },
   methods: {
     handleImageUpload(event) {
@@ -349,7 +352,9 @@ export default {
         });
 
         alert("Vehículo agregado con éxito");
-
+        setTimeout(() => {
+          this.$router.push("/layout-designer/add-vehicles");
+        }, 2000);
       } catch (error) {
         console.error("Error al agregar el vehículo:", error);
         alert("Hubo un error al enviar los datos del vehículo.");

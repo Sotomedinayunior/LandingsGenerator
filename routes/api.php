@@ -32,7 +32,7 @@ Route::middleware('auth:sanctum')->group(function () {
     //get landing
     Route::get('/landing/{id}', [LandingController::class, 'index']);
     //actualizar una landing
-    Route::put('/landing/updated/{id}' , [LandingController::class , 'update']);
+    Route::put('/landing/{userId}/{landingId}', [LandingController::class, 'update']);
     //delete soft landing o barrado suave
     Route::delete('/landing/{id}', [LandingController::class, 'destroy']);
     //borrado permanente
@@ -48,16 +48,20 @@ Route::middleware('auth:sanctum')->group(function () {
 
     //obtener la landing de un usuario especifico
     Route::get('/landings/{userId}/{landingId}', [LandingController::class, 'onelanding']);
-    //borrado suave de un vehicle
-    Route::delete('/vehicle/{id}', [VehicleController::class, 'destroy']);
+
     //crear el vehicle
     Route::post('/vehicle', [VehicleController::class, 'store']);
-    //actualizar un vehicle
-    Route::put('/vehicle/{id}', [VehicleController::class, 'update']);
+  
+
     //obtener todos los vehiculos y sus relaciones nota:optimizar esto
     Route::get('/vehicles/{landingId}', [VehicleController::class, 'index']);
+    //obtener un vehiculo espefico
+    Route::get('/vehicles/{landingId}/{vehicleId}', [VehicleController::class, 'show']);
     //obtener las reservaciones 
     Route::get('/reservations/{landing_id}', [ReservationController::class, 'index']);
-    //borrar un vehicles de una landing
-    Route::delete('/vehicle/{landing_id}', [VehicleController::class, 'destroy']);
+    //actualizar un vehiculo
+    Route::put('/vehicles/{landingId}/{vehicleId}', [VehicleController::class, 'update']);
+
+    //borrar un vehiculo
+    Route::delete('/vehicle/{landing_id}/{vehicle_id}', [VehicleController::class, 'destroy']);
 });

@@ -20,7 +20,11 @@
         <tbody>
           <tr v-for="vehiculo in vehicles" :key="vehiculo.id">
             <td class="vehiculo-nombre">
-              <img :src="`/storage/${vehiculo.images[0].path_images}`" :alt="vehiculo.name" class="vehicle-image" />
+              <img
+                :src="`/storage/${vehiculo.images[0].path_images}`"
+                :alt="vehiculo.name"
+                class="vehicle-image"
+              />
             </td>
             <td>{{ vehiculo.name }}</td>
             <td>{{ vehiculo.price }}</td>
@@ -31,19 +35,50 @@
             <td>{{ vehiculo.bluetooth }}</td>
             <td>{{ vehiculo.commissions }}</td>
             <td class="actions-cell">
-              <i class="fa-solid fa-pencil" @click="editVehicle(vehiculo.id)"></i>
-              <i class="fa-solid fa-trash"></i>
+              <i
+                class="fa-solid fa-pencil"
+                @click="editVehicle(vehiculo.id)"
+              ></i>
+              <i
+                class="fa-solid fa-trash"
+                @click="confirmDeleteVehicle(vehiculo.id)"
+              ></i>
             </td>
           </tr>
         </tbody>
       </table>
-      <button></button>
+
       <div v-if="error" class="error">Error al cargar los datos</div>
+    </div>
+
+    <div
+      v-if="showModal"
+      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+    >
+      <div class="bg-white p-6 rounded shadow-lg">
+        <h2 class="text-lg font-semibold">Confirmar eliminación</h2>
+        <p>¿Estás seguro de que deseas eliminar este vehículo?</p>
+        <div class="flex justify-end mt-4">
+          <button
+            @click="deleteVehicle(selectedVehicle)"
+            class="bg-red-600 text-white px-4 py-2 rounded"
+          >
+            Eliminar
+          </button>
+          <button
+            @click="showModal = false"
+            class="ml-2 bg-gray-300 text-black px-4 py-2 rounded"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
+import Axios from "../axios";
 export default {
   props: {
     vehicles: {
@@ -53,14 +88,35 @@ export default {
   },
   data() {
     return {
-      loading: false, // No necesitas cargar datos aquí
+      loading: false,
+      showModal: false,
+      selectedVehicle: null, // Almacena el vehículo seleccionado para eliminación
       error: false,
     };
   },
   methods: {
     editVehicle(vehicleId) {
-      // Redirige al usuario a la ruta de edición con el ID del vehículo
-      this.$router.push(`/layout-designer/add-vehicles/update-form/${vehicleId}`);
+      this.$router.push(
+        `/layout-designer/add-vehicles/update-form/${vehicleId}`
+      );
+    },
+    confirmDeleteVehicle(vehicleId) {
+      this.selectedVehicle = vehicleId; // Almacena el ID del vehículo seleccionado
+      this.showModal = true; // Muestra el modal de confirmación
+    },
+    deleteVehicle(vehicleId) {
+      const landingId = localStorage.getItem("NellyLandingCreate");
+
+      Axios.delete(`/api/vehicle/${landingId}/${vehicleId}`)
+        .then(() => {
+          
+          this.showModal = false;
+          
+        })
+        .catch(() => {
+          this.error = true;
+          this.showModal = false;
+        });
     },
   },
 };
