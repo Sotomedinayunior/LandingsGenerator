@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div class="container mt-11">
     <div v-if="vehicles">
       <NavComponents
         :logo="logoLanding"
@@ -12,7 +12,7 @@
       <section class="py-10">
         <TabsComponents />
       </section>
-      <section class="grid grid-cols-4 gap-5">
+      <section class="flex">
         <aside class="flex items-center flex-col p-4">
           <div class="flex w-full justify-center">
             <i class="fas fa-user"></i>
@@ -45,7 +45,9 @@
             <div>></div>
           </div>
         </aside>
-        <main>
+        <main
+          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
+        >
           <CardAuto
             v-for="vehicle in vehicles"
             :key="vehicle.id"

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Landing;
 use App\Models\Vehicle;
+use App\Models\Location;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Log;
@@ -21,7 +22,7 @@ class LandingController extends Controller
                 ->get();
 
             if ($landings->isEmpty()) {
-                return response()->json(['message' => 'No landings found'], 404);
+                return response()->json(['message' => 'No have landings'], 201);
             }
 
             // Devuelve la respuesta en formato JSON
@@ -96,54 +97,62 @@ class LandingController extends Controller
 
     // Actualizar un landing existente en la base de datos
 
-    public function update(Request $request, $id)
-    {
-        // Validar los datos entrantes
-        $validatedData = $request->validate([
-            'name' => 'nullable|string|max:255',
-            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg|max:2048',
-            'color_primary' => 'nullable|string|max:7',
-            'color_secondary' => 'nullable|string|max:7',
-            'published' => 'nullable|boolean',
-        ]);
-    
-        // Buscar la landing que se va a actualizar
-        $landing = Landing::findOrFail($id);
-    
-        try {
-            // Si se sube un nuevo logo, guardar la imagen y actualizar la URL en la base de datos
-            if ($request->hasFile('logo')) {
-                // Eliminar el logo antiguo si existe
-                if ($landing->logo && Storage::disk('public')->exists($landing->logo)) {
-                    // Si la eliminación falla, puedes lanzar una excepción personalizada si es necesario
-                    if (!Storage::disk('public')->delete($landing->logo)) {
-                        throw new \Exception('No se pudo eliminar el logo anterior');
-                    }
-                }
-    
-                // Guardar el nuevo logo
-                $logoPath = $request->file('logo')->store('logos', 'public');
-                $validatedData['logo'] = $logoPath;
-            }
-    
-            // Actualizar los datos de la landing
-            $landing->update($validatedData);
-    
-            // Recargar la instancia de la landing para obtener los datos actualizados
-            $landing->refresh();
-    
-            return response()->json([
-                'message' => 'Landing actualizada con éxito',
-                'landing' => $landing,
-            ], 200);
-        } catch (\Throwable $e) { // Catch Throwable to catch both Errors and Exceptions
-            // Manejo de errores y respuestas HTTP
-            return response()->json([
-                'message' => 'Error al actualizar la landing',
-                'error' => $e->getMessage(),
-            ], 500);
-        }
+    public function update(Request $request, $userId, $landingId)
+{
+    // Validar los datos entrantes
+    $validatedData = $request->validate([
+        'name' => 'nullable|string|max:255',
+        'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+        'color_primary' => 'nullable|string|max:20',
+        'color_secondary' => 'nullable|string|max:20',
+        'published' => 'nullable|boolean',
+    ]);
+
+    // Buscar la landing que se va a actualizar por ID del usuario y ID de la landing
+    $landing = Landing::where('id', $landingId)->where('id_users_landing', $userId)->first();
+
+    // Verificar si se encontró la landing
+    if (!$landing) {
+        return response()->json([
+            'message' => 'Landing no encontrada o no pertenece al usuario',
+        ], 404);
     }
+
+    try {
+        // Si se sube un nuevo logo, guardar la imagen y actualizar la URL en la base de datos
+        if ($request->hasFile('logo')) {
+            // Eliminar el logo antiguo si existe
+            if ($landing->logo && Storage::disk('public')->exists($landing->logo)) {
+                // Si la eliminación falla, puedes lanzar una excepción personalizada si es necesario
+                if (!Storage::disk('public')->delete($landing->logo)) {
+                    throw new \Exception('No se pudo eliminar el logo anterior');
+                }
+            }
+
+            // Guardar el nuevo logo
+            $logoPath = $request->file('logo')->store('logos', 'public');
+            $validatedData['logo'] = $logoPath;
+        }
+
+        // Actualizar los datos de la landing
+        $landing->update($validatedData);
+
+        // Recargar la instancia de la landing para obtener los datos actualizados
+        $landing->refresh();
+
+        return response()->json([
+            'message' => 'Landing actualizada con éxito',
+            'landing' => $landing,
+        ], 200);
+    } catch (\Throwable $e) { // Captura de errores y excepciones
+        // Manejo de errores y respuestas HTTP
+        return response()->json([
+            'message' => 'Error al actualizar la landing',
+            'error' => $e->getMessage(),
+        ], 500);
+    }
+}
+
 
     public function status(Request $request)
     {
@@ -230,24 +239,28 @@ class LandingController extends Controller
         $validatedData = $request->validate([
             'place_of_departure' => 'required|string|max:255',
             'arrival_place' => 'required|string|max:255',
+            'number_of_persons' => 'required|integer',
         ]);
-
+    
         try {
             // Buscar la landing por ID
             $landing = Landing::findOrFail($id);
-
-            // Agregar las nuevas localizaciones
-            $landing->place_of_departure = $validatedData['place_of_departure'];
-            $landing->arrival_place = $validatedData['arrival_place'];
-            $landing->save();
-
+    
+            // Crear nuevas localizaciones
+            $location = new Location();
+            $location->place_of_departure = $validatedData['place_of_departure'];
+            $location->arrival_place = $validatedData['arrival_place'];
+            $location->number_of_persons = $request->input('number_of_persons');
+            $location->id_landing = $landing->id; // Suponiendo que la tabla 'locations' tiene una columna 'landing_id'
+            $location->save();
+    
             return response()->json(['message' => 'Places added successfully'], 200);
         } catch (\Exception $e) {
             // Manejar errores y devolver una respuesta adecuada
             return response()->json(['error' => 'Error adding places', 'details' => $e->getMessage()], 500);
         }
-    
     }
+    
 
 
 

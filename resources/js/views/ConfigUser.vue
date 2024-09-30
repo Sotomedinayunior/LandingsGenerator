@@ -1,5 +1,5 @@
 <template>
-  <div class="max-w-3xl lg:ml-64 p-4 p-6 bg-white shadow-md rounded-md">
+  <div class="max-w-3xl lg:ml-64  p-6 bg-white shadow-md rounded-md">
     <h2 class="text-2xl font-semibold mb-6 text-[#f16822]">Configuración del Usuario</h2>
 
     <form @submit.prevent="updateUser">

@@ -92,14 +92,18 @@
         }"
       >
         Configuración
-        <!-- <span
-          :class="{
-            'flex justify-center items-center w-5 h-5 rounded-full ml-2 text-xs': true,
-            'bg-orange-500 text-white': activeTab === 'config',
-            'border border-gray-500 text-gray-500': activeTab !== 'config'
-          }"
-        >
-        </span> -->
+      </button>
+
+      <!-- Nuevo botón para SEO -->
+      <button
+        @click="activeTab = 'seo'"
+        :class="{
+          'py-2 px-4 flex items-center': true,
+          'text-orange-500 border-b-2 border-orange-500 font-bold': activeTab === 'seo',
+          'text-gray-500': activeTab !== 'seo'
+        }"
+      >
+        SEO
       </button>
     </div>
 
@@ -128,6 +132,9 @@
 
       <!-- Config Tab -->
       <TabConfig v-if="!isLoading && activeTab === 'config'" />
+
+      <!-- Nuevo SEO Tab -->
+      <TabSeo v-if="!isLoading && activeTab === 'seo'" />
     </div>
   </section>
 </template>
@@ -136,10 +143,11 @@
 import Axios from "../axios";
 import TabReservation from "../components/TabReservation.vue";
 import TabConfig from "../components/TabConfig.vue";
+import TabSeo from "../components/TabSeo.vue"; // Nuevo componente SEO
 import TabVehicle from "../components/TabVehicle.vue";
 
 export default {
-  components: { TabVehicle, TabReservation, TabConfig },
+  components: { TabVehicle, TabReservation, TabConfig, TabSeo },
   data() {
     return {
       landing: {

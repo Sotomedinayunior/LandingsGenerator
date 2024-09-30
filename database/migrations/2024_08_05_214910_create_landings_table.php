@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('landings', function (Blueprint $table) {
             $table->id();
             $table->unsignedBigInteger('id_users_landing');
-            $table->string('name');
+            $table->string('name')->unique();
             $table->string('logo')->nullable();
             $table->string('color_primary', 7);
             $table->string('color_secondary', 7);
@@ -30,6 +30,12 @@ return new class extends Migration
             $table->string('og_image', 255)->nullable(); // Imagen Open Graph
             $table->string('canonical_url', 255)->nullable(); // URL canónica
             $table->string('robots', 50)->default('index, follow')->nullable(); // Control de indexación y seguimiento
+
+            // Campos adicionales sugeridos
+            $table->string('favicon', 255)->nullable(); // URL del Favicon
+            $table->string('default_language', 10)->nullable(); // Idioma predeterminado
+            $table->text('hreflang_urls')->nullable(); // URLs alternas para otros idiomas
+            $table->string('meta_image', 255)->nullable(); // Imagen predeterminada para SEO
 
             $table->timestamps();
             $table->softDeletes(); // Borrado suave

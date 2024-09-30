@@ -21,4 +21,9 @@ class Location extends Model
         'date_of_arrival',
         'time_of_arrival'
     ];
+
+    public function landing()
+    {
+        return $this->belongsTo(Landing::class);
+    }
 }

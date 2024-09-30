@@ -6,7 +6,7 @@
       <span class="text-[#333333] text-[22px]  font-bold"
         >{{vehicle.name }} </span
       ><svg
-        width="352"
+        width="220"
         height="35"
         viewBox="0 0 352 35"
         fill="none"
@@ -47,9 +47,9 @@
         />
       </svg>
       <img
-        class="rounded-[20px] w-[352px] h-[172px]"
+        class="rounded-[20px] w-[220px] h-[172px]"
         :src="url + '/' + vehicle.images[0].path_images"
-        style="object-fit: cover; width: 352px;"
+        style="object-fit: cover; width:220px;"
       />
     </div>
   </template>

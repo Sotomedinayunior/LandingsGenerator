@@ -27,37 +27,41 @@ class ReservationController extends Controller
     }
 
     // Guardar una nueva reservación en la base de datos
-    public function store(Request $request)
+    public function store(Request $request, $id = null)
     {
-        // Validar los datos recibidos
+        // Validar los datos recibidos, haciendo que algunos campos sean opcionales
         $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'last_name' => 'required|string|max:255',
-            'email' => 'required|string|email|max:255|unique:reservations,email',
-            'description' => 'nullable|string',
-            'id_vehicle' => 'required|exists:vehicles,id',
-            'place_of_departure' => 'required|string|max:255',
-            'arrival_place' => 'required|string|max:255',
-            'number_of_persons' => 'required|integer',
-            'date_of_departure' => 'required|date',
-            'time_of_departure' => 'required|date_format:H:i',
-            'date_of_arrival' => 'required|date',
-            'time_of_arrival' => 'required|date_format:H:i',
-            'id_landing' => 'required|exists:landings,id',
+            'name' => 'nullable|string|max:255', // Opcional
+            'last_name' => 'nullable|string|max:255', // Opcional
+            'email' => 'nullable|string|email|max:255|unique:reservations,email,' . $id, // Opcional
+            'description' => 'nullable|string', // Opcional
+            'id_vehicle' => 'required|exists:vehicles,id', // Obligatorio
+            'place_of_departure' => 'nullable|string|max:255', // Opcional
+            'arrival_place' => 'nullable|string|max:255', // Opcional
+            'number_of_persons' => 'nullable|integer', // Opcional
+            'date_of_departure' => 'nullable|date', // Opcional
+            'time_of_departure' => 'nullable|date_format:H:i', // Opcional, especificando el formato
+            'date_of_arrival' => 'nullable|date', // Opcional
+            'time_of_arrival' => 'nullable|date_format:H:i', // Opcional, especificando el formato
+            'id_landing' => 'required|exists:landings,id', // Obligatorio
         ]);
-
+    
+        // Aquí puedes proceder a crear la reservación
         // Encontrar el Vehicle y Landing asociados
         $vehicle = Vehicle::findOrFail($validatedData['id_vehicle']);
         $landing = Landing::findOrFail($validatedData['id_landing']);
-
+    
         // Crear la reservación y asociarla con el Vehicle y Landing
         $reservation = new Reservation($validatedData);
         $reservation->vehicle()->associate($vehicle);
         $reservation->landing()->associate($landing);
         $reservation->save();
-
+    
         return response()->json(['message' => 'Reservación creada exitosamente', 'reservation' => $reservation], 201);
     }
+    
+
+
 
     // Actualizar una reservación existente en la base de datos
     public function update(Request $request, $id)
@@ -73,9 +77,9 @@ class ReservationController extends Controller
             'arrival_place' => 'string|max:255',
             'number_of_persons' => 'integer',
             'date_of_departure' => 'date',
-            'time_of_departure' => 'date_format:H:i',
+            'time_of_departure' => 'date_format',
             'date_of_arrival' => 'date',
-            'time_of_arrival' => 'date_format:H:i',
+            'time_of_arrival' => 'date_format',
             'id_landing' => 'exists:landings,id',
         ]);
 

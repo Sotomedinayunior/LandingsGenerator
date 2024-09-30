@@ -1,10 +1,7 @@
 <template>
   <div class="grid grid-cols-2 gap-8">
     <div class="p-5 w-full flex flex-col justify-center">
-      <form
-        ref="form"
-        @submit.prevent="handleSubmit"
-      >
+      <form ref="form" @submit.prevent="handleSubmit">
         <div class="mb-7">
           <h2 class="text-xl text-slate-950 font-medium mb-2">
             1- Name your website
@@ -12,7 +9,7 @@
           <input
             type="text"
             class="w-full px-4 py-2 border border-slate-300 rounded outline-none focus:ring-0"
-            v-model="name"
+            v-model="formData.name"
             name="name"
             placeholder="Enter your website name"
             required
@@ -37,9 +34,9 @@
               for="logo"
               class="flex flex-col items-center justify-center text-center text-gray-500 cursor-pointer w-full h-full"
             >
-              <template v-if="logoUrl">
+              <template v-if="formData.logo">
                 <img
-                  :src="logoUrl"
+                  :src="formData.logo"
                   alt="Logo Preview"
                   class="h-full max-h-full object-contain"
                 />
@@ -66,7 +63,7 @@
               <input
                 type="color"
                 id="primaryColor"
-                v-model="primaryColor"
+                v-model="formData.color_primary"
                 name="primaryColor"
                 class="w-12 h-12 cursor-pointer border border-slate-300 rounded"
               />
@@ -80,7 +77,7 @@
               <input
                 type="color"
                 id="secondaryColor"
-                v-model="secondaryColor"
+                v-model="formData.color_secondary"
                 name="secondaryColor"
                 class="w-12 h-12 cursor-pointer border border-slate-300 rounded"
               />
@@ -139,10 +136,15 @@ import Axios from "../axios";
 export default {
   data() {
     return {
-      name: "",
-      logoUrl: null, // Para almacenar la URL de la imagen
-      primaryColor: "#000000", // Valor por defecto para el color primario
-      secondaryColor: "#FFFFFF", // Valor por defecto para el color secundario
+      formData:{
+        // Se puede usar un objeto para almacenar los datos del formulario
+        name:'',
+        logo:null,
+        color_primary:'#000000',
+        logoUrl:null,
+        color_secondary:'#FFFFFF',
+        
+      },
       isModalVisible: false, // Controla la visibilidad del modal
       modalTitle: "Landing Actualizada",
       modalMessage: "Tu landing ha sido Actualizada exitosamente.",
@@ -151,9 +153,7 @@ export default {
   computed: {
     isFormComplete() {
       // Verifica si todos los campos necesarios están llenos
-      return (
-        this.name && this.primaryColor && this.secondaryColor
-      );
+      return this.formData.name && this.formData.color_primary && this.formData.color_secondary;
     },
   },
   mounted() {
@@ -162,7 +162,7 @@ export default {
   methods: {
     fetchLandingData() {
       const userId = localStorage.getItem("NellyUserId");
-      const landingId = localStorage.getItem("NellyLandingCreate");
+      const landingId = this.$route.params.id;
 
       if (!userId || !landingId) {
         console.error("User ID and Landing ID are required");
@@ -171,11 +171,9 @@ export default {
 
       Axios.get(`/api/landings/${userId}/${landingId}`)
         .then((response) => {
-          const data = response.data;
-          this.name = data.name;
-          this.logoUrl = data.logo ? `${data.logo}` : null;
-          this.primaryColor = data.color_primary;
-          this.secondaryColor = data.color_secondary;
+          console.log("Landing data:", response.data);
+          this.formData = response.data;
+          console.log("Landing data:", this.formData);
         })
         .catch((error) => {
           console.error("Error fetching landing data:", error);
@@ -187,64 +185,36 @@ export default {
         this.logoUrl = URL.createObjectURL(file); // Generar la URL de la imagen
       }
     },
+    confirmModal() {
+      this.isModalVisible = false;
+    },
     handleSubmit() {
       const userId = localStorage.getItem("NellyUserId");
       const landingId = this.$route.params.id;
+      console.log(" este es userId",userId);
+      console.log(" este es landingId",landingId);
+      
+      // Solo agregar el logo si se ha seleccionado uno nuevo
+   
 
-      if (!userId || !landingId) {
-        console.error("User ID and Landing ID are required");
-        return;
-      }
-
-      const formData = new FormData();
-      formData.append("name", this.name);
-      if (this.$refs.logoInput.files[0]) {
-        formData.append("logo", this.$refs.logoInput.files[0]);
-      }
-      formData.append("color_primary", this.primaryColor);
-      formData.append("color_secondary", this.secondaryColor);
-
-      // Log para verificar los datos que se están enviando
-      for (let [key, value] of formData.entries()) {
-        console.log(`${key}: ${value}`);
-      }
-
-      Axios.put(`/api/landing/updated/${landingId}`, formData, {
+      Axios.put(`/api/landing/${userId}/${landingId}`, this.formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       })
         .then((response) => {
-          console.log("Respuesta del servidor:", response.data);
-          if (response.data && response.data.id) {
-            console.log("ID de la landing actualizada:", response.data.id);
-          } else {
-            console.error(
-              "El ID de la landing no está en la respuesta:",
-              response.data
-            );
-          }
-
-          // Actualizar la vista con los nuevos datos
-          this.logoUrl = response.data.logo ? `${response.data.logo}` : null;
-          this.name = response.data.name;
-          this.primaryColor = response.data.color_primary;
-          this.secondaryColor = response.data.color_secondary;
-
-          // Mostrar el modal
-          this.isModalVisible = true;
-
-          // Redirigir después de 2 segundos
-          setTimeout(() => {
-            this.confirmModal();
-          }, 2000);
+          console.log("Landing actualizada:", response.data);
+          
+          this.isModalVisible = true; // Mostrar el modal de éxito
         })
         .catch((error) => {
-          console.error("Error al enviar el formulario:", error);
+          console.error(
+            "Error al actualizar la landing:",
+            error.response ? error.response.data : error
+          );
+          this.modalMessage = "Hubo un error al actualizar la landing.";
+          this.isModalVisible = true; // Mostrar modal con mensaje de error
         });
-    },
-    confirmModal() {
-      this.isModalVisible = false;
     },
   },
 };

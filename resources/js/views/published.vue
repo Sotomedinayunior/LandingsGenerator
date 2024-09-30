@@ -12,12 +12,13 @@
       <div class="mt-4 flex items-center">
         <input
           type="text"
-          :value="landing.name"
+           :value="`http://localhost:8000/${landing.name}`"
           readonly
           class=" p-2 border border-gray-300 rounded w-64"
         />
         <button
-          @click="copiarAlPortapapeles(landing.name)"
+        @click="copiarAlPortapapeles(`http://localhost:8000/${landing.name}`)"
+
           class=" px-3 py-2 bg-gray-200 border rounded hover:bg-gray-300"
         >
           📋

@@ -46,63 +46,65 @@ class VehicleController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\JsonResponse
      */
-    public function update(Request $request, $id)
+
+    public function update(Request $request, $landingId, $vehicleId)
     {
-        // Validar la solicitud
-        $request->validate([
-            'name' => 'sometimes|required|string|max:255',
-            'id_landing' => 'required|integer',
-            'description' => 'sometimes|required|string',
-            'price' => 'sometimes|required|numeric',
-            'luggage' => 'sometimes|required|integer',
-            'people' => 'sometimes|required|integer',
-            'type_of_car' => 'sometimes|required|string',
+        // Validación de los datos de la solicitud
+        $validatedData = $request->validate([
+            'name' => 'required|string|max:255',
+            'description' => 'nullable|string',
+            'price' => 'required|numeric',
+            'luggage' => 'required|integer',
+            'people' => 'required|integer',
+            'type_of_car' => 'required|string',
+            'transmision' => 'required|string',
             'bluetooth' => 'boolean',
             'siriusxm' => 'boolean',
-            'manual' => 'boolean',
+            'gps' => 'boolean',
             'automatic' => 'boolean',
-            'cvt' => 'boolean',
-            'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
+            'apple_car' => 'boolean',
+            'vehicle_images' => 'nullable|array',
+            'vehicle_images.*' => 'image|mimes:jpeg,png,jpg|max:2048', // Validación de imágenes
         ]);
 
-        // Verificar que el vehículo existe
-        $vehicle = Vehicle::find($id);
-        if (!$vehicle) {
-            return response()->json(['message' => 'Vehículo no encontrado'], 404);
-        }
+        // Buscar el vehículo por su ID
+        $vehicle = Vehicle::where('id_landing', $landingId)->findOrFail($vehicleId);
 
-        // Verificar que el vehículo pertenece a la landing especificada
-        if ($vehicle->id_landing !== $request->id_landing) {
-            return response()->json(['message' => 'El vehículo no pertenece a la landing especificada'], 403);
-        }
+        // Actualizar los datos del vehículo
+        $vehicle->update([
+            'name' => $validatedData['name'],
+            'description' => $validatedData['description'],
+            'price' => $validatedData['price'],
+            'luggage' => $validatedData['luggage'],
+            'people' => $validatedData['people'],
+            'type_of_car' => $validatedData['type_of_car'],
+            'transmision' => $validatedData['transmision'],
+            'bluetooth' => $validatedData['bluetooth'] ?? false,
+            'siriusxm' => $validatedData['siriusxm'] ?? false,
+            'gps' => $validatedData['gps'] ?? false,
+            'automatic' => $validatedData['automatic'] ?? false,
+            'apple_car' => $validatedData['apple_car'] ?? false,
+        ]);
 
-        // Actualizar los campos del vehículo
-        $vehicle->update($request->except(['images']));
+        // Manejo de las imágenes del vehículo (si se subieron nuevas)
+        if ($request->hasFile('vehicle_images')) {
+            // Limpiar imágenes anteriores (esto puede variar según cómo manejes las imágenes)
+            $vehicle->images()->delete();
 
-        // Manejar la actualización de las imágenes si hay nuevas
-        if ($request->hasFile('images')) {
-            // Eliminar imágenes anteriores si es necesario
-            $oldImages = $vehicle->images; // Asumimos que tiene una relación con VehicleImage
-            foreach ($oldImages as $oldImage) {
-                if (Storage::exists('public/' . $oldImage->path_images)) {
-                    Storage::delete('public/' . $oldImage->path_images);
-                }
-                $oldImage->delete();
-            }
-
-            // Guardar las nuevas imágenes
-            $images = $request->file('images');
-            foreach ($images as $image) {
-                $imagePath = $image->store('vehicle_images', 'public');
-                VehicleImage::create([
-                    'vehicle_id' => $vehicle->id,
-                    'path_images' => $imagePath,
-                ]);
+            foreach ($request->file('vehicle_images') as $image) {
+                $path = $image->store('vehicle_images', 'public');  // Guarda la imagen en el directorio 'storage/app/public/vehicle_images'
+                $vehicle->images()->create(['path' => $path]);  // Relacionar la imagen con el vehículo
             }
         }
 
-        return response()->json(['message' => 'Vehículo actualizado con éxito.'], 200);
+        // Guardar los cambios en la base de datos
+        $vehicle->save();
+
+        // Retornar una respuesta de éxito o redirigir a una página
+        return response()->json(['message' => 'Vehículo actualizado exitosamente', 'vehicle' => $vehicle]);
     }
+
+
 
     public function store(Request $request)
     {
@@ -205,12 +207,37 @@ class VehicleController extends Controller
             'dynamic_fields' => $dynamicFields
         ], 200);
     }
+    public function show($landingId, $vehicleId)
+    {
+        // Validar manualmente la existencia de los IDs en la base de datos
+        $vehicle = Vehicle::where('id', $vehicleId)
+            ->where('id_landing', $landingId)
+            ->with(['images']) // Relación con imágenes u otras relaciones si es necesario
+            ->first();
 
-    public function destroy($landingId)
+        if (!$vehicle) {
+            return response()->json([
+                'message' => 'Vehículo no encontrado',
+                'status' => 'error'
+            ], 404);
+        }
+
+        return response()->json([
+            'message' => 'Vehículo encontrado',
+            'vehicle' => $vehicle,
+            'status' => 'success'
+        ], 200);
+    }
+
+
+
+
+
+    public function destroy($landingId, $vehicleId)
     {
         try {
-            // Buscar el vehículo por el ID de la landing
-            $vehicle = Vehicle::where('id_landing', $landingId)->first();
+            // Buscar el vehículo por el ID del vehículo
+            $vehicle = Vehicle::where('id', $vehicleId)->where('id_landing', $landingId)->first();
 
             if (!$vehicle) {
                 return response()->json(['message' => 'Vehículo no encontrado'], 404);

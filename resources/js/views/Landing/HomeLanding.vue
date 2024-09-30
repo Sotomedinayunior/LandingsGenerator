@@ -1,9 +1,8 @@
 <template>
   <div class="container">
     <!-- Mostrar los detalles de la landing si fue encontrada -->
-    <div v-if="landing">
+    <div v-if="landing" :style="{ '--primary-color': landing.color_primary }">
       <HeaderComponents
-        
         :logo="landing.logo"
         :name="landing.name"
         :primaryColor="landing.color_primary"
@@ -35,16 +34,19 @@
                       class="px-5 rounded-lg text-xs text-gray-500 focus:outline-none bg-gray-200 cursor-pointer"
                       v-model="formValidate.place_of_departure"
                     >
-                      <option disabled value>{{
+                      <option disabled value="">{{
                         $t("selected_location")
                       }}</option>
+                      <!-- Iteramos sobre el array de locations -->
                       <option
-                        v-for="location in locations.place_of_departure"
+                        v-for="location in locations"
                         :key="location.id"
                         :value="location.place_of_departure"
-                        name="place_of_departure"
-                      ></option>
+                      >
+                        {{ location.place_of_departure }}
+                      </option>
                     </select>
+
                     <select
                       class="p-3 rounded-lg text-sm text-gray-300 focus:outline-none cursor-pointer"
                       v-model="formValidate.arrival_place"
@@ -52,12 +54,14 @@
                       <option disabled value="">{{
                         $t("add_different_return_location")
                       }}</option>
-
+                      <!-- Iteramos sobre el array de locations -->
                       <option
-                        v-for="location in locations.arrival_place"
+                        v-for="location in locations"
                         :key="location.id"
                         :value="location.arrival_place"
-                      ></option>
+                      >
+                        {{ location.arrival_place }}
+                      </option>
                     </select>
                   </div>
                 </div>
@@ -98,7 +102,7 @@
                       type="time"
                       class="p-3 rounded-lg text-sm text-gray-300 focus:outline-none"
                       value="10:00"
-                      v-bind:is="formValidate.time_of_departure"
+                      v-model="formValidate.time_of_departure"
                     />
                   </div>
                 </div>
@@ -141,7 +145,7 @@
         <h2 class="text-4xl font-bold text-slate-950 text-left">
           {{ $t("About_vehicle") }}
         </h2>
-        <div v-if="vehicles && vehicles.length">
+        <div v-if="vehicles && vehicles.length" class="grid grid-cols-4 gap-10">
           <div v-for="item in vehicles.slice(0, 4)" :key="item.id">
             <CardVehicle :vehicle="item" />
           </div>
@@ -150,7 +154,7 @@
       </section>
 
       <section
-        class="container max-w-screen-lg mx-auto p-5 grid grid-cols-2 gap-6  fade-in"
+        class="container max-w-screen-lg mx-auto p-5 grid grid-cols-2 gap-6 fade-in"
         id="about"
       >
         <div class="vehicle"></div>
@@ -199,7 +203,9 @@
           </ul>
         </div>
       </section>
-      <footer class="bg-slate-100 p-5 flex flex-col justify-center item fade-in">
+      <footer
+        class="bg-slate-100 p-5 flex flex-col justify-center item fade-in"
+      >
         <p class="text-slate-600 text-center">
           ©{{ landing.name }}{{ $t("footer_text") }}
         </p>
@@ -216,9 +222,13 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from "vue";
 import axios from "axios";
-import HeaderComponents from "./components/HeaderComponents.vue";
+const HeaderComponents = defineAsyncComponent(() =>
+  import("./components/HeaderComponents.vue")
+);
 import CardVehicle from "./components/CardVehicle.vue";
+
 const url = import.meta.env.VUE_APP_API_URL || "http://localhost:8000/api"; // Usar variable de entorno
 
 export default {
@@ -253,7 +263,6 @@ export default {
   methods: {
     getLanding() {
       const NameLandingId = this.$route.params.name;
-      
 
       axios
         .get(`${url}/publicLanding/${NameLandingId}`)
@@ -261,6 +270,10 @@ export default {
           this.landing = response.data.landing;
           this.locations = response.data.landing.locations;
           this.vehicles = response.data.landing.vehicles;
+          console.log(
+            `aqui esta los locations`,
+            this.locations[0].place_of_departure
+          );
           console.log(`aqui estan la info de los vehicles`, this.vehicles);
         })
         .catch((err) => {
@@ -292,7 +305,7 @@ export default {
       //metodo para almacenar los datos del formulario en la localstorage y redirigir CartLanding
       this.formValidate.id_landing = this.landing.id;
       localStorage.setItem("formValidate", JSON.stringify(this.formValidate));
-      return this.$router.push( { name: "vehicle" });
+      return this.$router.push({ name: "vehicle" });
     },
 
     changeLanguage(language) {
@@ -308,13 +321,8 @@ export default {
 
 <style scoped>
 ::selection {
-  background-color: rgba(
-    255,
-    107,
-    107,
-    0.8
-  ); /* Color de fondo semitransparente */
-  color: #fff; /* Color de texto blanco */
+  background-color: var(--primary-color);
+  color: #fff;
 }
 
 ::-moz-selection {
@@ -349,6 +357,7 @@ export default {
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
+  margin-top: 40px;
   min-height: 390px;
 }
 .vehicle {
@@ -364,14 +373,12 @@ export default {
   animation: fadeIn 0.5s forwards; /* Llama a la animación */
 }
 @media only screen and(max-width: 578px) {
-  body{
+  body {
     overflow-x: hidden;
   }
-  .pickup{
-    display:none;
-  } 
- 
- 
+  .pickup {
+    display: none;
+  }
 }
 
 @keyframes fadeIn {

@@ -1,6 +1,6 @@
 <template>
   <div
-    class="flex justify-between items-center bg-white py-4 rounded-lg  w-[300px]"
+    class="flex justify-between items-center bg-white py-4 rounded-lg  w-[220px]"
   >
     <!-- Columna izquierda: Información del vehículo -->
     <div class="flex flex-col gap-2">
@@ -34,7 +34,7 @@
 
   <!-- Imagen del vehículo -->
   <img
-    class="rounded-lg w-[300px] h-[160px] object-cover"
+    class="rounded-lg w-[220px] h-[160px] object-cover"
     :src="imageSrc"
     :alt="vehicle.name"
     width="330"

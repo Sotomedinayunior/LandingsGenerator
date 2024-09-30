@@ -15,10 +15,17 @@ import ViewConfigLanding from '../views/ViewConfigLanding.vue';
 import LayoutLanding from '../views/Landing/LayoutLanding.vue';
 import HomeLanding from '../views/Landing/HomeLanding.vue';
 import CartLanding from '../views/Landing/CartLanding.vue';
-import AdditionsLanding from '../views/Landing/AdditionsLanding.vue';
 import ReviewLanding from '../views/Landing/ReviewLanding.vue';
 import ThanksLanding from '../views/Landing/ThanksLanding.vue';
 import VehicleDetail from '../views/Landing/VehicleDetail.vue';
+import LogoColorsTab from '../views/LogoColorsTab.vue';
+import AddVehiclesTab from '../views/AddVehiclesTab.vue';
+import AdditionsLanding from '../views/Landing/AdditionsLanding.vue';
+import ReviewTab from '../views/ReviewTab.vue';
+import FormVehiclesCreate from '../components/FormVehiclesCreate.vue';
+import FormUpdateVehicles from '../components/FormUpdateVehicles.vue';
+
+
 const routes = [
   { 
     path: '/', 
@@ -27,7 +34,7 @@ const routes = [
     meta: { title: 'Login - Nelly App' } 
   },
   { 
-    path: '/dashboard', 
+    path: '/landings', 
     name: 'dashboard',
     component: MainLayout,
     meta: { title: 'Dashboard - Nelly App', requiresAuth: true },
@@ -75,7 +82,42 @@ const routes = [
     path: '/layout-designer',
     name: 'LayoutDesigner',
     component: LayoutDesigner,
-    meta: { title: 'Layout Designer - Nelly App', requiresAuth: true } 
+    meta: { title: 'Layout Designer - Nelly App', requiresAuth: true } ,
+    children: [
+      {
+        path:'',
+        name:'Landing Loyout',
+        component:LogoColorsTab,
+        meta:{title:'landing - Nelly App' , requiresAuth:true},
+      },
+      {
+        path:'add-vehicles',
+        name:'add-vehicles',
+        component:AddVehiclesTab,
+        meta:{title:'add vehicles - Nelly App' , requiresAuth:true},
+
+      },
+      {
+        path:'add-vehicles/add-form',
+        name:'add-form',
+        component:FormVehiclesCreate,
+        meta:{title:'add form - Nelly App' , requiresAuth:true},
+
+      },
+      {
+       path:'add-vehicles/update-form/:id',
+       name:'update-form',
+       component:FormUpdateVehicles,
+       meta:{title:'update form - Nelly App' , requiresAuth:true},
+
+      },
+      {
+        path:'review',
+        name:'review',
+        component:ReviewTab,
+        meta:{title:'review - Nelly App' , requiresAuth:true}
+      }
+    ]
   },
   {
     path:'/published',
