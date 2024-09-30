@@ -9,7 +9,7 @@
           <input
             type="text"
             class="w-full px-4 py-2 border border-slate-300 rounded outline-none focus:ring-0"
-            v-model="formData.name"
+            v-model="LandingInfo.name"
             name="name"
             placeholder="Enter your website name"
             required
@@ -34,9 +34,9 @@
               for="logo"
               class="flex flex-col items-center justify-center text-center text-gray-500 cursor-pointer w-full h-full"
             >
-              <template v-if="formData.logo">
+              <template v-if="LandingInfo.logo">
                 <img
-                  :src="formData.logo"
+                  :src="LandingInfo.logo"
                   alt="Logo Preview"
                   class="h-full max-h-full object-contain"
                 />
@@ -63,7 +63,7 @@
               <input
                 type="color"
                 id="primaryColor"
-                v-model="formData.color_primary"
+                v-model="LandingInfo.color_primary"
                 name="primaryColor"
                 class="w-12 h-12 cursor-pointer border border-slate-300 rounded"
               />
@@ -77,7 +77,7 @@
               <input
                 type="color"
                 id="secondaryColor"
-                v-model="formData.color_secondary"
+                v-model="LandingInfo.color_secondary"
                 name="secondaryColor"
                 class="w-12 h-12 cursor-pointer border border-slate-300 rounded"
               />
@@ -136,15 +136,15 @@ import Axios from "../axios";
 export default {
   data() {
     return {
-      formData:{
+      LandingInfo: {
         // Se puede usar un objeto para almacenar los datos del formulario
-        name:'',
-        logo:null,
-        color_primary:'#000000',
-        logoUrl:null,
-        color_secondary:'#FFFFFF',
-        
+        name: '',
+        logo: null,
+        color_primary: "#000000",
+        logoUrl: null,
+        color_secondary: "#FFFFFF",
       },
+      isSubmitting: false,
       isModalVisible: false, // Controla la visibilidad del modal
       modalTitle: "Landing Actualizada",
       modalMessage: "Tu landing ha sido Actualizada exitosamente.",
@@ -153,12 +153,14 @@ export default {
   computed: {
     isFormComplete() {
       // Verifica si todos los campos necesarios están llenos
-      return this.formData.name && this.formData.color_primary && this.formData.color_secondary;
+      return (
+        this.LandingInfo.name &&
+        this.LandingInfo.color_primary &&
+        this.LandingInfo.color_secondary
+      );
     },
   },
-  mounted() {
-    this.fetchLandingData();
-  },
+
   methods: {
     fetchLandingData() {
       const userId = localStorage.getItem("NellyUserId");
@@ -172,8 +174,8 @@ export default {
       Axios.get(`/api/landings/${userId}/${landingId}`)
         .then((response) => {
           console.log("Landing data:", response.data);
-          this.formData = response.data;
-          console.log("Landing data:", this.formData);
+          this.LandingInfo = response.data;
+          console.log("Landing data:", this.LandingInfo);
         })
         .catch((error) => {
           console.error("Error fetching landing data:", error);
@@ -182,40 +184,51 @@ export default {
     previewImage(event) {
       const file = event.target.files[0];
       if (file) {
-        this.logoUrl = URL.createObjectURL(file); // Generar la URL de la imagen
+        this.LandingInfo.logo = file; // Guardar el archivo en LandingInfo
+        this.LandingInfo.logoUrl = URL.createObjectURL(file); // Generar la URL para vista previa
       }
     },
+
     confirmModal() {
       this.isModalVisible = false;
     },
     handleSubmit() {
       const userId = localStorage.getItem("NellyUserId");
       const landingId = this.$route.params.id;
-      console.log(" este es userId",userId);
-      console.log(" este es landingId",landingId);
-      
-      // Solo agregar el logo si se ha seleccionado uno nuevo
-   
 
-      Axios.put(`/api/landing/${userId}/${landingId}`, this.formData, {
+      console.log("LandingInfo:", this.LandingInfo); // Verificar datos
+
+      
+
+      const formData = new FormData();
+      formData.append("name", this.LandingInfo.name);
+      formData.append("logo", this.LandingInfo.logo);
+      formData.append("color_primary", this.LandingInfo.color_primary);
+      formData.append("color_secondary", this.LandingInfo.color_secondary);
+
+      // Imprimir cada entrada de FormData
+      for (let [key, value] of formData.entries()) {
+        console.log(key, value);
+      }
+
+      Axios.post(`/api/landing-update/${userId}/${landingId}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
       })
         .then((response) => {
           console.log("Landing actualizada:", response.data);
-          
-          this.isModalVisible = true; // Mostrar el modal de éxito
+          this.isModalVisible = true;
         })
         .catch((error) => {
-          console.error(
-            "Error al actualizar la landing:",
-            error.response ? error.response.data : error
-          );
+          console.error("Error al actualizar la landing:", error);
           this.modalMessage = "Hubo un error al actualizar la landing.";
-          this.isModalVisible = true; // Mostrar modal con mensaje de error
+          this.isModalVisible = true;
         });
     },
+  },
+  mounted() {
+    this.fetchLandingData();
   },
 };
 </script>

@@ -25,7 +25,7 @@ return new class extends Migration
             $table->time('time_of_departure');
             $table->date('date_of_arrival');
             $table->time('time_of_arrival');
-            $table->integer('total_price');
+            $table->integer('total_price')->nullable();
             $table->unsignedBigInteger('id_landing');
             $table->timestamps();
             $table->softDeletes();

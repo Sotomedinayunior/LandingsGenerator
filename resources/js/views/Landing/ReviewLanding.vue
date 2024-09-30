@@ -191,7 +191,6 @@
             <button
               type="submit"
               class="w-full bg-black text-white font-semibold py-3 rounded-lg hover:bg-gray-800"
-              
             >
               Reservar
             </button>
@@ -217,12 +216,12 @@ export default {
     return {
       message: "Hola Mundo",
       currentLanguage: "en",
-      name: '',
-      lastName: '', // Asegúrate de definir lastName
-      email: '',
-      comment: '',
-      phone: '',
-      
+      name: "",
+      lastName: "", // Asegúrate de definir lastName
+      email: "",
+      comment: "",
+      phone: "",
+
       logoLanding: "",
       LogoTitle: "",
       color1: "",
@@ -232,7 +231,6 @@ export default {
       Tabs1: [],
       Tabs2: [],
       Tabs3: [],
-      
     };
   },
 
@@ -242,46 +240,59 @@ export default {
   },
 
   methods: {
+    // Aquí defines la función convertTo24Hour
+    convertTo24Hour(time) {
+      const [timePart, modifier] = time.split(' ');
+      let [hours, minutes] = timePart.split(':');
+
+      if (hours === '12') {
+        hours = '00';
+      }
+
+      if (modifier === 'PM') {
+        hours = parseInt(hours, 10) + 12;
+      }
+
+      return `${hours}:${minutes}`;
+    },
+
     submitForm() {
-      // Recuperar los datos del viaje desde localStorage
       const storedVehicle = localStorage.getItem("formVehicles");
       const storedFormData = localStorage.getItem("formValidate");
 
-      // Asegurarse de que los datos existen
       if (storedVehicle && storedFormData) {
         const vehicleData = JSON.parse(storedVehicle);
         const formData = JSON.parse(storedFormData);
 
-        // Preparar el objeto que se enviará al servidor
+        // Usar la función convertTo24Hour dentro del método submitForm
+        const timeOfDeparture24 = this.convertTo24Hour(formData.time_of_departure);
+        const timeOfArrival24 = this.convertTo24Hour(formData.time_of_arrival);
+
         const reservationData = {
-          id_vehicle: vehicleData.id_vehicle,  // ID del vehículo
-          id_landing: formData.id_landing,     // ID de la landing
-          name: this.name,                      // Nombre del usuario
-          last_name: this.lastName,             // Apellido del usuario
-          email: this.email,                    // Email del usuario
-          description: this.comment,            // Comentario adicional
-          place_of_departure: formData.place_of_departure, // Lugar de salida
-          arrival_place: formData.arrival_place, // Lugar de llegada
-          number_of_persons: formData.number_of_persons, // Número de personas
-          date_of_departure: formData.date_of_departure, // Fecha de salida
-          time_of_departure: formData.time_of_departure, // Hora de salida
-          date_of_arrival: formData.date_of_arrival, // Fecha de llegada
-          time_of_arrival: formData.time_of_arrival, // Hora de llegada
+          id_vehicle: vehicleData.id_vehicle,  
+          id_landing: formData.id_landing,     
+          name: this.name,                     
+          last_name: this.lastName,            
+          email: this.email,                   
+          description: this.comment,           
+          place_of_departure: formData.place_of_departure, 
+          arrival_place: formData.arrival_place, 
+          number_of_persons: formData.number_of_persons, 
+          date_of_departure: formData.date_of_departure, 
+          time_of_departure: timeOfDeparture24, 
+          date_of_arrival: formData.date_of_arrival, 
+          time_of_arrival: timeOfArrival24, 
         };
 
-        // Realizar la solicitud a la API para crear la reserva
         axios.post(`${url}/reservations`, reservationData)
           .then(response => {
             console.log("Reservación creada:", response.data);
-            // Aquí puedes manejar la respuesta, como redirigir o mostrar un mensaje
           })
           .catch(error => {
             console.error("Error al crear la reservación:", error);
-            // Aquí puedes manejar el error, mostrar un mensaje al usuario, etc.
           });
       } else {
         console.error("No se encontraron datos en localStorage.");
-        // Manejar el caso donde no hay datos disponibles
       }
     },
 
@@ -297,7 +308,13 @@ export default {
           this.color1 = this.landing.color_primary;
           this.color2 = this.landing.color_secondary;
 
-          console.log(`Info de los vehicles`, this.vehicles, this.logoLanding, this.color1, this.color2);
+          console.log(
+            `Info de los vehicles`,
+            this.vehicles,
+            this.logoLanding,
+            this.color1,
+            this.color2
+          );
         })
         .catch((err) => {
           if (err.response && err.response.status === 404) {
@@ -343,7 +360,10 @@ export default {
     formatDate(dateString) {
       // Verificar si la cadena de fecha está definida y tiene el formato correcto
       if (!dateString || !/^\d{2}-\d{2}-\d{4}$/.test(dateString)) {
-        console.error("Formato de fecha inválido o cadena indefinida:", dateString);
+        console.error(
+          "Formato de fecha inválido o cadena indefinida:",
+          dateString
+        );
         return dateString || "Fecha no disponible"; // Retornar un valor por defecto si es undefined o null
       }
 
@@ -368,6 +388,5 @@ export default {
   },
 };
 </script>
-
 
 <style scoped></style>

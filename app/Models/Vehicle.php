@@ -28,6 +28,11 @@ class Vehicle extends Model
     protected $casts = [
         'dynamic_fields' => 'array', // Convierte el campo JSON a un array
     ];
+    // Definir la relación uno a muchos con SpecialFeature
+    public function specialFeatures()
+    {
+        return $this->hasMany(SpecialFeature::class);
+    }
 
     // Definir la relación inversa uno a muchos con Landing
     public function landing()
