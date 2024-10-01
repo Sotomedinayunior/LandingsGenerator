@@ -104,6 +104,45 @@ class VehicleController extends Controller
         return response()->json(['message' => 'Vehículo actualizado exitosamente', 'vehicle' => $vehicle]);
     }
 
+    public function storeSpecialFeature(Request $request, $vehicleId)
+    {
+        // Validar los datos entrantes
+        $validatedData = $request->validate([
+            'features' => 'required|array', // Asegúrate de que 'features' sea un array
+        ]);
+
+        // Buscar el vehículo
+        $vehicle = Vehicle::findOrFail($vehicleId);
+
+        // Crear el registro de características especiales
+        $specialFeature = $vehicle->specialFeatures()->create([
+            'features' => $validatedData['features']
+        ]);
+
+        // Devolver la respuesta en formato JSON
+        return response()->json([
+            'message' => 'Característica especial creada con éxito.',
+            'specialFeature' => $specialFeature
+        ], 201);
+    }
+
+    public function getSpecialFeatures($vehicleId)
+    {
+        // Buscar el vehículo
+        $vehicle = Vehicle::findOrFail($vehicleId);
+
+        // Obtener las características especiales del vehículo
+        $specialFeatures = $vehicle->specialFeatures;
+
+        // Devolver las características en formato JSON
+        return response()->json([
+            'message' => 'Características especiales encontradas.',
+            'specialFeatures' => $specialFeatures
+        ]);
+    }
+
+
+
 
 
     public function store(Request $request)

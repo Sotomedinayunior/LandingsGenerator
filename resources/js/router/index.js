@@ -167,6 +167,7 @@ const routes = [
       },
       {
         path:'thanks-you',
+        name:'thanks-you',
         component:ThanksLanding,
       }
     ]

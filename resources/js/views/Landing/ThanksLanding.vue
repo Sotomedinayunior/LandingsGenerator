@@ -9,10 +9,11 @@
           :defaultLanguage="currentLang"
           @language-change="onLanguageChange"
         />
-        <section class="flex justify-center items-center ">
+        <section class="flex-col mx-0 justify-center items-center ">
             <img src="./asset/check.png" alt="Existo" class="w-44 h-auto">
+            <h1 class="text-3xl font-bold text-gray-800">{{ name }}</h1>
             <p>En breve uno de nuestros representates estarán comunicandote.</p>
-            <button class="bg-gray-600 p-5">Aceptar</button>
+            <button class="bg-gray-600 p-5 text-white">Aceptar</button>
         </section>
 
         
@@ -41,11 +42,13 @@
         LogoTitle: "",
         color1: "",
         color2: "",
+        name:'',
         message: "",
       };
     },
     mounted() {
       this.getVehicles();
+      this.name =localStorage.getItem('NameUser');
     },
     methods: {
       getVehicles() {

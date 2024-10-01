@@ -34,7 +34,7 @@
             name="meta_description"
             placeholder="Escriba una descripción breve de la página (máx. 160 caracteres)"
             id="meta_description"
-            class="w-full border  text-xs border-slate-300 rounded outline-none focus:ring-0"
+            class="w-full border text-xs border-slate-300 rounded outline-none focus:ring-0"
             rows="4"
             required
           ></textarea>
@@ -52,7 +52,7 @@
             name="meta_keywords"
             placeholder="Ingrese palabras clave separadas por comas (ej. 'SEO, marketing, alquiler')"
             id="meta_keywords"
-            class="w-full border  text-xs border-slate-300 rounded outline-none focus:ring-0"
+            class="w-full border text-xs border-slate-300 rounded outline-none focus:ring-0"
           />
         </div>
 
@@ -66,7 +66,7 @@
             name="og_title"
             id="og_title"
             placeholder="Título para compartir en redes sociales (máx. 60 caracteres)"
-            class="w-full  text-xs border border-slate-300 rounded outline-none focus:ring-0"
+            class="w-full text-xs border border-slate-300 rounded outline-none focus:ring-0"
           />
         </div>
       </div>
@@ -101,9 +101,11 @@
               </template>
               <template v-else>
                 <p class="text-[#F2994A] text-xs">
-                    Suba una imagen para compartir en redes sociales
+                  Suba una imagen para compartir en redes sociales
                 </p>
-                <p class="text-[#F2994A] text-xs">(preferiblemente 1200x630px)</p>
+                <p class="text-[#F2994A] text-xs">
+                  (preferiblemente 1200x630px)
+                </p>
                 <p class="text-gray-500 text-xs">
                   Haz clic aquí o arrastra tu imagen
                 </p>
@@ -124,7 +126,7 @@
             name="og_description"
             id="og_description"
             placeholder="Escriba una descripción breve para compartir en redes sociales (máx. 160 caracteres)"
-            class="w-full border  text-xs border-slate-300 rounded outline-none focus:ring-0"
+            class="w-full border text-xs border-slate-300 rounded outline-none focus:ring-0"
             rows="4"
             required
           ></textarea>
@@ -141,7 +143,7 @@
             name="canonical_url"
             id="canonical_url"
             placeholder="Ingrese la URL canónica de la página (ej. 'https://www.ejemplo.com/pagina')"
-            class="w-full border  text-xs border-slate-300 rounded outline-none focus:ring-0"
+            class="w-full border text-xs border-slate-300 rounded outline-none focus:ring-0"
           />
         </div>
 
@@ -166,6 +168,28 @@
         </button>
       </div>
     </form>
+    <!-- Modal de éxito -->
+    <div
+      v-if="isSuccessModalOpen"
+      class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
+    >
+      <div class="bg-white p-6 rounded-lg shadow-lg w-1/3">
+        <h2 class="text-lg font-bold mb-4 text-green-500">
+          ¡Metadatos guardados exitosamente!
+        </h2>
+        <p class="text-gray-700 mb-4">
+          Los metadatos se han actualizado correctamente.
+        </p>
+        <div class="flex justify-end">
+          <button
+            @click="closeSuccessModal"
+            class="px-4 py-2 bg-blue-500 text-white rounded"
+          >
+            Cerrar
+          </button>
+        </div>
+      </div>
+    </div>
   </div>
 </template>
 
@@ -187,6 +211,7 @@ export default {
         robots: "",
       },
       previewUrl: null,
+      isSuccessModalOpen: false, // Controla la visibilidad del modal de éxito
     };
   },
   methods: {
@@ -224,6 +249,7 @@ export default {
       })
         .then((response) => {
           console.log("Metadatos actualizados:", response.data);
+          this.showSuccessModal(); 
         })
         .catch((error) => {
           console.error(

@@ -63,6 +63,10 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/reservations/{landing_id}', [ReservationController::class, 'index']);
     //actualizar un vehiculo
     Route::put('/vehicles/{landingId}/{vehicleId}', [VehicleController::class, 'update']);
+    //agregar feature a un vehiculo
+    Route::post('special-feature/{vehicleId}/', [VehicleController::class, 'storeSpecialFeature']);
+    //obtener las caracteristicas especiales de un vehiculo
+    Route::get('vehicle/{vehicleId}/special-features', [VehicleController::class, 'getSpecialFeatures']);
 
     //borrar un vehiculo
     Route::delete('/vehicle/{landing_id}/{vehicle_id}', [VehicleController::class, 'destroy']);
