@@ -296,7 +296,8 @@ export default {
         localStorage.removeItem("formValidate");
         localStorage.removeItem("formVehicles");
         localStorage.removeItem("selectedProduct");
-        localStorage.setItem("NameUser", reservationData.name); 
+        localStorage.setItem("NameUser", this.name);
+
         
 
         this.$router.push({ name: "thanks-you" });

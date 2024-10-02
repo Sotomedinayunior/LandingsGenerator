@@ -261,19 +261,38 @@
                 <label
                   for="checked-air-conditioning"
                   class="ms-2 text-sm font-medium text-gray-900"
-                  >apple car</label
+                  >Apple Car</label
                 >
               </div>
-              <div class="mb-4">
-                
-                <ul>
-                  <li v-for="(feature, index) in specialFeatures" :key="index">
-                    <strong>{{ feature.name }}:</strong> {{ feature.value }}
-                  </li>
-                </ul>
-              </div>
+            </div>
+
+            <div class="mt-4">
+              <h4 class="text-md font-bold mb-2">Características especiales adiccionales</h4>
+              <ul v-if="specialFeatures.length" class="flex  space-y-2">
+                <li v-for="(featureSet, index) in specialFeatures" :key="index">
+                  <ul v-if="featureSet.features.length" class="flex">
+                    <li
+                      v-for="(feature, featureIndex) in featureSet.features"
+                      :key="featureIndex"
+                      class="flex m-2"
+                    >
+                      <input
+                        type="checkbox"
+                        :checked="!!feature.value"
+                        disabled
+                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                      />
+                      <label class="ms-2 text-sm font-medium text-gray-900"
+                        ><strong>{{ feature.name }}</strong></label
+                      >
+                    </li>
+                  </ul>
+                </li>
+              </ul>
+              <p v-else>No hay características especiales.</p>
             </div>
           </div>
+
           <button
             type="submit"
             class="w-[450px] px-4 py-2 bg-[#F57200] text-white font-bold rounded hover:bg-[#d06b2e] transition-colors"
@@ -388,7 +407,7 @@ export default {
         name: "",
         value: "",
       },
-      specialFeatures: [],
+      specialFeatures: null,
 
       vehicleImages: [], // Inicializa el array de imágenes
     };
@@ -400,7 +419,14 @@ export default {
         const response = await Axios.get(
           `/api/vehicle/${vehicleId}/special-features`
         );
-        this.specialFeatures = response.data.special_features;
+
+        // Verifica si 'specialFeatures' existe en la respuesta
+        if (response.data && response.data.specialFeatures) {
+          this.specialFeatures = response.data.specialFeatures;
+        } else {
+          console.error("No se encontraron specialFeatures");
+          this.specialFeatures = [];
+        }
       } catch (err) {
         this.error = "Error al cargar características especiales.";
         console.error(err);
@@ -408,6 +434,7 @@ export default {
         this.loading = false;
       }
     },
+
     closeModal() {
       this.showModal = false;
     },
@@ -490,13 +517,13 @@ export default {
 
       try {
         const vehicleId = localStorage.getItem("vehicleToEdit");
-        console.log(`Id de la vehicle que estoy editando`)
         const response = await Axios.post(
           `/api/special-feature/${vehicleId}`,
           featureData
         );
         alert("Característica agregada con éxito");
         this.closeModal(); // Cerrar modal después de agregar
+        this.loadSpecialFeatures(); // Recarga las características después de agregar
       } catch (error) {
         console.error("Error al agregar la característica:", error);
         alert("Hubo un error al agregar la característica.");

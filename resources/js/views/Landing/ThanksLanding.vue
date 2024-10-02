@@ -1,5 +1,5 @@
 <template>
-    <div class="container mt-11">
+    <div class="container mt-11 min-h-screen flex justify-center items-center">
       <div v-if="vehicles">
         <NavComponents
           :logo="logoLanding"
@@ -9,10 +9,10 @@
           :defaultLanguage="currentLang"
           @language-change="onLanguageChange"
         />
-        <section class="flex-col mx-0 justify-center items-center ">
-            <img src="./asset/check.png" alt="Existo" class="w-44 h-auto">
-            <h1 class="text-3xl font-bold text-gray-800">{{ name }}</h1>
-            <p>En breve uno de nuestros representates estarán comunicandote.</p>
+        <section class="flex-col mx-0 justify-center items-center mt-10 ">
+            <img src="./asset/check.png" alt="Existo" class="w-44 h-auto text-center">
+            <h1 class="text-3xl font-bold text-gray-800 text-center">{{ name }}</h1>
+            <p class="text-center text-xs">En breve uno de nuestros representates estarán comunicandote.</p>
             <button class="bg-gray-600 p-5 text-white">Aceptar</button>
         </section>
 
