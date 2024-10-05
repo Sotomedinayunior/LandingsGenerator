@@ -1,6 +1,6 @@
 <template>
   <section
-    class="grid grid-cols-4 gap-35 p-4 items-center border-b border-gray-200"
+    class="grid grid-cols-4 gap-35 p-4 items-center border-b border-gray-200 w-full"
   >
     <div class="flex flex-col">
       <h2 class="text-xs font-bold mb-3">Date & Location</h2>

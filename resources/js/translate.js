@@ -24,7 +24,7 @@ const messages = {
     overview:'visión general',
     vehicle:'vehículo',
     about_us:'Acerca de nosotros',
-
+    
     Rent:'Renta tu vehiculó',
     Find:'Busca tu vehiculo ideal',
     pick_up_and_return:"Recogida y devolución",

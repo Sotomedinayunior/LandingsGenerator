@@ -1,5 +1,5 @@
 <template>
-  <div class="container">
+  <div>
     <!-- Mostrar los detalles de la landing si fue encontrada -->
     <div v-if="landing" :style="{ '--primary-color': landing.color_primary }">
       <HeaderComponents
@@ -258,6 +258,7 @@ export default {
 
   mounted() {
     this.getLanding();
+  
   },
 
   methods: {
@@ -268,6 +269,10 @@ export default {
           {
             name: "description",
             content: this.landing?.meta_description || "Default description",
+          },
+          {
+            name: "viewport",
+            content: "width=device-width, initial-scale=1.0",
           },
           { name: "keywords", content: this.landing?.meta_keywords || "" },
           {
@@ -299,7 +304,6 @@ export default {
           this.landing = response.data.landing;
           this.locations = response.data.landing.locations;
           this.vehicles = response.data.landing.vehicles;
-          this.updateMetaTags();
 
           console.log(
             `aqui esta los locations`,
@@ -317,24 +321,26 @@ export default {
         });
     },
     updateMetaTags() {
-    const metaData = this.metaInfo();
+      const metaData = this.metaInfo();
 
-    // Actualiza el título de la página
-    document.title = metaData.title;
+      // Actualiza el título de la página
+      document.title = metaData.title;
 
-    // Eliminar meta tags existentes (si es necesario)
-    const existingMetaTags = document.querySelectorAll('meta[name], meta[property]');
-    existingMetaTags.forEach(tag => tag.parentNode.removeChild(tag));
+      // Eliminar meta tags existentes (si es necesario)
+      const existingMetaTags = document
+        .querySelectorAll("meta")
+        .forEach((meta) => meta.remove());
+      existingMetaTags.forEach((tag) => tag.parentNode.removeChild(tag));
 
-    // Añadir nuevos meta tags
-    metaData.meta.forEach(metaTag => {
-      const meta = document.createElement('meta');
-      Object.keys(metaTag).forEach(key => {
-        meta.setAttribute(key, metaTag[key]);
+      // Añadir nuevos meta tags
+      metaData.meta.forEach((metaTag) => {
+        const meta = document.createElement("meta");
+        Object.keys(metaTag).forEach((key) => {
+          meta.setAttribute(key, metaTag[key]);
+        });
+        document.head.appendChild(meta);
       });
-      document.head.appendChild(meta);
-    });
-  },
+    },
     SubmitForm(e) {
       e.preventDefault();
       this.formValidate.place_of_departure =
@@ -376,20 +382,8 @@ export default {
   color: #fff;
 }
 
-::-moz-selection {
-  background-color: rgba(255, 107, 107, 0.8); /* Para Firefox */
-  color: #fff;
-}
 
-/* Para soportar navegadores que no utilizan el selector ::selection */
-::-moz-selection {
-  background: linear-gradient(
-    135deg,
-    #ff6b6b,
-    #f7d94b
-  ); /* Degradado de rojo a amarillo */
-  color: #2c3e50; /* Color de texto oscuro para contraste */
-}
+
 
 .pickup {
   display: flex;

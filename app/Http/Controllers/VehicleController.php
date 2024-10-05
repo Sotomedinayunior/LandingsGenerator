@@ -88,8 +88,7 @@ class VehicleController extends Controller
 
         // Manejo de las imágenes del vehículo (si se subieron nuevas)
         if ($request->hasFile('vehicle_images')) {
-            // Limpiar imágenes anteriores (esto puede variar según cómo manejes las imágenes)
-            $vehicle->images()->delete();
+           
 
             foreach ($request->file('vehicle_images') as $image) {
                 $path = $image->store('vehicle_images', 'public');  // Guarda la imagen en el directorio 'storage/app/public/vehicle_images'
@@ -101,7 +100,7 @@ class VehicleController extends Controller
         $vehicle->save();
 
         // Retornar una respuesta de éxito o redirigir a una página
-        return response()->json(['message' => 'Vehículo actualizado exitosamente', 'vehicle' => $vehicle]);
+        return response()->json(['message' => 'Vehículo actualizado exitosamente', 'vehicle' => $vehicle ]); 
     }
 
     public function storeSpecialFeature(Request $request, $vehicleId)
