@@ -20,7 +20,11 @@
         <tbody>
           <tr v-for="vehiculo in vehicles" :key="vehiculo.id">
             <td class="vehiculo-nombre">
-              <img :src="`/storage/${vehiculo.images[0].path_images}`" :alt="vehiculo.name" class="vehicle-image" />
+              <img
+                :src="`/storage/${vehiculo.images[0].path_images}`"
+                :alt="vehiculo.name"
+                class="vehicle-image"
+              /> 
             </td>
             <td>{{ vehiculo.name }}</td>
             <td>{{ vehiculo.price }}</td>
@@ -31,36 +35,91 @@
             <td>{{ vehiculo.bluetooth }}</td>
             <td>{{ vehiculo.commissions }}</td>
             <td class="actions-cell">
-              <i class="fa-solid fa-pencil"></i>
-              <i class="fa-solid fa-trash"></i>
+              <i
+                class="fa-solid fa-pencil"
+                
+                @click="updateVehicle
+                (vehiculo.id)"
+              ></i>
+              <i
+                class="fa-solid fa-trash"
+                @click="confirmDeleteVehicle(vehiculo.id)"
+              ></i>
             </td>
           </tr>
         </tbody>
       </table>
+
       <div v-if="error" class="error">Error al cargar los datos</div>
+    </div>
+
+    <div
+      v-if="showModal"
+      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+    >
+      <div class="bg-white p-6 rounded shadow-lg">
+        <h2 class="text-lg font-semibold">Confirmar eliminación</h2>
+        <p>¿Estás seguro de que deseas eliminar este vehículo?</p>
+        <div class="flex justify-end mt-4">
+          <button
+            @click="deleteVehicle(selectedVehicle)"
+            class="bg-red-600 text-white px-4 py-2 rounded"
+          >
+            Eliminar
+          </button>
+          <button
+            @click="showModal = false"
+            class="ml-2 bg-gray-300 text-black px-4 py-2 rounded"
+          >
+            Cancelar
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
 
 <script>
-
-
+import Axios from "../axios";
 export default {
   props: {
     vehicles: {
-      type: Array, // Cambiar a Array para que acepte un array de vehículos
+      type: Array,
       required: true,
     },
   },
   data() {
     return {
-      loading: true,
+      loading: false,
+      showModal: false,
+      selectedVehicle: null, // Almacena el vehículo seleccionado para eliminación
       error: false,
     };
   },
+  methods: {
+    updateVehicle(vehicleId) {
+      const vehicleToEdit = localStorage.setItem("vehicleToEdit", vehicleId);
+      this.$emit("edit-vehicle", this.vehicleToEdit);
+    },
+    confirmDeleteVehicle(vehicleId) {
+      this.selectedVehicle = vehicleId; // Almacena el ID del vehículo seleccionado
+      this.showModal = true; // Muestra el modal de confirmación
+    },
+    deleteVehicle(vehicleId) {
+      const landingId = localStorage.getItem("NellyLandingCreate");
 
- 
-
+      Axios.delete(`/api/vehicle/${landingId}/${vehicleId}`)
+        .then(() => {
+          
+          this.showModal = false;
+          
+        })
+        .catch(() => {
+          this.error = true;
+          this.showModal = false;
+        });
+    },
+  },
 };
 </script>
 
@@ -69,8 +128,8 @@ export default {
   width: 100%;
   border-collapse: collapse;
   margin-bottom: 20px;
-  border-radius: 8px 8px 0 0; /* Añadir borde redondeado superior */
-  overflow: hidden; /* Asegurar que el borde redondeado se aplique correctamente */
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
 }
 
 .table thead {
@@ -78,7 +137,7 @@ export default {
   color: #222;
   font-size: 10px !important;
   border: 2px solid #fc8b46;
-  border-radius: 8px 8px 0 0; /* Añadir borde redondeado superior */
+  border-radius: 8px 8px 0 0;
 }
 
 .table th,
@@ -97,7 +156,7 @@ export default {
   text-transform: capitalize;
   letter-spacing: 0.04em;
   font-weight: 300;
-  font-size: 12px; /* text-xs */
+  font-size: 12px;
 }
 
 .table td img {
@@ -116,6 +175,7 @@ export default {
 /* Ocultar íconos por defecto */
 .actions-cell {
   opacity: 0;
+  cursor: pointer;
   transition: opacity 0.3s ease;
 }
 

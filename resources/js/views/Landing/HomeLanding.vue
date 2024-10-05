@@ -261,6 +261,35 @@ export default {
   },
 
   methods: {
+    metaInfo() {
+      return {
+        title: this.landing?.meta_title || "Default Title",
+        meta: [
+          {
+            name: "description",
+            content: this.landing?.meta_description || "Default description",
+          },
+          { name: "keywords", content: this.landing?.meta_keywords || "" },
+          {
+            property: "og:title",
+            content: this.landing?.og_title || "Default OG Title",
+          },
+          {
+            property: "og:description",
+            content: this.landing?.og_description || "Default OG Description",
+          },
+          {
+            property: "og:image",
+            content: this.landing?.og_image || "default-image-url.jpg",
+          },
+          { name: "robots", content: this.landing?.robots || "index, follow" },
+          {
+            rel: "canonical",
+            href: this.landing?.canonical_url || window.location.href,
+          },
+        ],
+      };
+    },
     getLanding() {
       const NameLandingId = this.$route.params.name;
 
@@ -270,6 +299,8 @@ export default {
           this.landing = response.data.landing;
           this.locations = response.data.landing.locations;
           this.vehicles = response.data.landing.vehicles;
+          this.updateMetaTags();
+
           console.log(
             `aqui esta los locations`,
             this.locations[0].place_of_departure
@@ -285,6 +316,25 @@ export default {
           }
         });
     },
+    updateMetaTags() {
+    const metaData = this.metaInfo();
+
+    // Actualiza el título de la página
+    document.title = metaData.title;
+
+    // Eliminar meta tags existentes (si es necesario)
+    const existingMetaTags = document.querySelectorAll('meta[name], meta[property]');
+    existingMetaTags.forEach(tag => tag.parentNode.removeChild(tag));
+
+    // Añadir nuevos meta tags
+    metaData.meta.forEach(metaTag => {
+      const meta = document.createElement('meta');
+      Object.keys(metaTag).forEach(key => {
+        meta.setAttribute(key, metaTag[key]);
+      });
+      document.head.appendChild(meta);
+    });
+  },
     SubmitForm(e) {
       e.preventDefault();
       this.formValidate.place_of_departure =
@@ -313,6 +363,7 @@ export default {
       this.currentLanguage = language;
     },
   },
+
   created() {
     this.currentLanguage = this.$i18n.locale;
   },

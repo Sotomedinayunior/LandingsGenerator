@@ -11,7 +11,7 @@
         loading="lazy"
         width="230"
         height="200"
-        class="w-[75px] h-auto cursor-pointer mr-7"
+        class="w-auto h-20  cursor-pointer mr-7 object-cover aspect-auto"
         @click="goToHome"
 
       />

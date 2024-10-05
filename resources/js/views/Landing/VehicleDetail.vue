@@ -108,7 +108,8 @@ export default {
     },
     Guardar() {
       // Asignar los valores al objeto formVehicles
-      this.formVehicles.id_vehicle = this.vehicle.id; // ID del vehículo
+      
+     this.formVehicles.id_vehicle = this.$route.params.idvehicle// ID del vehículo
       this.formVehicles.title = this.vehicle.name; // Título del vehículo
 
       // Comprobar si hay imágenes disponibles y almacenar la ruta de la primera imagen

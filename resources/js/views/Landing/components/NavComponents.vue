@@ -1,5 +1,5 @@
 <template>
-    <header class=" fixed top-0 left-0 w-full z-50 flex justify-between p-3 items-center border-b border-gray-200 mb-10 bg-white shadow-md">
+    <header class="fixed top-0 left-0 w-full z-50 flex justify-between p-3 items-center border-b border-gray-200 mb-10 bg-white shadow-md">
       <!-- Logo -->
       <img
         :src="logo"

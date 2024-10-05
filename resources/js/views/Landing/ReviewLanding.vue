@@ -104,7 +104,14 @@
               type="text"
               v-model="name"
               required
-              placeholder="Name and Last Name"
+              placeholder="Name"
+              class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            />
+            <input
+              type="text"
+              v-model="lastName"
+              required
+              placeholder="Last Name"
               class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
@@ -242,14 +249,14 @@ export default {
   methods: {
     // Aquí defines la función convertTo24Hour
     convertTo24Hour(time) {
-      const [timePart, modifier] = time.split(' ');
-      let [hours, minutes] = timePart.split(':');
+      const [timePart, modifier] = time.split(" ");
+      let [hours, minutes] = timePart.split(":");
 
-      if (hours === '12') {
-        hours = '00';
+      if (hours === "12") {
+        hours = "00";
       }
 
-      if (modifier === 'PM') {
+      if (modifier === "PM") {
         hours = parseInt(hours, 10) + 12;
       }
 
@@ -257,44 +264,52 @@ export default {
     },
 
     submitForm() {
-      const storedVehicle = localStorage.getItem("formVehicles");
-      const storedFormData = localStorage.getItem("formValidate");
+  const storedVehicle = localStorage.getItem("formVehicles");
+  const storedFormData = localStorage.getItem("formValidate");
 
-      if (storedVehicle && storedFormData) {
-        const vehicleData = JSON.parse(storedVehicle);
-        const formData = JSON.parse(storedFormData);
+  if (storedVehicle && storedFormData) {
+    const vehicleData = JSON.parse(storedVehicle);
+    const formData = JSON.parse(storedFormData);
 
-        // Usar la función convertTo24Hour dentro del método submitForm
-        const timeOfDeparture24 = this.convertTo24Hour(formData.time_of_departure);
-        const timeOfArrival24 = this.convertTo24Hour(formData.time_of_arrival);
+    const timeOfDeparture24 = this.convertTo24Hour(formData.time_of_departure);
+    const timeOfArrival24 = this.convertTo24Hour(formData.time_of_arrival);
 
-        const reservationData = {
-          id_vehicle: vehicleData.id_vehicle,  
-          id_landing: formData.id_landing,     
-          name: this.name,                     
-          last_name: this.lastName,            
-          email: this.email,                   
-          description: this.comment,           
-          place_of_departure: formData.place_of_departure, 
-          arrival_place: formData.arrival_place, 
-          number_of_persons: formData.number_of_persons, 
-          date_of_departure: formData.date_of_departure, 
-          time_of_departure: timeOfDeparture24, 
-          date_of_arrival: formData.date_of_arrival, 
-          time_of_arrival: timeOfArrival24, 
-        };
+    const reservationData = {
+      id_vehicle: vehicleData.id_vehicle,
+      id_landing: formData.id_landing,
+      name: this.name,
+      last_name: this.lastName,
+      email: this.email,
+      description: this.comment,
+      place_of_departure: formData.place_of_departure,
+      arrival_place: formData.arrival_place,
+      number_of_persons: formData.number_of_persons,
+      date_of_departure: this.formatDate(formData.date_of_departure), // Convertir aquí
+      time_of_departure: timeOfDeparture24,
+      date_of_arrival: this.formatDate(formData.date_of_arrival), // Convertir aquí también
+      time_of_arrival: timeOfArrival24,
+    };
 
-        axios.post(`${url}/reservations`, reservationData)
-          .then(response => {
-            console.log("Reservación creada:", response.data);
-          })
-          .catch(error => {
-            console.error("Error al crear la reservación:", error);
-          });
-      } else {
-        console.error("No se encontraron datos en localStorage.");
-      }
-    },
+    axios.post(`${url}/reservations`, reservationData)
+      .then(response => {
+        console.log("Reservación creada:", response.data);
+        localStorage.removeItem("formValidate");
+        localStorage.removeItem("formVehicles");
+        localStorage.removeItem("selectedProduct");
+        localStorage.setItem("NameUser", this.name);
+
+        
+
+        this.$router.push({ name: "thanks-you" });
+      })
+      .catch(error => {
+        console.error("Error al crear la reservación:", error);
+      });
+  } else {
+    console.error("No se encontraron datos en localStorage.");
+  }
+},
+
 
     getVehicles() {
       const NameLandingId = this.$route.params.name;
@@ -358,32 +373,19 @@ export default {
     },
 
     formatDate(dateString) {
-      // Verificar si la cadena de fecha está definida y tiene el formato correcto
       if (!dateString || !/^\d{2}-\d{2}-\d{4}$/.test(dateString)) {
         console.error(
           "Formato de fecha inválido o cadena indefinida:",
           dateString
         );
-        return dateString || "Fecha no disponible"; // Retornar un valor por defecto si es undefined o null
+        return dateString || "Fecha no disponible";
       }
 
       // Dividir la cadena en día, mes, año
       const [day, month, year] = dateString.split("-");
 
-      // Crear un nuevo objeto de fecha
-      const date = new Date(`${year}-${month}-${day}`);
-
-      // Verificar si la fecha es válida
-      if (isNaN(date.getTime())) {
-        console.error("Fecha inválida:", dateString);
-        return dateString;
-      }
-
-      // Configurar las opciones de formato
-      const options = { day: "numeric", month: "short", year: "numeric" };
-
-      // Retornar la fecha formateada
-      return date.toLocaleDateString("es-ES", options);
+      // Retornar la fecha en formato YYYY-MM-DD
+      return `${year}-${month}-${day}`;
     },
   },
 };
