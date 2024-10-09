@@ -1,7 +1,11 @@
 <template>
   <div class="grid grid-cols-2 gap-8">
-    <div class="p-5 w-full flex flex-col justify-center">
-      <form ref="form" @submit.prevent="handleSubmit">
+    <div class="p-5 w-full flex flex-col">
+      <form
+        ref="form"
+        @submit.prevent="handleSubmit"
+        enctype="multipart/form-data"
+      >
         <div class="mb-7">
           <h2 class="text-xl text-slate-950 font-medium mb-2">
             1- Name your website
@@ -34,9 +38,9 @@
               for="logo"
               class="flex flex-col items-center justify-center text-center text-gray-500 cursor-pointer w-full h-full"
             >
-              <template v-if="LandingInfo.logo">
+              <template v-if="LandingInfo.logoUrl">
                 <img
-                  :src="LandingInfo.logo"
+                  :src="LandingInfo.logoUrl"
                   alt="Logo Preview"
                   class="h-full max-h-full object-contain"
                 />
@@ -55,7 +59,6 @@
             3- Choose Primary & Secondary Color
           </h2>
           <div class="flex space-x-4">
-            <!-- Selector de color primario -->
             <div class="flex flex-col items-center">
               <label for="primaryColor" class="text-slate-950 mb-2">
                 Primary Color
@@ -68,8 +71,6 @@
                 class="w-12 h-12 cursor-pointer border border-slate-300 rounded"
               />
             </div>
-
-            <!-- Selector de color secundario -->
             <div class="flex flex-col items-center">
               <label for="secondaryColor" class="text-slate-950 mb-2">
                 Secondary Color
@@ -87,32 +88,140 @@
       </form>
     </div>
 
-    <!-- Segunda columna -->
-    <div class="p-8 w-full flex justify-center flex-col">
-      <div class="flex justify-around">
-        <div class="flex justify-end">
-          <button
-            class="px-4 py-2 border-orange-500 border text-orange-500 rounded transition-colors"
-          >
-            Previsualizar
-          </button>
-          <button
-            @click="handleSubmit"
-            :disabled="!isFormComplete"
-            :class="{
-              'bg-orange-500': isFormComplete,
-              'bg-gray-500': !isFormComplete,
-            }"
-            class="px-4 py-2 text-white rounded transition-colors"
-          >
-            Guardar
-          </button>
+    <div class="p-8 w-full flex  flex-col">
+      <div class="p-8 w-full flex flex-col">
+        <div class="flex justify-between">
+          <h2 class="text-2xl font-bold text-gray-500">Preview</h2>
         </div>
-        
+        <div class="flex justify-around">
+          <div class="flex justify-between gap-10">
+            <button
+              class="px-4 py-2 m-6 border-orange-500 border text-orange-500 rounded transition-colors"
+            >
+              Previsualizar
+            </button>
+            <button
+              @click="handleSubmit"
+              :disabled="!isFormComplete"
+              :class="{
+                'bg-orange-500': isFormComplete,
+                'bg-gray-500': !isFormComplete,
+              }"
+              class="px-4 py-2 m-6 text-white rounded transition-colors"
+            >
+              Guardar
+            </button>
+          </div>
+        </div>
+        <p class="my-1 mb-2 text-sm text-gray-500">
+          Echa un vistazo a cómo se verá y se sentirá
+        </p>
+
+        <!-- Vista previa de la landing -->
+        <div class="p-8 bg-gray-100 rounded-lg">
+          <!-- Header con logo y botón -->
+          <div class="flex justify-between items-center mb-8">
+            <!-- Logo -->
+            <img
+              v-if="logoUrl"
+              :src="logoUrl"
+              alt="Logo"
+              class="h-auto w-14"
+              width="200"
+              height="200"
+            />
+            <img
+              v-else
+              src="../static/asset/Logo.webp"
+              alt="Logo Predeterminado"
+              class="h-auto w-14"
+              width="200"
+              height="200"
+            />
+
+            <!-- Botón superior derecho -->
+            <div
+              class="w-16 h-8 rounded"
+              :style="{ backgroundColor: primaryColor }"
+            ></div>
+          </div>
+
+          <!-- Sección principal con cuadro de búsqueda y caja grande -->
+          <div class="gap-4 mb-8">
+            <!-- Caja grande -->
+            <div
+              class="bg-gray-200 h-24 rounded flex items-center justify-between"
+            >
+              <div class="flex-grow"></div>
+              <!-- Espacio flexible para empujar el input hacia la derecha -->
+              <div>
+                <input
+                  type="text"
+                  placeholder="Search"
+                  class="h-5 p-1 border rounded"
+                  :style="{ backgroundColor: primaryColor }"
+                />
+              </div>
+            </div>
+          </div>
+
+          <!-- Caja de precios -->
+          <div class="grid grid-cols-5 gap-4 mb-8">
+            <div
+              class="bg-gray-200 h-16 flex items-center justify-center rounded"
+            >
+              <p class="text-sm" :style="{ color: primaryColor }">$0.00</p>
+            </div>
+            <div
+              class="bg-gray-200 h-16 flex items-center justify-center rounded"
+            >
+              <p class="text-sm" :style="{ color: primaryColor }">$0.00</p>
+            </div>
+            <div
+              class="bg-gray-200 h-16 flex items-center justify-center rounded"
+            >
+              <p class="text-sm" :style="{ color: primaryColor }">$0.00</p>
+            </div>
+            <div
+              class="bg-gray-200 h-16 flex items-center justify-center rounded"
+            >
+              <p class="text-sm" :style="{ color: primaryColor }">$0.00</p>
+            </div>
+            <div
+              class="bg-gray-200 h-16 flex items-center justify-center rounded"
+            >
+              <p class="text-sm" :style="{ color: primaryColor }">$0.00</p>
+            </div>
+          </div>
+
+          <!-- Caja grande y puntos -->
+          <div class="grid grid-cols-12 gap-4">
+            <!-- Caja grande inferior izquierda -->
+            <div class="col-span-9 bg-gray-200 h-24 rounded"></div>
+
+            <!-- Puntos a la derecha -->
+            <div
+              class="col-span-3 flex flex-col space-y-4 items-center justify-center"
+            >
+              <span
+                class="w-3 h-3 rounded-full"
+                :style="{ backgroundColor: primaryColor }"
+              ></span>
+              <span
+                class="w-3 h-3 rounded-full"
+                :style="{ backgroundColor: primaryColor }"
+              ></span>
+              <span
+                class="w-3 h-3 rounded-full"
+                :style="{ backgroundColor: primaryColor }"
+              ></span>
+            </div>
+          </div>
+        </div>
+        <div class="w-full bg-gray-200 h-24 rounded"></div>
       </div>
     </div>
 
-    <!-- Modal -->
     <div
       v-if="isModalVisible"
       class="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75"
@@ -138,14 +247,12 @@ export default {
   data() {
     return {
       LandingInfo: {
-        // Se puede usar un objeto para almacenar los datos del formulario
-        name: '',
+        name: "",
         logo: null,
         color_primary: "#000000",
         logoUrl: null,
         color_secondary: "#FFFFFF",
       },
-      isSubmitting: false,
       isModalVisible: false, // Controla la visibilidad del modal
       modalTitle: "Landing Actualizada",
       modalMessage: "Tu landing ha sido Actualizada exitosamente.",
@@ -153,7 +260,6 @@ export default {
   },
   computed: {
     isFormComplete() {
-      // Verifica si todos los campos necesarios están llenos
       return (
         this.LandingInfo.name &&
         this.LandingInfo.color_primary &&
@@ -161,7 +267,6 @@ export default {
       );
     },
   },
-
   methods: {
     fetchLandingData() {
       const userId = localStorage.getItem("NellyUserId");
@@ -174,9 +279,8 @@ export default {
 
       Axios.get(`/api/landings/${userId}/${landingId}`)
         .then((response) => {
-          console.log("Landing data:", response.data);
           this.LandingInfo = response.data;
-          console.log("Landing data:", this.LandingInfo);
+          this.LandingInfo.logoUrl = response.data.logo; // Asegura que logoUrl esté configurado
         })
         .catch((error) => {
           console.error("Error fetching landing data:", error);
@@ -185,11 +289,10 @@ export default {
     previewImage(event) {
       const file = event.target.files[0];
       if (file) {
-        this.LandingInfo.logo = file; // Guardar el archivo en LandingInfo
-        this.LandingInfo.logoUrl = URL.createObjectURL(file); // Generar la URL para vista previa
+        this.LandingInfo.logo = file;
+        this.LandingInfo.logoUrl = URL.createObjectURL(file);
       }
     },
-
     confirmModal() {
       this.isModalVisible = false;
     },
@@ -197,20 +300,17 @@ export default {
       const userId = localStorage.getItem("NellyUserId");
       const landingId = this.$route.params.id;
 
-      console.log("LandingInfo:", this.LandingInfo); // Verificar datos
-
-      
-
       const formData = new FormData();
       formData.append("name", this.LandingInfo.name);
-      formData.append("logo", this.LandingInfo.logo);
+
+      const logoFile = this.$refs.logoInput.files[0];
+      if (logoFile) {
+        formData.append("logo", this.LandingInfo.logo);
+        console.log("url construida del logo:", this.LandingInfo.logo);
+      }
+
       formData.append("color_primary", this.LandingInfo.color_primary);
       formData.append("color_secondary", this.LandingInfo.color_secondary);
-
-      // Imprimir cada entrada de FormData
-      for (let [key, value] of formData.entries()) {
-        console.log(key, value);
-      }
 
       Axios.post(`/api/landing-update/${userId}/${landingId}`, formData, {
         headers: {
@@ -218,8 +318,8 @@ export default {
         },
       })
         .then((response) => {
-          console.log("Landing actualizada:", response.data);
           this.isModalVisible = true;
+          console.log("Landing actualizada:", response.data);
         })
         .catch((error) => {
           console.error("Error al actualizar la landing:", error);
@@ -234,6 +334,4 @@ export default {
 };
 </script>
 
-<style scoped>
-/* Estilos personalizados */
-</style>
+<style scoped></style>

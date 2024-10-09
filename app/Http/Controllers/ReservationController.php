@@ -13,7 +13,7 @@ class ReservationController extends Controller
     {
         // Obtener todas las reservaciones que pertenezcan a la landing específica
         $reservations = Reservation::with(['landing', 'vehicle'])
-            ->where('landing_id', $landing_id)
+            ->where('id_landing', $landing_id)
             ->get();
 
         return response()->json($reservations, 200);
@@ -25,6 +25,15 @@ class ReservationController extends Controller
         $reservation = Reservation::with(['landing', 'vehicle'])->findOrFail($id);
         return response()->json($reservation, 200);
     }
+    public function indexUser($user_id)
+{
+    // Obtener todas las landings asociadas al usuario
+    $landings = Landing::where('id_users_landing', $user_id)
+        ->with('reservations.vehicle') // Cargar las reservaciones y los vehículos relacionados
+        ->get();
+
+    return response()->json($landings, 200);
+}
 
     // Guardar una nueva reservación en la base de datos
     public function store(Request $request, $id = null)
@@ -33,6 +42,7 @@ class ReservationController extends Controller
         $validatedData = $request->validate([
             'name' => 'nullable|string|max:255', // Opcional
             'last_name' => 'nullable|string|max:255', // Opcional
+            'phone' => 'nullable|string|max:255', // Opcional
             'email' => 'nullable|string|email|max:255|unique:reservations,email,' . $id, // Opcional
             'description' => 'nullable|string', // Opcional
             'id_vehicle' => 'required|exists:vehicles,id', // Obligatorio
@@ -70,6 +80,7 @@ class ReservationController extends Controller
         $validatedData = $request->validate([
             'name' => 'string|max:255',
             'last_name' => 'string|max:255',
+            'phone' => 'string|max:255',
             'email' => 'string|email|max:255|unique:reservations,email,' . $id,
             'description' => 'nullable|string',
             'id_vehicle' => 'exists:vehicles,id',

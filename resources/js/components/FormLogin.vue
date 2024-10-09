@@ -9,6 +9,7 @@
         v-model="email"
         placeholder="Email"
         :class="{'error': errors.email}"
+        pattern="^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$"
         @input="clearError('email')"
       />
      
@@ -21,7 +22,7 @@
       <input
         :type="passwordFieldType"
         v-model="password"
-        placeholder="Password"
+        placeholder="Contraseña"
         :class="{'error': errors.password}"
         @input="clearError('password')"
         required
@@ -38,8 +39,8 @@
       :disabled="loading"
       class="submit-button"
     >
-      <span v-if="loading">Loading...</span>
-      <span v-else>Login</span>
+      <span v-if="loading">Accediendo...</span>
+      <span v-else>Acceder</span>
     </button>
   </form>
 </template>

@@ -106,7 +106,7 @@ export default {
       this.showModal = true; // Muestra el modal de confirmación
     },
     deleteVehicle(vehicleId) {
-      const landingId = localStorage.getItem("NellyLandingCreate");
+      const landingId = this.$route.params.id;
 
       Axios.delete(`/api/vehicle/${landingId}/${vehicleId}`)
         .then(() => {
@@ -174,15 +174,11 @@ export default {
 
 /* Ocultar íconos por defecto */
 .actions-cell {
-  opacity: 0;
+
   cursor: pointer;
   transition: opacity 0.3s ease;
 }
 
-/* Mostrar íconos al hacer hover en la fila */
-tr:hover .actions-cell {
-  opacity: 1;
-}
 
 .error {
   color: red;

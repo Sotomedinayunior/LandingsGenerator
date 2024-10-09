@@ -1,6 +1,6 @@
 <template>
-  <div class="container mt-11">
-    <div v-if="vehicles">
+  <div>
+    <div v-if="vehicles" :style="{ '--primary-color': color2 }">
       <NavComponents
         :logo="logoLanding"
         :logoTitle="LogoTitle"
@@ -9,49 +9,73 @@
         :defaultLanguage="currentLang"
         @language-change="onLanguageChange"
       />
-      <section class="py-10">
+      <section class="w-full">
         <TabsComponents />
       </section>
-      <section class="flex">
-        <aside class="flex items-center flex-col p-4">
-          <div class="flex w-full justify-center">
-            <i class="fas fa-user"></i>
-            <h2 class="text-sm mx-8">Capacidad</h2>
-            <div>></div>
+      <section class="wrapper-content">
+        <aside class="p-10 flex flex-col space-y-11">
+          <div
+            class="flex py-3 justify-between items-center border-b border-gray-300"
+          >
+            <div class="flex">
+              <img src="./asset/User.png" alt="" />
+              <h2>Capacidad</h2>
+            </div>
+            <img src="./asset/vector.png" alt="" />
           </div>
-          <div class="flex w-full justify-center my-2">
-            <i class="fas fa-car"></i>
-            <h2 class="text-sm mx-2">Tipo de Vehículo</h2>
-            <div>></div>
+          <div
+            class="flex py-3 justify-between items-center border-b border-gray-300"
+          >
+            <div class="flex">
+              <img src="./asset/cart.png" alt="" />
+              <h2>Tipo de Vehículo</h2>
+            </div>
+            <img src="./asset/vector.png" alt="" />
           </div>
-          <div class="flex w-full justify-center my-2">
-            <i class="fas fa-suitcase"></i>
-            <h2 class="text-sm mx-2">Equipaje</h2>
-            <div>></div>
+          <div
+            class="flex py-3 justify-between items-center border-b border-gray-300"
+          >
+            <div class="flex">
+              <img src="./asset/bag.png" alt="" />
+              <h2>Equipaje</h2>
+            </div>
+            <img src="./asset/vector.png" alt="" />
           </div>
-          <div class="flex w-full justify-center my-2">
-            <i class="fas fa-tag"></i>
-            <h2 class="text-sm mx-2">Marca</h2>
-            <div>></div>
+          <div
+            class="flex py-3 justify-between items-center border-b border-gray-300"
+          >
+            <div class="flex">
+              <img src="./asset/cart.png" alt="" />
+              <h2>Marca</h2>
+            </div>
+            <img src="./asset/vector.png" alt="" />
           </div>
-          <div class="flex w-full justify-center my-2">
-            <i class="fas fa-cogs"></i>
-            <h2 class="text-sm mx-2">Transmisión</h2>
-            <div>></div>
+          <div
+            class="flex py-3 justify-between items-center border-b border-gray-300"
+          >
+            <div class="flex">
+              <img src="./asset/transmision.png" alt="" />
+              <h2>Transmisión</h2>
+            </div>
+            <img src="./asset/vector.png" alt="" />
           </div>
-          <div class="flex w-full justify-center my-2">
-            <i class="fas fa-star"></i>
-            <h2 class="text-sm mx-2">Características</h2>
-            <div>></div>
+          <div
+            class="flex py-3 justify-between items-center border-b border-gray-300"
+          >
+            <div class="flex">
+              <img src="./asset/bluetooh.png" alt="" />
+              <h2>Características</h2>
+            </div>
+            <img src="./asset/vector.png" alt="" />
           </div>
         </aside>
-        <main
-          class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8"
-        >
+        <main class="wrapper-cards">
           <CardAuto
             v-for="vehicle in vehicles"
             :key="vehicle.id"
             :vehicle="vehicle"
+            :colorPrimary="color1"
+            :colorSecondary="color2"
           />
         </main>
       </section>
@@ -76,6 +100,7 @@ export default {
       vehicles: [],
       currentLanguage: "en",
       logoLanding: "",
+      landing: [],
       LogoTitle: "",
       color1: "",
       color2: "",
@@ -84,26 +109,59 @@ export default {
   },
   mounted() {
     this.getVehicles();
+    this.updateMetaTags();
   },
   methods: {
+    metaInfo() {
+      return {
+        title: this.landing?.meta_title || "Default Title",
+        meta: [
+          {
+            name: "description",
+            content: this.landing?.meta_description || "Default description",
+          },
+          {
+            name: "viewport",
+            content: "width=device-width, initial-scale=1.0",
+          },
+          { name: "keywords", content: this.landing?.meta_keywords || "" },
+          {
+            property: "og:title",
+            content: this.landing?.og_title || "Default OG Title",
+          },
+          {
+            property: "og:description",
+            content: this.landing?.og_description || "Default OG Description",
+          },
+          {
+            property: "og:image",
+            content: this.landing?.og_image || "default-image-url.jpg",
+          },
+          { name: "robots", content: this.landing?.robots || "index, follow" },
+          {
+            rel: "canonical",
+            href: this.landing?.canonical_url || window.location.href,
+          },
+        ],
+      };
+    },
     getVehicles() {
       const NameLandingId = this.$route.params.name;
 
       axios
         .get(`${url}/publicLanding/${NameLandingId}`)
         .then((response) => {
+          this.landing = response.data.landing;
           this.logoLanding = response.data.landing.logo;
           this.LogoTitle = response.data.landing.name;
           this.color1 = response.data.landing.color_primary;
           this.color2 = response.data.landing.color_secondary;
           this.vehicles = response.data.landing.vehicles;
-          console.log(
-            `aqui estan la info de los vehicles`,
-            this.vehicles,
-            this.logoLanding,
-            this.color1,
-            this.color2
-          );
+
+          // Asignar el color a la variable CSS
+          document.documentElement.style.setProperty('--primary-color', this.color1);
+
+          this.updateMetaTags();
         })
         .catch((err) => {
           // si ocurre un error (como un 404), mostrar el mensaje de error
@@ -114,6 +172,27 @@ export default {
           }
         });
     },
+    updateMetaTags() {
+      const metaData = this.metaInfo();
+
+      // Actualiza el título de la página
+      document.title = metaData.title;
+
+      // Eliminar meta tags existentes (si es necesario)
+      const existingMetaTags = document.querySelectorAll(
+        "meta[name], meta[property]"
+      );
+      existingMetaTags.forEach((tag) => tag.parentNode.removeChild(tag));
+
+      // Añadir nuevos meta tags
+      metaData.meta.forEach((metaTag) => {
+        const meta = document.createElement("meta");
+        Object.keys(metaTag).forEach((key) => {
+          meta.setAttribute(key, metaTag[key]);
+        });
+        document.head.appendChild(meta);
+      });
+    },
     changeLanguage(language) {
       this.$i18n.locale = language;
       this.currentLanguage = language;
@@ -123,7 +202,28 @@ export default {
 </script>
 
 <style scoped>
-h1 {
-  color: blue;
+.wrapper-content {
+  display: grid;
+  grid-template-columns: 1fr 3fr;
+  margin: 20px 0px 0px 0px;
+}
+.wrapper-cards {
+  display: grid;
+  grid-template-columns: auto auto auto auto;
+  gap: 10px;
+  margin: 20px 20px 0px 0px;
+}
+@media screen and (max-width: 576px) {
+  .wrapper-cards {
+    grid-template-columns: auto;
+  }
+  .wrapper-content {
+    grid-template-columns: 1fr;
+  }
+}
+
+::selection {
+  background-color: var(--primary-color) !important;
+  color: #fff !important;
 }
 </style>

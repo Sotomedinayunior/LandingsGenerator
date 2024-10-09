@@ -175,6 +175,7 @@ export default {
       Axios.delete(`/api/landing/deletedFinal/${id}`)
         .then(() => {
           this.showDeleteModal = false;
+          this.landings = this.landings.filter(landing => landing.id !== id);
           this.fetchDeletedLandings(); // Actualizar la lista después de eliminar
         })
         .catch((error) => {

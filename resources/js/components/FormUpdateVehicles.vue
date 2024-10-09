@@ -351,8 +351,10 @@ export default {
       const vehicleId = this.$route.params.id;
       Axios.put(`/api/vehicles/${landingId}/${vehicleId}`, this.currentVehicle)
         .then((response) => {
+          console.log("Vehículo actualizado:", response.data);
         
           this.showModal = true;
+          this.closeModal=false;  
 
         })
         .catch((error) => {

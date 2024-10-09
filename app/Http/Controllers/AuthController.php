@@ -22,7 +22,7 @@ class AuthController extends Controller
                 'email' => 'required|string|email|max:255|unique:users',
                 'password' => 'required|string|confirmed|min:3',
                 'phone' => 'nullable|string|max:25',
-                'theme' => 'nullable|string|max:255',
+          
                 'role' => 'required|string|in:admin,user',
                 'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             ]);
@@ -48,7 +48,7 @@ class AuthController extends Controller
                 'password' => Hash::make($fields['password']),
                 'phone' => $fields['phone'],
                 'avatar' => $avatar,
-                'theme' => $fields['theme'],
+           
                 'role' => $fields['role'],
             ]);
 
@@ -91,11 +91,11 @@ class AuthController extends Controller
 
         // Verificar si el usuario existe
         if (!$user) {
-            $errors['email'] = ['The email is not registered.'];
+            $errors['email'] = ['El email no esta registrado.'];
         } else {
             // Verificar la contraseña
             if (!Hash::check($request->password, $user->password)) {
-                $errors['password'] = ['The password is incorrect.'];
+                $errors['password'] = ['La contraseña es incorrecta.'];
             }
         }
 
@@ -123,7 +123,7 @@ class AuthController extends Controller
                 'name' => 'required|string|max:255',
                 'email' => 'required|string|email|max:255|unique:users,email,' . $request->user()->id,
                 'phone' => 'required|string|max:25',
-                'theme' => 'required|string|max:255',
+                'password' => 'required|string|confirmed|min:3',
                 'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048', // Avatar opcional
             ]);
 
@@ -150,8 +150,8 @@ class AuthController extends Controller
             $user->update([
                 'name' => $fields['name'],
                 'email' => $fields['email'],
+                'password' => Hash::make($fields['password']),
                 'phone' => $fields['phone'],
-                'theme' => $fields['theme'],
                 'avatar' => $avatar,
             ]);
 

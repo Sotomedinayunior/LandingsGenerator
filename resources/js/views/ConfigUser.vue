@@ -60,17 +60,7 @@
         <span v-if="errors.phone" class="text-red-500">{{ errors.phone }}</span>
       </div>
 
-      <div class="mb-4">
-        <label for="theme" class="block text-base font-bold text-[#f16822]">Tema</label>
-        <input
-          type="text"
-          v-model="user.theme"
-          id="theme"
-          name="theme"
-          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none sm:text-sm"
-        />
-        <span v-if="errors.theme" class="text-red-500">{{ errors.theme }}</span>
-      </div>
+      
 
       <div class="flex justify-end">
         <button
@@ -119,7 +109,7 @@ export default {
       }
 
       if (!this.user.phone) this.errors.phone = 'El teléfono es obligatorio.';
-      if (!this.user.theme) this.errors.theme = 'El tema es obligatorio.';
+      if (!this.user.password) this.errors.password = 'El tema es obligatorio.';
 
       return Object.keys(this.errors).length === 0;
     },
@@ -131,7 +121,7 @@ export default {
       formData.append("name", this.user.name);
       formData.append("email", this.user.email);
       formData.append("phone", this.user.phone);
-      formData.append("theme", this.user.theme);
+      formData.append("password", this.user.password);
       if (this.user.avatarFile) {
         formData.append("avatar", this.user.avatarFile);
       }
@@ -158,5 +148,5 @@ export default {
 </script>
 
 <style scoped>
-/* Puedes agregar estilos personalizados aquí */
+
 </style>

@@ -9,13 +9,13 @@
 
     <div v-if="loading" class="text-center">Cargando...</div>
 
-    <div v-else>
+    <div v-else class="mx-w-md">
       <form
         @submit.prevent="updateVehicle"
         class="grid grid-cols-1 md:grid-cols-2 gap-5"
         enctype="multipart/form-data"
       >
-        <div class="pl-10">
+        <div class="">
           <div
             class="border-2 border-dashed border-gray-300 bg-[#DDDDDD33] p-4 w-full h-40 flex items-center justify-center relative"
           >
@@ -267,8 +267,10 @@
             </div>
 
             <div class="mt-4">
-              <h4 class="text-md font-bold mb-2">Características especiales adiccionales</h4>
-              <ul v-if="specialFeatures.length" class="flex  space-y-2">
+              <h4 class="text-md font-bold mb-2">
+                Características especiales adiccionales
+              </h4>
+              <ul v-if="specialFeatures.length" class="flex space-y-2">
                 <li v-for="(featureSet, index) in specialFeatures" :key="index">
                   <ul v-if="featureSet.features.length" class="flex">
                     <li
@@ -396,20 +398,17 @@ export default {
         automatic: false,
         apple_car: false,
         images: [],
-      }, // Inicializa  // Asegúrate de inicializar el objeto del vehículo
+      },
       error: false,
       loading: true,
       currentImage: null,
-      showModal: false,
-      showModalfeature: false,
-      // Nueva característica
+      showModalFeature: false,
       newFeature: {
         name: "",
         value: "",
       },
-      specialFeatures: null,
-
-      vehicleImages: [], // Inicializa el array de imágenes
+      specialFeatures: [],
+      vehicleImages: [],
     };
   },
   methods: {
@@ -420,8 +419,7 @@ export default {
           `/api/vehicle/${vehicleId}/special-features`
         );
 
-        // Verifica si 'specialFeatures' existe en la respuesta
-        if (response.data && response.data.specialFeatures) {
+        if (response.data?.specialFeatures) {
           this.specialFeatures = response.data.specialFeatures;
         } else {
           console.error("No se encontraron specialFeatures");
@@ -437,75 +435,80 @@ export default {
 
     closeModal() {
       this.showModal = false;
+      this.showModalFeature = false;
     },
-    fetchData() {
+
+    async fetchData() {
       const landingId = this.$route.params.id;
       const vehicleId = localStorage.getItem("vehicleToEdit");
 
-      Axios.get(`/api/vehicles/${landingId}/${vehicleId}`)
-        .then((response) => {
-          console.log(response.data);
-          this.vehicleImages = response.data.vehicle.images.map(
-            (image) => `/storage/${image.path_images}`
-          );
-          this.currentVehicle = response.data.vehicle; // Usa currentVehicle
-        })
-        .catch((error) => {
-          this.error = true;
-          console.error("Error fetching data:", error); // Para depuración
-        })
-        .finally(() => {
-          this.loading = false;
-        });
-    },
-    updateVehicle() {
-      const landingId = this.$route.params.id;
-      const vehicleId = localStorage.getItem("vehicleToEdit");
-
-      Axios.put(`/api/vehicles/${landingId}/${vehicleId}`, this.currentVehicle)
-        .then((response) => {
-          this.showModal = true;
-        })
-        .catch((error) => {
-          console.error("Error actualizando el vehículo:", error);
-        });
-    },
-    handleImageUpload(event) {
-      const files = event.target.files;
-      this.vehicleImages = []; // Reinicializa el array de imágenes en el componente
-
-      for (let i = 0; i < files.length; i++) {
-        const reader = new FileReader();
-        reader.onload = (e) => {
-          this.vehicleImages.push(e.target.result); // Agrega la imagen al array
-        };
-        reader.readAsDataURL(files[i]);
+      try {
+        const response = await Axios.get(
+          `/api/vehicles/${landingId}/${vehicleId}`
+        );
+        console.log(response.data);
+        this.vehicleImages = response.data.vehicle.images.map(
+          (image) => `/storage/${image.path_images}`
+        );
+        this.currentVehicle = response.data.vehicle;
+      } catch (error) {
+        this.error = true;
+        console.error("Error fetching data:", error);
+      } finally {
+        this.loading = false;
       }
     },
 
-    removeImage(index) {
-      this.vehicleImages.splice(index, 1); // Elimina la imagen del array
+    async updateVehicle() {
+      const landingId = this.$route.params.id;
+      const vehicleId = localStorage.getItem("vehicleToEdit");
+
+      try {
+        const response = await Axios.put(
+          `/api/vehicles/${landingId}/${vehicleId}`,
+          this.currentVehicle
+        );
+        console.log("Vehículo actualizado:", response.data);
+        alert("Vehículo actualizado con éxito");
+      } catch (error) {
+        console.error("Error actualizando el vehículo:", error);
+      }
     },
+
+    handleImageUpload(event) {
+      const files = event.target.files;
+
+      this.currentImage = null;
+
+      Array.from(files).forEach((file) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          this.vehicleImages.push(e.target.result);
+          this.currentImage = e.target.result;
+          console.log(this.currentImage);
+        };
+        reader.readAsDataURL(file);
+      });
+    },
+
+    removeImage(index) {
+      this.vehicleImages.splice(index, 1);
+    },
+
     prev() {
       this.$router.push("/layout-designer/add-vehicles");
     },
+
     openFeatureModal() {
-      this.showModalfeature = true;
+      this.showModalFeature = true;
     },
-    openModal() {
-      this.showModal = true;
-    },
-    closeModal() {
-      this.showModalfeature = false;
-    },
+
     async addFeature() {
-      // Verifica que newFeature tenga contenido
       if (!this.newFeature.name || !this.newFeature.value) {
         alert("Por favor, completa todos los campos de la característica.");
         return;
       }
 
-      // Crea un objeto de características
       const featureData = {
         features: [
           {
@@ -517,13 +520,10 @@ export default {
 
       try {
         const vehicleId = localStorage.getItem("vehicleToEdit");
-        const response = await Axios.post(
-          `/api/special-feature/${vehicleId}`,
-          featureData
-        );
+        await Axios.post(`/api/special-feature/${vehicleId}`, featureData);
         alert("Característica agregada con éxito");
-        this.closeModal(); // Cerrar modal después de agregar
-        this.loadSpecialFeatures(); // Recarga las características después de agregar
+        this.closeModal();
+        this.loadSpecialFeatures();
       } catch (error) {
         console.error("Error al agregar la característica:", error);
         alert("Hubo un error al agregar la característica.");
@@ -539,5 +539,5 @@ export default {
 </script>
 
 <style scoped>
-/* Your custom styles here */
+
 </style>
