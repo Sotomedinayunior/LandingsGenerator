@@ -342,5 +342,4 @@ export default {
 </script>
 
 <style scoped>
-/* Estilos personalizados */
 </style>

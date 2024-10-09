@@ -21,20 +21,21 @@
     <!-- Sidebar -->
     <aside :class="sidebarClass" class="w-64 h-screen flex flex-col px-6">
       <!-- Logo e Icono -->
-      <div class="flex justify-between items-center py-6 px-2">
+      <div class="flex justify-between items-center py-6 px-2 cursor-pointer">
         <img
           src="../static/asset/Icon.webp"
           alt="Logo"
           class="h-8"
           loading="lazy"
+          @click="navigate('/landings')"
         />
         <!-- El icono de la flecha doble -->
-        <img
+        <!-- <img
           src="../static/asset/arrow.svg"
           alt="arrow double"
           class="w-5 h-5 cursor-pointer"
           @click="toggleSidebarOnMobile"
-        />
+        /> -->
       </div>
 
       <!-- Links -->
@@ -45,7 +46,7 @@
             :key="link.name"
             :class="getLinkClass(link.route)"
             @click="navigate(link.route)"
-            class="flex items-center px-4 py-2 cursor-pointer text-sm"
+            class="flex items-center px-4 py-2 cursor-pointer text-xs"
           >
             <component :is="link.icon" class="h-6 w-6 mr-2" />
             <span>{{ link.name }}</span>
@@ -56,14 +57,17 @@
       <!-- Sección Inferior -->
       <div class="flex flex-col items-center mb-6 mt-auto">
         <div class="flex items-center space-x-2 mb-4">
-          <img src="../static/asset/config.svg" class="cursor-pointer" alt="configuracion de usuario" title="configuracion de usuario" loading="lazy" @click="UserConfig">
+          <img src="../static/asset/config.svg" class="cursor-pointer object-contain" alt="configuracion de usuario" title="configuracion de usuario" loading="lazy" @click="UserConfig">
           <img
             :src="userAvatar" 
-            alt="User Avatar"
+            alt="Avatar"
+            width="200"
+            height="200"
             title="Avatar" 
             loading="lazy" 
+            style="aspect-ratio: 20/21;"
             @click="UserConfig"
-            class="h-12 w-12 cursor-pointer rounded-full border-2 border-[#F57200]"
+            class="object-cover h-auto w-10 cursor-pointer rounded-full border-2 border-[#F57200]"
           />
         </div>
         <button

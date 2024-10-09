@@ -9,13 +9,13 @@
 
     <div v-if="loading" class="text-center">Cargando...</div>
 
-    <div v-else>
+    <div v-else class="mx-w-md">
       <form
         @submit.prevent="updateVehicle"
         class="grid grid-cols-1 md:grid-cols-2 gap-5"
         enctype="multipart/form-data"
       >
-        <div class="pl-10">
+        <div class="">
           <div
             class="border-2 border-dashed border-gray-300 bg-[#DDDDDD33] p-4 w-full h-40 flex items-center justify-center relative"
           >
@@ -539,5 +539,5 @@ export default {
 </script>
 
 <style scoped>
-/* Tus estilos personalizados aquí */
+
 </style>

@@ -178,10 +178,7 @@ export default {
   transition: opacity 0.3s ease;
 }
 
-/* Mostrar íconos al hacer hover en la fila */
-tr:hover .actions-cell {
-  opacity: 1;
-}
+
 
 .error {
   color: red;

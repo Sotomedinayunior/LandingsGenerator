@@ -19,7 +19,8 @@ Route::post('/login-nelly', [AuthController::class, 'login']);
 Route::get('/publicLanding/{name}', [PublicLandingController::class, 'index']);
 Route::get('/publicLanding/{name}/vehicle/{id}', [PublicLandingController::class, 'showVehicle']);
 Route::post('/reservations', [ReservationController::class, 'store']);
-
+//obtener las caracteristicas especiales de un vehiculo
+Route::get('vehicle/{vehicleId}/special-features-public', [VehicleController::class, 'getSpecialFeatures']);
 
 Route::middleware('auth:sanctum')->get('/protected', function () {
     return response()->json(['message' => 'You are authenticated!']);
@@ -61,6 +62,8 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/vehicles/{landingId}/{vehicleId}', [VehicleController::class, 'show']);
     //obtener las reservaciones 
     Route::get('/reservations/{landing_id}', [ReservationController::class, 'index']);
+    //obtener las reservaciones de un usuario
+    Route::get('/reservations/user/{user_id}', [ReservationController::class, 'indexUser']);
     //actualizar un vehiculo
     Route::put('/vehicles/{landingId}/{vehicleId}', [VehicleController::class, 'update']);
     //agregar feature a un vehiculo

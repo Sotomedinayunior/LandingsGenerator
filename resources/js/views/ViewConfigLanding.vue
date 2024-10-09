@@ -156,7 +156,7 @@ export default {
         logo: "",
         name: "",
       },
-      activeTab: "vehicles",
+      activeTab: "reservations",
       isLoading: true, // Estado para manejar la carga
     };
   },

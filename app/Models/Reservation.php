@@ -13,6 +13,7 @@ class Reservation extends Model
         'last_name',
         'email',
         'description',
+        'phone',
         'id_vehicle',
         'place_of_departure',
         'arrival_place',
