@@ -20,7 +20,7 @@
             </p>
           </div>
         </div>
-        <!-- Trash Icon -->
+        <!-- Trash Icon iconsss -->
         <i class="fas fa-trash w-4 h-4" @click.stop="showModal = true"></i>
       </div>
       <div class="flex justify-between mt-4">
