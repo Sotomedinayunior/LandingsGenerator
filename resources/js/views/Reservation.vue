@@ -37,7 +37,7 @@
       <thead>
         <tr>
      
-          <th>Foto</th>
+          <th>Logo landing</th>
           <th>Nombre de Carro</th>
           <th>$ Monto Total</th>
           <th>Nombre</th>
@@ -52,15 +52,15 @@
         <tr v-for="item in reservations" :key="item.id || index">
          
           <td>
-            <img :src="item.landing.logo" alt="Carro" class="foto" />
+            <img :src="item.logo" alt="Carro" class="foto" />
           </td>
-          <td>{{ item.vehicle.name }}</td>
+          <td>{{ item.reservations[0].vehicle.name }}</td>
           <td>{{ item.total_price || "N/A" }}</td>
-          <td>{{ item.name }}</td>
-          <td>{{ item.last_name }}</td>
-          <td>{{ item.email }}</td>
-          <td>{{ item.phone }}</td>
-          <td>{{ item.description }}</td>
+          <td>{{ item.reservations[0].name }}</td>
+          <td>{{ item.reservations[0].last_name }}</td>
+          <td>{{ item.reservations[0].email }}</td>
+          <td>{{ item.reservations[0].phone }}</td>
+          <td>{{ item.reservations[0].description }}</td>
           <td class="flex justify-between" id="actions">
             <i class="fa-solid fa-eye" @click="viewReservation(item)"></i>
             <i class="fa-solid fa-pencil" @click="editReservation(item)"></i>
@@ -79,8 +79,10 @@ import Axios from '../axios';
 export default {
   data() {
     return {
+      
       reservations: [], // Asegúrate de inicializar esto como un array
       searchTerm: '', // Para la búsqueda de reservas
+      
     };
   },
   computed: {
@@ -101,7 +103,7 @@ export default {
       try {
         const UserId = localStorage.getItem("NellyUserId");
         const response = await Axios.get(`/api/reservations/user/${UserId}`);
-        this.reservations = response.data.reservations;
+        this.reservations = response.data; 
         console.log("Reservas cargadas:", this.reservations);
       } catch (error) {
         this.error = "Error al cargar las reservas";
@@ -119,5 +121,77 @@ export default {
 
 
 <style scoped>
+.table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 20px;
+  border-radius: 8px 8px 0 0;
+  overflow: hidden;
+}
+
+.table thead {
+  background-color: #fdf0e9;
+  color: #222;
+  font-size: 10px !important;
+  border: 2px solid #fc8b46;
+  border-radius: 8px 8px 0 0;
+}
+
+.table th,
+.table td {
+  padding: 7px;
+  text-align: left;
+  border-bottom: 1.2px solid #ddd;
+  vertical-align: middle;
+}
+
+.table td {
+  font-size: 12px;
+}
+
+.table th {
+  text-transform: capitalize;
+  letter-spacing: 0.04em;
+  font-weight: 300;
+  font-size: 12px;
+}
+
+.table td img {
+  width: 40px;
+  height: 40px;
+  margin-right: 10px;
+  border-radius: 5px;
+}
+
+.actions-cell {
+  display: flex;
+  justify-content: space-evenly;
+  align-items: center;
+}
+
+/* Ocultar íconos por defecto */
+.actions-cell {
+  opacity: 0;
+  cursor: pointer;
+  transition: opacity 0.3s ease;
+}
+
+
+
+.error {
+  color: red;
+  font-size: 14px;
+}
+
+.vehicle-image {
+  border-radius: 5px;
+  width: 40px;
+  height: 40px;
+}
+
+.vehiculo-nombre {
+  display: flex;
+  align-items: center;
+}
 
 </style>
