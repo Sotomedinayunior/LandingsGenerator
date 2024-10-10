@@ -85,7 +85,7 @@ export default {
   },
   computed: {
     filteredReservations() {
-      // Filtra las reservas en función del término de búsqueda
+     
       return this.reservations.filter(reservation => {
         const fullName = `${reservation.name} ${reservation.last_name}`.toLowerCase();
         return (
