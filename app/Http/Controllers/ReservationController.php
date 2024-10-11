@@ -26,14 +26,15 @@ class ReservationController extends Controller
         return response()->json($reservation, 200);
     }
     public function indexUser($user_id)
-{
-    // Obtener todas las landings asociadas al usuario
-    $landings = Landing::where('id_users_landing', $user_id)
-        ->with('reservations.vehicle') // Cargar las reservaciones y los vehículos relacionados
-        ->get();
+    {
 
-    return response()->json($landings, 200);
-}
+        // Obtener todas las landings asociadas al usuario
+        $landings = Landing::where('id_users_landing', $user_id)
+            ->with('reservations.vehicle') // Cargar las reservaciones y los vehículos relacionados
+            ->get();
+
+        return response()->json($landings, 200);
+    }
 
     // Guardar una nueva reservación en la base de datos
     public function store(Request $request, $id = null)
@@ -55,21 +56,21 @@ class ReservationController extends Controller
             'time_of_arrival' => 'nullable|date_format:H:i', // Opcional, especificando el formato
             'id_landing' => 'required|exists:landings,id', // Obligatorio
         ]);
-    
+
         // Aquí puedes proceder a crear la reservación
         // Encontrar el Vehicle y Landing asociados
         $vehicle = Vehicle::findOrFail($validatedData['id_vehicle']);
         $landing = Landing::findOrFail($validatedData['id_landing']);
-    
+
         // Crear la reservación y asociarla con el Vehicle y Landing
         $reservation = new Reservation($validatedData);
         $reservation->vehicle()->associate($vehicle);
         $reservation->landing()->associate($landing);
         $reservation->save();
-    
+
         return response()->json(['message' => 'Reservación creada exitosamente', 'reservation' => $reservation], 201);
     }
-    
+
 
 
 

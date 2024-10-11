@@ -2,7 +2,6 @@
   <section class="lg:ml-64 p-4">
     <div class="flex flex-col sm:flex-row items-center justify-between mb-6 px-4">
       <h1 class="font-bold text-3xl">Reservas</h1>
-
       <div class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-4 sm:mt-0">
         <!-- Campo de búsqueda -->
         <div class="relative">
@@ -12,7 +11,6 @@
             v-model="searchTerm"
             class="p-2 pr-10 border border-gray-300 rounded-md focus:outline-none placeholder:text-sm w-full sm:w-auto"
           />
-          <!-- SVG de lupa -->
           <svg
             class="absolute inset-y-2 right-2 w-5 h-5 text-gray-500"
             fill="none"
@@ -31,47 +29,52 @@
       </div>
     </div>
 
-    <!-- Tabla aquí -->
     <div class="overflow-x-auto">
       <table class="table">
-      <thead>
-        <tr>
-     
-          <th>Logo landing</th>
-          <th>Nombre de Carro</th>
-          <th>$ Monto Total</th>
-          <th>Nombre</th>
-          <th>Apellido</th>
-          <th>Correo Electrónico</th>
-          <th>Teléfono</th>
-          <th>Descripción</th>
-          <th>Acciones</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="item in reservations" :key="item.id || index">
-         
-          <td>
-            <img :src="item.logo" alt="Carro" class="foto" />
-          </td>
-          <td>{{ item.reservations[0].vehicle.name }}</td>
-          <td>{{ item.total_price || "N/A" }}</td>
-          <td>{{ item.reservations[0].name }}</td>
-          <td>{{ item.reservations[0].last_name }}</td>
-          <td>{{ item.reservations[0].email }}</td>
-          <td>{{ item.reservations[0].phone }}</td>
-          <td>{{ item.reservations[0].description }}</td>
-          <td class="flex justify-between" id="actions">
-            <i class="fa-solid fa-eye" @click="viewReservation(item)"></i>
-            <i class="fa-solid fa-pencil" @click="editReservation(item)"></i>
-          </td>
-        </tr>
-      </tbody>
-    </table>
+        <thead>
+          <tr>
+            <th>Logo landing</th>
+            <th>Nombre de Carro</th>
+            <th>$ Monto Total</th>
+            <th>Nombre</th>
+            <th>Apellido</th>
+            <th>Correo Electrónico</th>
+            <th>Teléfono</th>
+            <th>Descripción</th>
+            <th>Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <template v-for="landing in reservations" :key="landing.id">
+            <template v-for="reservation in landing.reservations" :key="reservation.id">
+              <tr>
+                <!-- Muestra el logo y el nombre del carro solo en la primera reserva -->
+                <td v-if="reservation === landing.reservations[0]">
+                  <img :src="landing.logo" alt="Carro" class="foto" />
+                </td>
+                <td v-if="reservation === landing.reservations[0]">
+                  {{ reservation.vehicle.name }}
+                </td>
+                <td v-if="reservation === landing.reservations[0]">
+                  {{ landing.total_price || "N/A" }}
+                </td>
+                <td>{{ reservation.name }}</td>
+                <td>{{ reservation.last_name }}</td>
+                <td>{{ reservation.email }}</td>
+                <td>{{ reservation.phone }}</td>
+                <td>{{ reservation.description }}</td>
+                <td class="flex justify-between" id="actions">
+                  <i class="fa-solid fa-eye" @click="viewReservation(reservation)"></i>
+                  <i class="fa-solid fa-pencil" @click="editReservation(reservation)"></i>
+                </td>
+              </tr>
+            </template>
+          </template>
+        </tbody>
+      </table>
     </div>
   </section>
 </template>
-
 
 <script>
 import Axios from '../axios';
@@ -79,22 +82,21 @@ import Axios from '../axios';
 export default {
   data() {
     return {
-      
       reservations: [], // Asegúrate de inicializar esto como un array
       searchTerm: '', // Para la búsqueda de reservas
-      
     };
   },
   computed: {
     filteredReservations() {
-     
-      return this.reservations.filter(reservation => {
-        const fullName = `${reservation.name} ${reservation.last_name}`.toLowerCase();
-        return (
-          fullName.includes(this.searchTerm.toLowerCase()) ||
-          reservation.email.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-          reservation.arrival_place.toLowerCase().includes(this.searchTerm.toLowerCase())
-        );
+      return this.reservations.filter(landing => {
+        return landing.reservations.some(reservation => {
+          const fullName = `${reservation.name} ${reservation.last_name}`.toLowerCase();
+          return (
+            fullName.includes(this.searchTerm.toLowerCase()) ||
+            reservation.email.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
+            reservation.arrival_place.toLowerCase().includes(this.searchTerm.toLowerCase())
+          );
+        });
       });
     },
   },
@@ -108,8 +110,6 @@ export default {
       } catch (error) {
         this.error = "Error al cargar las reservas";
         console.error("Error al cargar las reservas:", error);
-      } finally {
-        this.loading = false; // Detiene el estado de carga
       }
     },
   },
@@ -118,7 +118,6 @@ export default {
   },
 };
 </script>
-
 
 <style scoped>
 .table {
@@ -169,29 +168,8 @@ export default {
   align-items: center;
 }
 
-/* Ocultar íconos por defecto */
-.actions-cell {
-  opacity: 0;
-  cursor: pointer;
-  transition: opacity 0.3s ease;
-}
-
-
-
 .error {
   color: red;
   font-size: 14px;
 }
-
-.vehicle-image {
-  border-radius: 5px;
-  width: 40px;
-  height: 40px;
-}
-
-.vehiculo-nombre {
-  display: flex;
-  align-items: center;
-}
-
 </style>

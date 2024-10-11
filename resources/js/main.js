@@ -2,6 +2,7 @@ import { createApp } from 'vue';
 import App from './App.vue';
 import router from './router/index';
 import store from './global/store';
+import '../sass/app.scss';
 import { createMetaManager } from 'vue-meta'; 
 import i18n from './translate'
 
