@@ -1,4 +1,5 @@
 # LandingsGenerator
+![LandingsGenerator Logo](https://chezaad.com/wp-content/uploads/2021/05/chezaad-new-logo-regular-v2.png)
 
 ## Descripción
 
