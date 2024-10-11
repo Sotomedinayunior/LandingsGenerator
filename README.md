@@ -10,6 +10,8 @@ Este proyecto es una **aplicación monolítica** construida utilizando **Vue.js 
 - **Vue.js 3**: Framework JavaScript moderno que permite la creación de interfaces de usuario altamente reactivas.
 - **Vite**: Herramienta de compilación ultrarrápida que mejora la experiencia de desarrollo y construcción de la aplicación.
 - **Tailwind CSS**: Framework de utilidades CSS para el diseño de interfaces de usuario responsivas y personalizables.
+- **Vuex**: Biblioteca oficial de manejo de estado para Vue.js, utilizada para gestionar el estado compartido en la aplicación, permitiendo una arquitectura centralizada y eficiente para controlar los datos y su flujo entre componentes.
+- **Vue Meta**: Plugin que facilita la gestión de las etiquetas meta del documento en una aplicación Vue, permitiendo configurar dinámicamente el contenido de SEO como títulos de página y meta descripciones basados en la ruta o la vista activa.
 
 ### Backend:
 - **Laravel 11**: Framework de PHP que sigue el patrón MVC (Modelo-Vista-Controlador) para construir aplicaciones web robustas y escalables.
@@ -17,7 +19,7 @@ Este proyecto es una **aplicación monolítica** construida utilizando **Vue.js 
 - **Spatie Laravel Permission**: Sistema avanzado de gestión de roles y permisos dentro de la aplicación.
 
 ### Internacionalización (i18n):
-- **i18n**: Implementación completa de un sistema multi-idioma que adapta la aplicación a diferentes regiones y usuarios globales.
+- **i18n**: Implementación completa de un sistema multi-idioma que adapta la aplicación a diferentes regiones y usuarios globales. Esto permite que el contenido y la interfaz se ajusten automáticamente en función del idioma preferido por el usuario.
 
 ### Gestión de Roles y Permisos:
 - Funcionalidad avanzada para manejar diferentes niveles de acceso mediante roles de usuario y permisos, garantizando un control detallado dentro de la plataforma.
