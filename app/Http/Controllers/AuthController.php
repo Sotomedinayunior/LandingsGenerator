@@ -22,7 +22,7 @@ class AuthController extends Controller
                 'email' => 'required|string|email|max:255|unique:users',
                 'password' => 'required|string|confirmed|min:3',
                 'phone' => 'nullable|string|max:25',
-          
+
                 'role' => 'required|string|in:admin,user',
                 'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
             ]);
@@ -48,7 +48,7 @@ class AuthController extends Controller
                 'password' => Hash::make($fields['password']),
                 'phone' => $fields['phone'],
                 'avatar' => $avatar,
-           
+
                 'role' => $fields['role'],
             ]);
 
@@ -115,58 +115,82 @@ class AuthController extends Controller
             'expiration' => now()->addMinutes(60)->toDateTimeString()
         ]);
     }
-    public function update(Request $request)
+    public function show($id)
     {
         try {
-            // Validar los datos
-            $fields = $request->validate([
-                'name' => 'required|string|max:255',
-                'email' => 'required|string|email|max:255|unique:users,email,' . $request->user()->id,
-                'phone' => 'required|string|max:25',
-                'password' => 'required|string|confirmed|min:3',
-                'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048', // Avatar opcional
-            ]);
+            // Buscar el usuario por el ID recibido en la URL
+            $user = User::findOrFail($id); // Si el usuario no existe, se lanzará un error 404
 
-            // Obtener el usuario autenticado
-            $user = $request->user();
-
-            // Manejar la carga de archivo del avatar
-            if ($request->hasFile('avatar')) {
-                // Eliminar el avatar antiguo si no es el predeterminado
-                if ($user->avatar && filter_var($user->avatar, FILTER_VALIDATE_URL) === false) {
-                    $oldAvatarPath = str_replace(asset('storage/') . '/', '', $user->avatar);
-                    Storage::disk('public')->delete($oldAvatarPath);
-                }
-
-                // Almacenar el nuevo avatar
-                $avatarPath = $request->file('avatar')->store('users', 'public');
-                $avatar = asset('storage/' . $avatarPath); // Generar la URL pública
-            } else {
-                // Mantener el avatar actual si no se proporciona uno nuevo
-                $avatar = $user->avatar;
-            }
-
-            // Actualizar los datos del usuario
-            $user->update([
-                'name' => $fields['name'],
-                'email' => $fields['email'],
-                'password' => Hash::make($fields['password']),
-                'phone' => $fields['phone'],
-                'avatar' => $avatar,
-            ]);
-
+            // Retornar la respuesta con los datos del usuario
             return response()->json([
-                'message' => 'Información actualizada con éxito',
-                'user' => $user,
+                'user' => $user
             ]);
         } catch (\Exception $e) {
-            return response()->json([
-                'message' => 'Hubo un problema al actualizar la información.',
-                'error' => $e->getMessage(),
-            ], 500);
+            // Si ocurre un error, retornar una respuesta con el mensaje de error
+            return response()->json(['error' => 'Usuario no encontrado.'], 404);
         }
     }
 
+    public function update(Request $request, $id)
+{
+    try {
+        // Buscar el usuario por el ID recibido en la URL
+        $user = User::findOrFail($id); // Esto devolverá 404 si el usuario no existe
+
+        // Validar los datos enviados
+        $fields = $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|string|email|max:255|unique:users,email,' . $user->id, // Excluir el email del usuario actual
+            'password' => 'nullable|string|confirmed|min:3', // La contraseña es opcional
+            'phone' => 'nullable|string|max:25',
+            'avatar' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048', // Validación del avatar
+        ]);
+
+        // Manejar la carga de archivo del avatar (si se proporciona)
+        if ($request->hasFile('avatar')) {
+            // Eliminar el avatar anterior si existe
+            if ($user->avatar && Storage::disk('public')->exists(str_replace(asset('storage'), '', $user->avatar))) {
+                Storage::disk('public')->delete(str_replace(asset('storage'), '', $user->avatar));
+            }
+
+            // Almacenar el nuevo avatar
+            $avatarPath = $request->file('avatar')->store('users', 'public');
+            $user->avatar = asset('storage/' . $avatarPath); // Generar URL pública
+        }
+
+        // Si se proporciona una nueva contraseña, actualizarla
+        if ($request->filled('password')) {
+            $user->password = Hash::make($fields['password']);
+        }
+
+        // Actualizar los demás campos
+        $user->name = $fields['name'];
+        $user->email = $fields['email'];
+        $user->phone = $fields['phone'];
+  
+
+        // Guardar los cambios en el usuario
+        $user->save();
+
+    
+
+        // Retornar la respuesta con los datos del usuario actualizado
+        return response()->json([
+            'message' => 'Usuario actualizado correctamente.',
+            'user' => $user
+        ]);
+    } catch (\Illuminate\Database\Eloquent\ModelNotFoundException $e) {
+        return response()->json(['error' => 'Usuario no encontrado.'], 404);
+    } catch (\Exception $e) {
+        // Retornar el mensaje de error junto con la información del error para diagnóstico (opcional)
+        return response()->json([
+            'error' => 'Ocurrió un error al actualizar el usuario.',
+            'details' => $e->getMessage() // Incluyendo el mensaje de excepción
+        ], 500);
+    }
+}
+
+    
 
 
 

@@ -18,7 +18,7 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     {{-- <link href="https://fonts.bunny.net/css?family=figtree:400,600&display=swap" rel="stylesheet" /> --}}
-    @vite(['resources/sass/app.scss', 'resources/js/main.js'])
+    @vite(['resources/js/main.js'])
 </head>
 
 <body>

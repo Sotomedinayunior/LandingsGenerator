@@ -25,8 +25,11 @@ Route::get('vehicle/{vehicleId}/special-features-public', [VehicleController::cl
 Route::middleware('auth:sanctum')->get('/protected', function () {
     return response()->json(['message' => 'You are authenticated!']);
 });
+
 Route::post('/nelly-logout', [AuthController::class, 'logout'])->middleware('auth:sanctum');
-Route::post('/users-update', [AuthController::class, 'update'])->middleware('auth:sanctum');
+Route::post('/users-update/{id}', [AuthController::class, 'update'])->middleware('auth:sanctum');
+Route::get('/users/{id}', [AuthController::class, 'show'])->middleware('auth:sanctum');
+
 Route::middleware('auth:sanctum')->group(function () {
     //landing create
     Route::post('/landing', [LandingController::class, 'store']);

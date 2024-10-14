@@ -59,7 +59,7 @@
         <div class="flex items-center space-x-2 mb-4">
           <img src="../static/asset/config.svg" class="cursor-pointer object-contain" alt="configuracion de usuario" title="configuracion de usuario" loading="lazy" @click="UserConfig">
           <img
-            :src="userAvatar" 
+            :src="avatar" 
             alt="Avatar"
             width="200"
             height="200"
@@ -98,13 +98,13 @@ import {
   
 } from "@heroicons/vue/24/outline";
 
-import { mapGetters } from 'vuex';
-
+import Axios from "../axios";
 
 export default {
   data() {
     return {
       isOpen: false,
+      avatar:null,
       loggingOut: false, // Estado para mostrar el mensaje de salida
       links: [
         { name: "Landings", route: "/landings", icon: NewspaperIcon },
@@ -116,7 +116,7 @@ export default {
     };
   },
   computed: {
-    ...mapGetters(['getUser']),
+    
     userAvatar() {
       // Obtener el avatar del usuario desde el store
       return this.getUser?.avatar || 'https://api.multiavatar.com/Binx Bond.png'; // URL de fallback si no hay avatar
@@ -137,6 +137,12 @@ export default {
         // Solo en pantallas móviles
         this.toggleSidebar();
       }
+    },
+    GetAvatar(){
+      const IdUser = localStorage.getItem('NellyUserId');
+      Axios.get(`/api/users/${IdUser}`).then((response) => {
+        this.avatar = response.data.user.avatar;
+      });
     },
     navigate(route) {
       this.$router.push(route);
@@ -165,8 +171,9 @@ export default {
       }, 1000); // Ajusta el tiempo según sea necesario
     },
   },
-  created() {
-    // Puedes incluir lógica adicional si es necesario cuando el componente se crea
-  },
+ mounted(){
+  this.GetAvatar();
+  
+ }
 };
 </script>

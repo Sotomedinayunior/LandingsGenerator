@@ -1,5 +1,5 @@
 # LandingsGenerator
-![LandingsGenerator Logo](https://chezaad.com/wp-content/uploads/2021/05/chezaad-new-logo-regular-v2.png)
+[![LandingsGenerator Logo](https://chezaad.com/wp-content/uploads/2021/05/chezaad-new-logo-regular-v2.png)](https://chezaad.com/)
 
 ## Descripción
 
@@ -33,34 +33,49 @@ Este proyecto es una **aplicación monolítica** construida utilizando **Vue.js 
 - **Gestión de Roles**: Sistema robusto que permite definir distintos tipos de usuarios como administradores, usuarios y agentes, con permisos diferenciados.
 - **Interfaz Responsive**: La aplicación está optimizada para dispositivos móviles y de escritorio, garantizando una experiencia de usuario fluida en cualquier dispositivo.
 
-## Dependencias y Herramientas
+## Instalación
 
-### Scripts de NPM:
-```json
-{
-    "private": true,
-    "type": "module",
-    "scripts": {
-        "dev": "vite",
-        "build": "vite build"
-    },
-    "devDependencies": {
-        "axios": "^1.7.3",
-        "laravel-vite-plugin": "^1.0",
-        "sass": "^1.79.5",
-        "sass-loader": "^16.0.0",
-        "vite": "^5.0"
-    },
-    "dependencies": {
-        "@headlessui/vue": "^1.7.22",
-        "@heroicons/vue": "^2.1.5",
-        "@vitejs/plugin-vue": "^5.1.2",
-        "tailwindcss": "^3.4.9",
-        "vue": "^3.4.35",
-        "vue-i18n": "^9.14.0",
-        "vue-loader": "^17.3.1",
-        "vue-meta": "^3.0.0-alpha.2",
-        "vue-router": "^4.4.2",
-        "vuex": "^4.1.0"
-    }
-}
+### Instalación del frontend (Vue.js 3)
+
+1. **Instalar dependencias de npm**:
+    ```bash
+    npm install
+    ```
+
+2. **Comandos npm**:
+    - Para entorno de desarrollo:
+      ```bash
+      npm run dev
+      ```
+    - Para construir el proyecto:
+      ```bash
+      npm run build
+      ```
+
+### Dependencias principales de npm:
+- **axios**: `npm install axios`
+- **laravel-vite-plugin**: `npm install laravel-vite-plugin`
+- **sass**: `npm install sass`
+- **sass-loader**: `npm install sass-loader`
+- **vite**: `npm install vite`
+- **@headlessui/vue**: `npm install @headlessui/vue`
+- **@heroicons/vue**: `npm install @heroicons/vue`
+- **@vitejs/plugin-vue**: `npm install @vitejs/plugin-vue`
+- **tailwindcss**: `npm install tailwindcss`
+- **vue**: `npm install vue`
+- **vue-i18n**: `npm install vue-i18n`
+- **vue-loader**: `npm install vue-loader`
+- **vue-meta**: `npm install vue-meta`
+- **vue-router**: `npm install vue-router`
+- **vuex**: `npm install vuex`
+
+### Instalación del backend (Laravel 11)
+
+1. **Instalar dependencias de Composer**:
+    ```bash
+    composer install
+    ```
+
+2. **Dependencias principales de Composer**:
+    - **laravel/sanctum**: `composer require laravel/sanctum`
+    - **spatie/laravel-permission**: `composer require spatie/laravel-permission`
