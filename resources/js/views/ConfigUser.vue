@@ -1,11 +1,14 @@
 <template>
-  <div class="max-w-3xl lg:ml-64 p-6 bg-white shadow-md rounded-md">
-    <h2 class="text-2xl font-semibold mb-6 text-[#f16822]">
+  <div
+    class="max-w-sm mt-10 p-6 bg-white shadow-md rounded-md flex justify-center items-center flex-col"
+    style="margin-left: 25rem;"
+  >
+    <h2 class="text-xl font-semibold mb-6 text-[#f16822]">
       Configuración del Usuario
     </h2>
 
     <form @submit.prevent="updateUser">
-      <div class="mb-4 flex justify-center">
+      <div class="mb-8 flex justify-center">
         <div class="relative flex items-center justify-center">
           <input
             type="file"
@@ -29,81 +32,90 @@
         </div>
       </div>
 
-      <div class="mb-4">
+      <div class="mb-8">
         <label for="name" class="block text-base font-bold text-[#f16822]"
           >Nombre</label
         >
-        <input
-          type="text"
+        <InputText
           v-model="user.name"
-          id="name"
-          name="name"
-          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none sm:text-sm"
+          placeholder="Nombre"
+          size="large"
+          class="w-full"
         />
+
         <span v-if="errors.name" class="text-red-500">{{ errors.name }}</span>
       </div>
-      <div class="mb-4">
+      <div class="mb-8">
         <label for="contraseña" class="block text-base font-bold text-[#f16822]"
           >Contraseña</label
         >
-        <input
-          type="password"
+        <Password
           v-model="user.password"
-          id="contraseña"
+          id="password"
           name="password"
-          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none sm:text-sm"
+          toggleMask
+          promptLabel="Introduce tu contraseña"
+          weakLabel="Débil"
+          mediumLabel="Media"
+          strongLabel="Fuerte"
         />
+
         <span v-if="errors.password" class="text-red-500">{{
           errors.password
         }}</span>
       </div>
-      <div class="mb-4">
+      <div class="mb-8">
         <label
           for="password-confirm"
           class="block text-base font-bold text-[#f16822]"
           >Confirma la contraseña</label
         >
-        <input
-          type="password"
+        <Password
           v-model="user.password_confirmation"
-          id="name"
+          id="confirm_password"
           name="confirm_password"
-          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none sm:text-sm"
+          toggleMask
+          promptLabel="Introduce tu contraseña"
+          weakLabel="Débil"
+          mediumLabel="Media"
+          strongLabel="Fuerte"
         />
+
         <span v-if="errors.password_confirmation" class="text-red-500">{{
           errors.password_confirmation
         }}</span>
       </div>
 
-      <div class="mb-4">
+      <div class="mb-8">
         <label for="email" class="block text-base font-bold text-[#f16822]"
           >Correo Electrónico</label
         >
-        <input
-          type="email"
+        <InputText
           v-model="user.email"
-          id="email"
-          name="email"
-          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none sm:text-sm"
+          type="email"
+          size="large"
+          class="w-full"
+          placeholder="Correo Electrónico"
         />
         <span v-if="errors.email" class="text-red-500">{{ errors.email }}</span>
       </div>
 
-      <div class="mb-4">
+      <div class="mb-8">
         <label for="phone" class="block text-base font-bold text-[#f16822]"
           >Teléfono</label
         >
-        <input
-          type="text"
+        <InputMask
           v-model="user.phone"
-          id="phone"
-          name="phone"
-          class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:outline-none sm:text-sm"
+          mask="(999) 999-9999"
+          size="large"
+          class="w-full"
+          placeholder="Teléfono"
         />
+
         <span v-if="errors.phone" class="text-red-500">{{ errors.phone }}</span>
       </div>
 
-      <div class="flex justify-end">
+      <div class="flex justify-center">
         <button
           type="submit"
           class="px-4 py-2 mt-5 text-white bg-[#F57200] font-bold border border-[#F57200] rounded hover:bg-[#F57200] hover:text-white transition-colors"
@@ -113,19 +125,33 @@
         </button>
       </div>
     </form>
+    <Toast ref="toast" position="bottom-right" group="br" />
+
+    <Dialog
+      header="Error"
+      :visible="isErrorDialogVisible"
+      @hide="isErrorDialogVisible = false"
+      :modal="true"
+      :closable="false"
+    >
+      <p>{{ errorMessage }}</p>
+      <div class="flex justify-end">
+        <Button label="Cerrar" severity="danger" text raised  @click="isErrorDialogVisible = false" />
+      </div>
+    </Dialog>
 
     <!-- Modal de confirmación -->
-    <transition name="fade">
+    <!-- <transition name="fade">
       <div
         v-if="showSuccessModal"
         class="fixed inset-0 bg-black bg-opacity-50 flex justify-center items-center z-50"
       >
         <div class="bg-white p-6 rounded-lg shadow-lg text-center">
           <div
-            class="w-20 h-20 mx-auto mb-4 flex items-center justify-center bg-green-100 rounded-full"
+            class="w-20 h-20 mx-auto mb-4 flex items-center justify-center bg-gray-100 rounded-full"
           >
             <i
-              class="fas fa-check-circle text-green-600 text-4xl animate-check"
+              class="fas fa-check-circle text-[#F57200] text-4xl animate-check"
             ></i>
           </div>
           <p class="text-lg font-semibold mb-2">¡Actualización Exitosa!</p>
@@ -140,14 +166,35 @@
           </button>
         </div>
       </div>
-    </transition>
+    </transition> -->
   </div>
 </template>
 
 <script>
 import Axios from "../axios";
+import Password from "primevue/password";
+import InputText from "primevue/InputText";
+import InputMask from "primevue/inputmask";
+import InputIcon from "primevue/InputIcon";
+import IconField from "primevue/InputIcon";
+import Dialog from "primevue/dialog";
+
+import Button from 'primevue/button';
+
+import Toast from "primevue/toast";
+import { ref } from "vue";
 
 export default {
+  components: {
+    Password,
+    InputText,
+    InputMask,
+    InputIcon,
+    IconField,
+    Toast,
+    Dialog,
+    Button,
+  },
   data() {
     return {
       user: {
@@ -160,7 +207,8 @@ export default {
       },
       errors: {},
       loading: false,
-      showSuccessModal: false,
+      isErrorDialogVisible: false, // Estado para controlar la visibilidad del diálogo
+      errorMessage: '', // Mensaje de error
     };
   },
 
@@ -180,7 +228,6 @@ export default {
             password: "",
             avatar: response.data.user.avatar || "",
           };
-          console.log("Información del usuario:", this.user);
         })
         .catch((error) => {
           console.error("Error al obtener la información del usuario:", error);
@@ -233,18 +280,24 @@ export default {
       })
         .then((response) => {
           this.loading = false; // Finalizar el estado de carga
-          this.showSuccessModal = true; // Mostrar el modal de éxito
+          this.$refs.toast.add({
+            severity: "success",
+            summary: "Éxito",
+            detail: "Usuario actualizado correctamente",
+            life: 3000,
+          });
           this.GetUser(); // Actualizar la información del usuario
-          console.log("Usuario actualizado:", response.data);
         })
         .catch((error) => {
           this.loading = false; // Finalizar el estado de carga
           if (error.response && error.response.data.errors) {
             // Manejo de errores desde el servidor
             this.errors = error.response.data.errors;
+            this.errorMessage = this.errors[0] || 'Error desconocido'; // Guardar el mensaje de error
           } else {
-            console.error("Error al actualizar el usuario:", error);
+            this.errorMessage = 'Error al actualizar el usuario.'; // Mensaje genérico
           }
+          this.isErrorDialogVisible = true; 
         });
     },
   },

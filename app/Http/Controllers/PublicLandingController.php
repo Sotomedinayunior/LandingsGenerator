@@ -48,6 +48,42 @@ class PublicLandingController extends Controller
             ], 500);
         }
     }
+    /**
+     * Método para obtener una landing por su nombre, sin importar si está publicada o eliminada.
+     *
+     * @param string $name - Nombre de la landing.
+     * @return \Illuminate\Http\JsonResponse
+     */
+    public function getLandingWithoutFilters($name)
+    {
+        try {
+            // Obtener la landing por su nombre, sin verificar si está eliminada o publicada
+            $landing = Landing::with(['vehicles.images', 'locations'])
+                ->where('name', $name)
+                ->first(); // Obtener el primer resultado sin filtros adicionales
+
+            // Si no se encuentra la landing
+            if (!$landing) {
+                return response()->json([
+                    'message' => 'Landing no encontrada.'
+                ], 404);
+            }
+
+            // Devolver los datos de la landing, los vehículos y las imágenes relacionadas
+            return response()->json([
+                'message' => 'Landing encontrada.',
+                'landing' => $landing,
+                'vehicles' => $landing->vehicles,
+                'locations' => $landing->locations,
+            ], 200);
+        } catch (\Throwable $e) {
+            // Manejar cualquier error que ocurra durante la consulta
+            return response()->json([
+                'error' => 'Error al buscar la landing: ' . $e->getMessage(),
+            ], 500);
+        }
+    }
+
 
     public function showVehicle($name, $id)
     {

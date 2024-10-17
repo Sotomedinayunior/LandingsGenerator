@@ -92,6 +92,7 @@
 import {
   NewspaperIcon,
   BookOpenIcon,
+  CogIcon,
   QuestionMarkCircleIcon,
   TrashIcon,
   MapPinIcon
@@ -109,8 +110,10 @@ export default {
       links: [
         { name: "Landings", route: "/landings", icon: NewspaperIcon },
         { name: "Reservaciones", route: "/reservation", icon: BookOpenIcon },
-        { name: "Papeleria", route: "/history", icon: TrashIcon },
+        { name: "Características", route: "/feature-view", icon: CogIcon },
         {name:'Localizaciones' , route:'/location-reservaction ',icon:MapPinIcon},
+        { name: "Papelería", route: "/history", icon: TrashIcon },
+       
         { name: "Ayuda", route: "/help", icon: QuestionMarkCircleIcon },
       ],
     };

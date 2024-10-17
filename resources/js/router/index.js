@@ -1,29 +1,32 @@
 import { createRouter, createWebHistory } from 'vue-router';
-import store from '../global/store';
-import Login from '../views/Login.vue';
-import ListLanding from '../views/ListLanding.vue';
-import Help from '../views/Help.vue';
-import Reservation from '../views/Reservation.vue';
-import MainLayout from '../views/MainLayout.vue'; 
-import ConfigUser from '../views/ConfigUser.vue';
-import LayoutDesigner from '../views/LayoutDesigner.vue';
-import NotFoundDashboard from '../views/NotFoundDashorad.vue'; // 404 para usuarios autenticados
-import HistoryLanding from '../views/HistoryLanding.vue';
-import LocationReservation from '../views/LocationReservation.vue';
-import Published from '../views/Published.vue';
-import ViewConfigLanding from '../views/ViewConfigLanding.vue';
-import LayoutLanding from '../views/Landing/LayoutLanding.vue';
-import HomeLanding from '../views/Landing/HomeLanding.vue';
+import AdditionsLanding from '../views/Landing/AdditionsLanding.vue';
+import AddVehiclesTab from '../views/AddVehiclesTab.vue';
 import CartLanding from '../views/Landing/CartLanding.vue';
+import ConfigUser from '../views/ConfigUser.vue';
+import FeatureView from '../views/FeatureView.vue';
+import FormUpdateVehicles from '../components/FormUpdateVehicles.vue';
+import FormVehiclesCreate from '../components/FormVehiclesCreate.vue';
+import HomeLanding from '../views/Landing/HomeLanding.vue';
+import Help from '../views/Help.vue';
+import HistoryLanding from '../views/HistoryLanding.vue';
+import LayoutDesigner from '../views/LayoutDesigner.vue';
+import LayoutLanding from '../views/Landing/LayoutLanding.vue';
+import ListLanding from '../views/ListLanding.vue';
+import LocationReservation from '../views/LocationReservation.vue';
+import Login from '../views/Login.vue';
+import LogoColorsTab from '../views/LogoColorsTab.vue';
+import MainLayout from '../views/MainLayout.vue';
+import NotFoundDashboard from '../views/NotFoundDashorad.vue'; // 404 para usuarios autenticados
+import Published from '../views/Published.vue';
+import Reservation from '../views/Reservation.vue';
 import ReviewLanding from '../views/Landing/ReviewLanding.vue';
+import ReviewComponent from '../views/ReviewComponent.vue';
+import ReviewTab from '../views/ReviewTab.vue';
 import ThanksLanding from '../views/Landing/ThanksLanding.vue';
 import VehicleDetail from '../views/Landing/VehicleDetail.vue';
-import LogoColorsTab from '../views/LogoColorsTab.vue';
-import AddVehiclesTab from '../views/AddVehiclesTab.vue';
-import AdditionsLanding from '../views/Landing/AdditionsLanding.vue';
-import ReviewTab from '../views/ReviewTab.vue';
-import FormVehiclesCreate from '../components/FormVehiclesCreate.vue';
-import FormUpdateVehicles from '../components/FormUpdateVehicles.vue';
+import ViewConfigLanding from '../views/ViewConfigLanding.vue';
+import store from '../global/store';
+
 
 
 const routes = [
@@ -65,12 +68,27 @@ const routes = [
         meta:{title:'location - Nelly App'}
       },
       {
+        path:'/feature-view',
+        component:FeatureView,
+        meta:{title:'feature - Nelly App'}
+      },
+      {
         path:'/user-config',
         component:ConfigUser,
         meta:{title:'user - Nelly App'}
       },
       {
         path: '/view-landing/:id',
+        component: ViewConfigLanding,
+        meta: { title: 'View-landing - Nelly App' }
+      },
+      {
+        path:'/review-component/:name',
+        component:ReviewComponent,
+        meta:{title:'review - Nelly App'}
+      },
+      {
+        path: '/review-landing/:id',
         component: ViewConfigLanding,
         meta: { title: 'View-landing - Nelly App' }
       }

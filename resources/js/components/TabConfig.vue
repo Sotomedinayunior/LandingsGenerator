@@ -97,6 +97,7 @@
           <div class="flex justify-between gap-10">
             <button
               class="px-4 py-2 m-6 border-orange-500 border text-orange-500 rounded transition-colors"
+              @clik="handlePreview"
             >
               Previsualizar
             </button>
@@ -285,6 +286,10 @@ export default {
         .catch((error) => {
           console.error("Error fetching landing data:", error);
         });
+    },
+    handlePreview() {
+      IdLanding = this.$route.params.name;
+      this.$router.push(`/review-component/${IdLanding}`);
     },
     previewImage(event) {
       const file = event.target.files[0];

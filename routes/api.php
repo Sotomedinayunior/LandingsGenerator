@@ -17,6 +17,7 @@ Route::post('/register-nelly', [AuthController::class, 'register']);
 Route::post('/login-nelly', [AuthController::class, 'login']);
 
 Route::get('/publicLanding/{name}', [PublicLandingController::class, 'index']);
+Route::get('/reviews/{name}/', [PublicLandingController::class, 'getLandingWithoutFilters']);
 Route::get('/publicLanding/{name}/vehicle/{id}', [PublicLandingController::class, 'showVehicle']);
 Route::post('/reservations', [ReservationController::class, 'store']);
 //obtener las caracteristicas especiales de un vehiculo
