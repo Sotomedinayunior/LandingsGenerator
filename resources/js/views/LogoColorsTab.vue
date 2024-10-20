@@ -9,26 +9,17 @@
       >
         <div class="mb-7">
           <h2 class="text-xl text-slate-950 font-semibold mb-2">
-            1- Name your website
+            1- Nombre de tu landing
           </h2>
+          <InputText v-keyfilter.alpha v-model="name" size="large" />
 
-          <input
-            type="text"
-            class="text-sm px-9 py-2 w-full border border-slate-300 rounded outline-none focus:ring-0"
-            v-model="name"
-            name="name"
-            placeholder="Enter your website name"
-            required
-            pattern="^[A-Za-z0-9]+$"
-            title="El nombre debe contener solo letras  sin espacios."
-            maxlength="25"
-          />
-
-          <p class="text-gray-600 text-xs mt-1">Este nombre debe ser único.</p>
+          <p class="text-gray-600 text-xs mt-1 font-bold">
+            * Este nombre debe ser único.
+          </p>
         </div>
         <div class="mb-4">
           <h2 class="text-xl text-slate-950 font-semibold mb-2">
-            2- Upload the logo
+            2- Sube el logo de tu landing
           </h2>
           <div
             class="border-4 border-orange-400 border-dashed bg-[#F2994A0D] p-4 h-60 flex items-center justify-center relative w-full"
@@ -55,7 +46,7 @@
               <template v-else>
                 <i class="fa-solid fa-camera text-[#F2994A] text-4xl"></i>
                 <p class="text-[#F2994A] mt-2">
-                  Tamaño recomendado 1920 x 1080px
+                  Tamaño recomendado 250px / 80px
                 </p>
               </template>
             </label>
@@ -63,35 +54,65 @@
         </div>
         <div class="mb-8">
           <h2 class="text-xl text-slate-950 font-semibold mb-2">
-            3- Choose Primary & Secondary Color
+            3- Color principal y secundario
           </h2>
           <div class="flex space-x-4">
             <!-- Selector de color primario -->
             <div class="flex flex-col items-center">
               <label for="primaryColor" class="text-slate-950 mb-2">
-                Primary Color
+                Color Principal
               </label>
-              <input
-                type="color"
-                id="primaryColor"
-                v-model="primaryColor"
-                name="primaryColor"
-                class="w-12 h-12 cursor-pointer border border-slate-300 rounded"
-              />
+              <ColorPicker v-model="primaryColor" inline />
             </div>
 
             <!-- Selector de color secundario -->
             <div class="flex flex-col items-center">
               <label for="secondaryColor" class="text-slate-950 mb-2">
-                Secondary Color
+                Color secundario
               </label>
-              <input
-                type="color"
-                id="secondaryColor"
-                v-model="secondaryColor"
-                name="secondaryColor"
-                class="w-12 h-12 cursor-pointer border border-slate-300 rounded"
-              />
+              <ColorPicker v-model="secondaryColor" inline />
+              {{ formattedPrimaryColor }} {{ formattedSecondaryColor }}
+            </div>
+          </div>
+        </div>
+        <div class="mb-8">
+          <h2 class="text-xl text-slate-950 font-semibold mb-2">
+            4- Idioma Predeterminado de tu landing
+          </h2>
+          <div class="flex justify-around">
+            <div
+              class="bg-white w-20 h-auto shadow-xl flex justify-around items-center cursor-pointer"
+              @click="selectLanguage('es')"
+              :class="{
+                'border-4 border-orange-500': defaultLanguage === 'es',
+              }"
+            >
+              <div class="w-full h-full">
+                <img
+                  src="../static/asset/do.svg"
+                  alt="Idioma español"
+                  width="40"
+                  height="40"
+                  class="w-full h-full"
+                />
+              </div>
+            </div>
+            <div
+              class="bg-white w-20 h-auto shadow-xl flex justify-around items-center cursor-pointer"
+              @click="selectLanguage('en')"
+              :class="{
+                'border-4 border-orange-500': defaultLanguage === 'en',
+              }"
+            >
+              <div class="w-full h-full">
+                <img
+                  src="../static/asset/us.svg"
+                  alt="Idioma español"
+                  width="40"
+                  height="40"
+                  class="w-full h-full"
+                />
+              </div>
             </div>
           </div>
         </div>
@@ -145,7 +166,7 @@
           <!-- Botón superior derecho -->
           <div
             class="w-16 h-8 rounded"
-            :style="{ backgroundColor: primaryColor }"
+            :style="{ backgroundColor: formattedPrimaryColor }"
           ></div>
         </div>
 
@@ -162,7 +183,7 @@
                 type="text"
                 placeholder="Search"
                 class="h-5 p-1 border rounded"
-                :style="{ backgroundColor: primaryColor }"
+                :style="{ backgroundColor: formattedPrimaryColor }"
               />
             </div>
           </div>
@@ -173,27 +194,37 @@
           <div
             class="bg-gray-200 h-16 flex items-center justify-center rounded"
           >
-            <p class="text-sm" :style="{ color: primaryColor }">$0.00</p>
+            <p class="text-sm" :style="{ color: formattedPrimaryColor }">
+              $0.00
+            </p>
           </div>
           <div
             class="bg-gray-200 h-16 flex items-center justify-center rounded"
           >
-            <p class="text-sm" :style="{ color: primaryColor }">$0.00</p>
+            <p class="text-sm" :style="{ color: formattedPrimaryColor }">
+              $0.00
+            </p>
           </div>
           <div
             class="bg-gray-200 h-16 flex items-center justify-center rounded"
           >
-            <p class="text-sm" :style="{ color: primaryColor }">$0.00</p>
+            <p class="text-sm" :style="{ color: formattedPrimaryColor }">
+              $0.00
+            </p>
           </div>
           <div
             class="bg-gray-200 h-16 flex items-center justify-center rounded"
           >
-            <p class="text-sm" :style="{ color: primaryColor }">$0.00</p>
+            <p class="text-sm" :style="{ color: formattedPrimaryColor }">
+              $0.00
+            </p>
           </div>
           <div
             class="bg-gray-200 h-16 flex items-center justify-center rounded"
           >
-            <p class="text-sm" :style="{ color: primaryColor }">$0.00</p>
+            <p class="text-sm" :style="{ color: formattedPrimaryColor }">
+              $0.00
+            </p>
           </div>
         </div>
 
@@ -224,6 +255,32 @@
       <div class="w-full bg-gray-200 h-24 rounded"></div>
     </div>
 
+    <!--Dialog para mostrar el error -->
+    <Dialog
+      :header="errorHeader"
+      :visible="isErrorDialogVisible"
+      @hide="isErrorDialogVisible = false"
+      :modal="true"
+      :closable="false"
+    >
+      <div class="flex items-center mb-4">
+        <i
+          class="fa-solid fa-exclamation-circle text-red-600 text-2xl mr-2"
+        ></i>
+        
+      </div>
+      <p>{{ errorMessage }}</p>
+      <div class="flex justify-end">
+        <Button
+          label="Cerrar"
+          severity="danger"
+          text
+          raised
+          @click="isErrorDialogVisible = false"
+        />
+      </div>
+    </Dialog>
+
     <!-- Modal -->
     <div
       v-if="isModalVisible"
@@ -246,34 +303,75 @@
 <script>
 import Axios from "../axios";
 
+import KeyFilter from "primevue/keyfilter";
+import ColorPicker from "primevue/colorpicker";
+
+import InputText from "primevue/InputText";
+import Button from "primevue/button";
+
+import RadioButton from "primevue/radiobutton";
+import Dialog from "primevue/dialog";
 export default {
+  components: {
+    KeyFilter,
+    InputText,
+    ColorPicker,
+    RadioButton,
+    Dialog,
+    Button,
+  },
+
   data() {
     return {
       step: null,
       name: "",
+
       logoUrl: null, // Para almacenar la URL de la imagen
       primaryColor: "#000000", // Valor por defecto para el color primario
       secondaryColor: "#FFFFFF", // Valor por defecto para el color secundario
       isModalVisible: false, // Controla la visibilidad del modal
       modalTitle: "Landing Creada",
+      defaultLanguage: "",
+      isErrorDialogVisible: false,
+      errorHeader: "Error al crear la landing",
+      errorMessage: "",
+
       modalMessage: "Tu landing ha sido creada exitosamente.",
     };
   },
   computed: {
+    formattedPrimaryColor() {
+      return this.primaryColor.startsWith("#")
+        ? this.primaryColor
+        : `#${this.primaryColor}`;
+    },
+    formattedSecondaryColor() {
+      return this.secondaryColor.startsWith("#")
+        ? this.secondaryColor
+        : `#${this.secondaryColor}`;
+    },
     isFormComplete() {
       // Verifica si todos los campos necesarios están llenos
       return (
-        this.name && this.logoUrl && this.primaryColor && this.secondaryColor
+        this.name &&
+        this.logoUrl &&
+        this.primaryColor &&
+        this.secondaryColor &&
+        this.defaultLanguage
       );
     },
   },
   methods: {
+    selectLanguage(lang) {
+      this.defaultLanguage = lang; // Asigna el idioma seleccionado a defaultLanguage
+    },
     previewImage(event) {
       const file = event.target.files[0];
       if (file) {
         this.logoUrl = URL.createObjectURL(file); // Generar la URL de la imagen
       }
     },
+
     handleSubmit() {
       let userId = localStorage.getItem("NellyUserId");
 
@@ -293,11 +391,11 @@ export default {
 
       const formData = new FormData();
       formData.append("id_users_landing", userId);
-      formData.append("name", formattedName);
       formData.append("name", this.name);
       formData.append("logo", this.$refs.logoInput.files[0]);
-      formData.append("color_primary", this.primaryColor);
-      formData.append("color_secondary", this.secondaryColor);
+      formData.append("color_primary", this.formattedPrimaryColor);
+      formData.append("default_language", this.defaultLanguage);
+      formData.append("color_secondary", this.formattedSecondaryColor);
 
       Axios.post("/api/landing", formData, {
         headers: {
@@ -327,6 +425,9 @@ export default {
         })
         .catch((error) => {
           console.error("Error al enviar el formulario:", error);
+
+          this.errorMessage = error.response.data.message;
+          this.isErrorDialogVisible = true;
         });
     },
     submitForm() {
@@ -342,4 +443,8 @@ export default {
 </script>
 
 <style scoped>
+.flag-icon {
+  width: 1.5rem; /* Ajusta el tamaño de las banderas */
+  height: auto;
+}
 </style>

@@ -92,6 +92,7 @@ class ReservationController extends Controller
             'time_of_departure' => 'date_format',
             'date_of_arrival' => 'date',
             'time_of_arrival' => 'date_format',
+         
             'id_landing' => 'exists:landings,id',
         ]);
 

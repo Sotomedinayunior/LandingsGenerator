@@ -13,12 +13,14 @@ return new class extends Migration
     {
         Schema::create('special_features', function (Blueprint $table) {
             $table->id();
-            $table->unsignedBigInteger('vehicle_id'); // Relación con la tabla vehicles
-            $table->json('features'); // Campo JSON para almacenar los campos dinámicos
+            $table->foreignId('vehicle_id')->constrained('vehicles')->onDelete('cascade'); // Relación con vehículos
+            $table->foreignId('feature_id')->constrained('features')->onDelete('cascade'); // Relación con features
+            $table->boolean('value_override')->nullable(); // Valor personalizado para este vehículo
             $table->timestamps();
 
-            // Foreign key constraint
-            $table->foreign('vehicle_id')->references('id')->on('vehicles')->onDelete('cascade');
+            // Opcional: Índices para mejorar el rendimiento
+            $table->index('vehicle_id');
+            $table->index('feature_id');
         });
     }
 
@@ -30,4 +32,3 @@ return new class extends Migration
         Schema::dropIfExists('special_features');
     }
 };
-

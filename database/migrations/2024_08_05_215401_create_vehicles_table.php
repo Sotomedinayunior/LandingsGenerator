@@ -21,16 +21,15 @@ return new class extends Migration
             $table->integer('people');
             $table->string('type_of_car');            
             $table->string('transmision');
-            $table->boolean('bluetooth')->default(false);
-            $table->boolean('siriusxm')->default(false);
-            $table->boolean('gps')->default(false);
-            $table->boolean('apple_car')->default(false);
+
+            
             $table->json('dynamic_fields')->nullable(); // Campo para datos dinámicos
             $table->timestamps();
             $table->softDeletes();
 
             // Foreign key constraint
             $table->foreign('id_landing')->references('id')->on('landings')->onDelete('cascade');
+            $table->index('id_landing');
         });
     }
 

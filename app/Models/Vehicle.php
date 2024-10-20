@@ -16,11 +16,8 @@ class Vehicle extends Model
         'luggage',
         'people',
         'type_of_car',   
-        'transmision',      
-        'bluetooth',
-        'siriusxm',
-        'gps',
-        'apple_car',
+        'transmision',  
+          
         'id_image',
         'dynamic_fields'
     ];

@@ -33,10 +33,13 @@
 // Importación correcta del componente CountVehicles
 import CountVehicles from "../components/CountVehicles.vue";
 import TableVehicle from "../components/TableVehicle.vue";
+
+import Tag from 'primevue/tag';
+
 import  Axios  from "../axios";
 export default {
   components: {
-    CountVehicles, TableVehicle
+    CountVehicles, TableVehicle , Tag
   },
   data() {
     return {
@@ -67,6 +70,7 @@ export default {
   },
 
   methods: {
+    
     async getVehicles() {
       const storedId = localStorage.getItem("NellyLandingCreate");
       console.log(storedId);

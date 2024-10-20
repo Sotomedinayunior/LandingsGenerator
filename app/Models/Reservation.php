@@ -21,6 +21,8 @@ class Reservation extends Model
         'date_of_departure',
         'time_of_departure',
         'date_of_arrival',
+        'name_landing',
+        'url_landing',
         'time_of_arrival',
         'id_landing',
     ];

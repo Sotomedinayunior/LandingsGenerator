@@ -58,11 +58,7 @@ class VehicleController extends Controller
             'people' => 'required|integer',
             'type_of_car' => 'required|string',
             'transmision' => 'required|string',
-            'bluetooth' => 'boolean',
-            'siriusxm' => 'boolean',
-            'gps' => 'boolean',
             'automatic' => 'boolean',
-            'apple_car' => 'boolean',
             'vehicle_images' => 'nullable|array',
             'vehicle_images.*' => 'image|mimes:jpeg,png,jpg|max:2048', // Validación de imágenes
         ]);
@@ -79,11 +75,8 @@ class VehicleController extends Controller
             'people' => $validatedData['people'],
             'type_of_car' => $validatedData['type_of_car'],
             'transmision' => $validatedData['transmision'],
-            'bluetooth' => $validatedData['bluetooth'] ?? false,
-            'siriusxm' => $validatedData['siriusxm'] ?? false,
-            'gps' => $validatedData['gps'] ?? false,
             'automatic' => $validatedData['automatic'] ?? false,
-            'apple_car' => $validatedData['apple_car'] ?? false,
+            
         ]);
 
         // Manejo de las imágenes del vehículo (si se subieron nuevas)
@@ -157,13 +150,10 @@ class VehicleController extends Controller
                 'people' => 'required|integer',
                 'type_of_car' => 'required|string',
                 'transmision' => 'required|string',
-                'bluetooth' => 'nullable|boolean',
-                'gps' => 'nullable|boolean',
-                'siriusxm' => 'nullable|boolean',
-                'apple_car' => 'nullable|boolean',
                 'images' => 'required|array',
                 'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             ]);
+            
 
             // Si la validación falla, retornamos los errores
             if ($validator->fails()) {

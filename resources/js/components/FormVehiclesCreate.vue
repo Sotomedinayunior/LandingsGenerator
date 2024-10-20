@@ -7,14 +7,14 @@
     >
       <i class="fa fa-arrow-left mr-2"></i>Atrás
     </button>
-    <div>
+    <div class="p-2">
       <!-- Carousel de imágenes del vehículo -->
       <form
         @submit.prevent="addVehicle"
-        class="grid grid-cols-1 md:grid-cols-2 gap-5"
+        class="flex justify-evelyn items-start"
         enctype="multipart/form-data"
       >
-        <div class="pl-10">
+        <div class="w-full px-10">
           <!-- Contenedor de carga de imágenes -->
           <div
             class="border-2 border-dashed border-gray-300 bg-[#DDDDDD33] p-8 w-full h-80 flex items-center justify-center relative"
@@ -79,15 +79,20 @@
           </h2>
 
           <div class="mb-4">
-            <input
+            <AutoComplete
               v-model="newVehicle.name"
+              :suggestions="filteredItems"
+              @complete="searchItems"
+              :virtualScrollerOptions="{ itemSize: 38 }"
+              optionLabel="name"
+              dropdown
               id="name"
               placeholder="Nombre del Vehículo"
-              class="mt-1 block text-sm w-[450px] border outline-none border-gray-300 rounded-md p-3"
+              class="mt-1 block text-xs w-[450px] outline-none rounded-md"
               required
             />
           </div>
-          <div class="mb-4">
+          <div class="mb-4" style="max-width: 510px;">
             <textarea
               v-model="newVehicle.description"
               id="description"
@@ -98,174 +103,78 @@
             ></textarea>
           </div>
           <div class="mb-4">
-            <input
-              v-model="newVehicle.price"
-              id="price"
-              type="number"
-              placeholder="Precio por día"
-              class="mt-1 block w-[200px] border border-gray-300 rounded-md p-2"
-              required
-            />
+            <div class="flex items-center justify-start">
+              <InputNumber
+                v-model="newVehicle.price"
+                inputId="currency-us"
+                mode="currency"
+                currency="USD"
+                locale="en-US"
+              />
+              <span class="text-xs text-gray-400 mx-2">Precio por dia</span>
+            </div>
           </div>
           <div class="mb-4">
             <h2 class="text-lg font-bold mb-4">Seleccionar característica</h2>
             <div class="flex space-x-4">
               <!-- Select Equipaje -->
-              <div class="relative inline-block">
-                <select
-                  class="appearance-none pl-10 pr-6 py-2 border text-sm rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
-                  v-model="newVehicle.luggage"
-                  name="luggage"
-                  required
-                >
-                  <option disabled>Equipaje</option>
-                  <option value="2">2</option>
-                  <option value="4">4</option>
-                  <option value="8">8</option>
-                </select>
-                <div class="absolute inset-y-0 left-0 flex items-center pl-2">
-                  <i class="fa-solid fa-suitcase text-gray-500"></i>
-                </div>
-                <div
-                  class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
-                >
-                  <i class="fas fa-chevron-down text-gray-500"></i>
-                </div>
-              </div>
+              <Select
+                v-model="newVehicle.luggage"
+                :options="Equipaje"
+                name="luggage"
+                optionLabel="name"
+                placeholder="Equipajes"
+                class="text-xs w-25"
+              />
 
               <!-- Select Capacidad -->
-              <div class="relative inline-block">
-                <select
-                  class="appearance-none pl-10 pr-6 py-2 border text-sm rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
-                  v-model="newVehicle.people"
-                  name="people"
-                  required
-                >
-                  <option disabled>Capacidad</option>
-                  <option value="2">2 Personas</option>
-                  <option value="4">4 Personas</option>
-                  <option value="6">6 Personas</option>
-                </select>
-                <div class="absolute inset-y-0 left-0 flex items-center pl-2">
-                  <i class="fa-solid fa-users text-gray-500"></i>
-                </div>
-                <div
-                  class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
-                >
-                  <i class="fas fa-chevron-down text-gray-500"></i>
-                </div>
-              </div>
+              <Select
+                v-model="newVehicle.people"
+                :options="Capacidad"
+                name="people"
+                optionLabel="name"
+                placeholder="capacidad"
+                class="text-xs w-25"
+              />
 
-              <!-- Select Tipo -->
-              <div class="relative inline-block">
-                <select
-                  class="appearance-none pl-10 pr-6 py-2 border text-sm rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
-                  v-model="newVehicle.type_of_car"
-                  name="type_of_car"
-                  required
-                >
-                  <option disabled>Tipo</option>
-                  <option value="sedan">Sedan</option>
-                  <option value="suv">SUV</option>
-                  <option value="camioneta">Camioneta</option>
-                </select>
-                <div class="absolute inset-y-0 left-0 flex items-center pl-2">
-                  <i class="fas fa-car text-gray-500"></i>
-                </div>
-                <div
-                  class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
-                >
-                  <i class="fas fa-chevron-down text-gray-500"></i>
-                </div>
-              </div>
+              <!-- Select Tipo de vehicle -->
+              <Select
+                v-model="newVehicle.type_of_car"
+                :options="Tipo"
+                optionLabel="name"
+                placeholder="Tipo"
+                class="text-xs w-25"
+              />
 
-              <!-- Select Tipo -->
-              <div class="relative inline-block">
-                <select
-                  class="appearance-none pl-10 pr-6 py-2 border text-sm rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
-                  required
-                  v-model="newVehicle.transmision"
-                  name="transmision"
-                >
-                  <option disabled>Transmision</option>
-                  <option value="automatica">automática</option>
-                  <option value="cvt">CVT</option>
-                  <option value="secuencial">secuencial</option>
-                </select>
-                <div class="absolute inset-y-0 left-0 flex items-center pl-2">
-                  <i class="fa-solid fa-gears text-gray-500"></i>
-                </div>
-                <div
-                  class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
-                >
-                  <i class="fas fa-chevron-down text-gray-500"></i>
-                </div>
-              </div>
+              <!-- Select Tipo de transmision -->
+              <Select
+                v-model="newVehicle.transmision"
+                :options="Transmision"
+                optionLabel="name"
+                placeholder="Transmision"
+                class="text-xs w-25"
+              />
             </div>
           </div>
           <div class="mb-4">
             <h3 class="text-lg font-bold mb-4">
-              Seleccione características adicionales
+              características adicionales
             </h3>
             <div class="flex space-x-3">
-              <div class="flex items-center">
-                <input
-                  id="checked-bluetooth"
-                  type="checkbox"
-                  v-model="newVehicle.bluetooth"
-                  name="bluetooth"
-                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                />
-                <label
-                  for="checked-bluetooth"
-                  class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                  >Bluetooth</label
+              <template v-if="features && features.length > 0">
+                <Tag
+                  v-for="(feature, index) in features"
+                  :key="index"
+                  class="text-xs"
                 >
-              </div>
-
-              <div class="flex items-center">
-                <input
-                  id="checked-siriusxm"
-                  type="checkbox"
-                  name="siriusxm"
-                  v-model="newVehicle.siriusxm"
-                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                />
-                <label
-                  for="checked-siriusxm"
-                  class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                  >SiriusXM</label
-                >
-              </div>
-
-              <div class="flex items-center">
-                <input
-                  id="checked-gps"
-                  type="checkbox"
-                  name="gps"
-                  v-model="newVehicle.gps"
-                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                />
-                <label
-                  for="checked-gps"
-                  class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                  >GPS</label
-                >
-              </div>
-
-              <div class="flex items-center">
-                <input
-                  id="checked-apple-car"
-                  type="checkbox"
-                  v-model="newVehicle.apple_car"
-                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                />
-                <label
-                  for="checked-apple-car"
-                  class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                  >Apple Car</label
-                >
-              </div>
+                  {{ feature.name }}
+                </Tag>
+              </template>
+              <template v-else>
+                <p class="text-xs text-gray-500">
+                  No se han creado características para este vehículo.
+                </p>
+              </template>
             </div>
           </div>
 
@@ -277,17 +186,48 @@
           </button>
         </div>
       </form>
+      <Toast ref="toast" position="bottom-right" group="br" />
+
+      <Dialog header="Confirmación" v-model:visible="showError" modal >
+        <div class="flex justify-around">
+          <p>Error al crear el vehiculo </p>
+        </div>
+        <button @click="closeDialog">Cerrar</button>
+      </Dialog>
     </div>
   </div>
 </template>
 
 <script>
 const url = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
+import Toast from "primevue/toast";
+
+import AutoComplete from "primevue/autocomplete";
+
+import InputNumber from "primevue/inputNumber";
+
+import Select from "primevue/select";
+import Tooltip from "primevue/tooltip";
+
+import Tag from "primevue/tag";
+
+import Dialog from "primevue/dialog";
+
 import Axios from "../axios";
 export default {
+  components: {
+    AutoComplete,
+    Dialog,
+    Select,
+    InputNumber,
+    Tooltip,
+    Toast,
+    Tag,
+  },
   name: "FormVehicles",
   data() {
     return {
+      showError: false,
       vehicleImages: [], // Array para almacenar las imágenes cargadas
       currentImage: null, // Imagen seleccionada para previsualización
       newVehicle: {
@@ -297,14 +237,153 @@ export default {
         price: 0,
         luggage: null,
         people: null,
+
         type_of_car: null,
         transmision: null,
-        apple_car: false,
-        bluetooth: false,
-        siriusxm: false,
-        gps: false,
       },
+      features: [],
+
+      selectedItem: null, // Almacena el vehículo seleccionado
+      items: [], // Lista completa de vehículos
+      filteredItems: [], // Lista filtrada para sugerencias
+      editorOptions: {
+        theme: "bubble",
+        modules: {
+          toolbar: [
+            // Aquí puedes incluir la configuración de la barra de herramientas si es necesario
+            ["bold", "italic", "underline"],
+            [{ list: "ordered" }, { list: "bullet" }],
+            ["clean"], // Botón para limpiar el formato
+          ],
+        },
+        placeholder: "Descripción del vehículo", // Establece el placeholder aquí
+      },
+      Equipaje: null,
+      Capacidad: null,
+      Tipo: null,
+      Transmision: null,
     };
+  },
+  mounted() {
+    this.fetchFeatures(); // Llama al método fetchFeatures al montar el componente
+    this.Transmision = [
+      { name: "Automática" },
+      { name: "Manual" },
+      { name: "CVT" },
+      { name: "DCT" },
+      { name: "AMT" },
+      { name: "Semi-Automática" },
+      { name: "Tiptronic" },
+      { name: "i-MMD" },
+    ];
+    this.Capacidad = [
+      { name: "1" },
+      { name: "2" },
+      { name: "3" },
+      { name: "4" },
+      { name: "5" },
+      { name: "6" },
+      { name: "7" },
+      { name: "8" },
+      { name: "9" },
+      { name: "10" },
+    ];
+    this.Tipo = [
+      { name: "Sedan" },
+      { name: "SUV" },
+      { name: "Pickup" },
+      { name: "Van" },
+      { name: "Coupe" },
+      { name: "Convertible" },
+      { name: "Hatchback" },
+      { name: "Wagon" },
+      { name: "Crossover" },
+      { name: "Deportivo" },
+      { name: "Camioneta" },
+      { name: "Familiar" },
+      { name: "Compacto" },
+      { name: "Eléctrico" },
+      { name: "Híbrido" },
+      { name: "De Lujo" },
+      { name: "Otros" },
+    ];
+    this.Equipaje = [
+      { name: "1" },
+      { name: "2" },
+      { name: "3" },
+      { name: "4" },
+      { name: "5" },
+      { name: "6" },
+      { name: "7" },
+      { name: "8" },
+      { name: "9" },
+      { name: "10" },
+    ];
+    this.items = [
+      { name: "Toyota Corolla" },
+      { name: "Honda Civic" },
+      { name: "Ford Mustang" },
+      { name: "Chevrolet Camaro" },
+      { name: "Jeep Wrangler" },
+      { name: "Toyota RAV4" },
+      { name: "Nissan Sentra" },
+      { name: "Hyundai Elantra" },
+      { name: "Kia Forte" },
+      { name: "Mazda 3" },
+      { name: "Volkswagen Jetta" },
+      { name: "Subaru Impreza" },
+      { name: "Audi A4" },
+      { name: "BMW Serie 3" },
+      { name: "Mercedes-Benz Clase C" },
+      { name: "Lexus IS" },
+      { name: "Infiniti Q50" },
+      { name: "Acura ILX" },
+      { name: "Genesis G70" },
+      { name: "Tesla Model 3" },
+      { name: "Porsche Taycan" },
+      { name: "Jaguar I-PACE" },
+      { name: "Audi e-tron" },
+      { name: "BMW i3" },
+      { name: "Chevrolet Bolt" },
+      { name: "Nissan Leaf" },
+      { name: "Kia Niro" },
+      { name: "Hyundai Kona" },
+      { name: "Ford Mustang Mach-E" },
+      { name: "Volkswagen ID.4" },
+      { name: "Toyota Prius" },
+      { name: "Honda Insight" },
+      { name: "Hyundai Ioniq" },
+      { name: "Kia Soul" },
+      { name: "Nissan Versa" },
+      { name: "Chevrolet Spark" },
+      { name: "Mitsubishi Mirage" },
+      { name: "Smart EQ fortwo" },
+      { name: "Mini Cooper SE" },
+      { name: "Fiat 500e" },
+      { name: "Honda Clarity" },
+      { name: "Toyota Mirai" },
+      { name: "Hyundai Nexo" },
+      { name: "Chevrolet Equinox" },
+      { name: "Ford Escape" },
+      { name: "Jeep Cherokee" },
+      { name: "Nissan Rogue" },
+      { name: "Toyota RAV4" },
+      { name: "Honda CR" },
+      { name: "Jeep Grand Cherokee" },
+      { name: "Ford Explorer" },
+      { name: "Chevrolet Traverse" },
+      { name: "Toyota Highlander" },
+      { name: "Nissan Pathfinder" },
+      { name: "Hyundai Palisade" },
+      { name: "Kia Telluride" },
+      { name: "Mazda CX-9" },
+      { name: "Volkswagen Atlas" },
+      { name: "Subaru Ascent" },
+      { name: "Audi Q7" },
+
+      { name: "Toyota Sienna" },
+      // Otros vehículos
+    ];
   },
   created() {
     const storedId = localStorage.getItem("NellyLandingCreate");
@@ -313,6 +392,25 @@ export default {
     }
   },
   methods: {
+    async fetchFeatures() {
+      this.loading = true; // Muestra el indicador de carga
+      try {
+        const response = await Axios.get("/api/features");
+        this.features = response.data; // Almacena las características
+        console.log("features", this.features);
+      } catch (error) {
+        console.error("Error al obtener características:", error);
+      } finally {
+        this.loading = false; // Cambia el estado de carga a falso
+      }
+    },
+    // Método para filtrar vehículos según el texto ingresado
+    searchItems(event) {
+      const query = event.query.toLowerCase();
+      this.filteredItems = this.items.filter((item) => {
+        return item.name.toLowerCase().includes(query);
+      });
+    },
     handleImageUpload(event) {
       const files = event.target.files;
       if (files.length + this.vehicleImages.length > 12) {
@@ -331,35 +429,74 @@ export default {
     async addVehicle() {
       const formData = new FormData();
 
+      // Iterar sobre los campos del vehículo
       for (const key in this.newVehicle) {
-        const value = this.newVehicle[key];
+        let value = this.newVehicle[key];
+
+        // Si es un objeto, extrae el campo relevante (por ejemplo, 'name')
+        if (typeof value === "object" && value !== null) {
+          value = value.name; // 'name' debe coincidir con lo que esperas enviar
+        }
+
         formData.append(
           key,
           typeof value === "boolean" ? (value ? 1 : 0) : value
         );
       }
 
+      // Agregar imágenes
       const imageInput = document.getElementById("vehicle-images").files;
       Array.from(imageInput).forEach((file, index) => {
         formData.append(`images[${index}]`, file);
       });
+      // Mostrar el contenido del formData antes de enviarlo
+      console.log("FormData enviado al backend:");
+      for (let pair of formData.entries()) {
+        console.log(pair[0] + ": " + pair[1]); // Muestra el nombre del campo y el valor
+      }
+      console.log("Descripción del vehículo:", this.newVehicle.description);
 
+      // Envío de datos al backend
       try {
         await Axios.post("/api/vehicle", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
         });
+        this.$refs.toast.add({
+            severity: "success",
+            summary: "Éxito",
+            detail: "Vehiculo creado",
+            life: 3000,
+          });
 
-        alert("Vehículo agregado con éxito");
-        setTimeout(() => {
-          this.$router.push("/layout-designer/add-vehicles");
-        }, 2000);
+        this.newVehicle = {
+          name: "",
+          description: "",
+          id_landing: 0,
+          price: 0,
+          luggage: null,
+          people: null,
+          type_of_car: null,
+          transmision: null,
+        };
+
+        // Limpiar las imágenes
+        this.vehicleImages = [];
+        document.getElementById("vehicle-images").value = ""; // Limpiar input file
       } catch (error) {
-        console.error("Error al agregar el vehículo:", error);
-        alert("Hubo un error al enviar los datos del vehículo.");
+        if (error.response && error.response.status === 422) {
+          console.log("Errores de validación:", error.response.data.errors);
+          // Aquí puedes manejar los errores y mostrarlos en tu UI
+        } else {
+          console.error("Error inesperado:", error);
+        }
       }
     },
+    closeDialog() {
+      this.showDialog = false;
+    },
+
     prev() {
       this.$router.push("/layout-designer/add-vehicles");
     },
@@ -367,12 +504,4 @@ export default {
 };
 </script>
 
-<style scoped lang="scss">
-.btn-new {
-  background-color: $color-background-secondary;
-  font-size: clamp(12px, 1vw, 1.5rem);
-  border-radius: 8px;
-  padding: 14px 25px;
-  color: $color-font-tertiary;
-}
-</style>
+<style scoped lang="scss"></style>

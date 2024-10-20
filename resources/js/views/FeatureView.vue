@@ -1,5 +1,5 @@
 <template>
-  <div class="lg:ml-64 p-4" >
+  <div class="lg:ml-64 p-4">
     <!-- Mostrar indicador de carga mientras se está procesando -->
     <div v-if="loading" class="flex justify-center items-center h-screen">
       <div role="status">
@@ -26,26 +26,207 @@
 
     <!-- Contenido principal del componente -->
     <div v-else>
-      <h1 class="text-2xl font-bold">Contenido Principal</h1>
-      <p>Aquí puedes agregar el contenido que desees.</p>
+      <div
+        class="flex flex-col sm:flex-row items-center justify-between mb-6 px-4"
+      >
+        <h1 class="font-bold text-3xl">Características Adicionales</h1>
+        <div
+          class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-4 sm:mt-0"
+        >
+          <!-- Campo de búsqueda -->
+          <div class="relative">
+            <input
+              type="text"
+              placeholder="Característica"
+              v-model="searchTerm"
+              class="p-2 pr-10 border border-gray-300 rounded-md focus:outline-none placeholder:text-sm w-full sm:w-auto"
+            />
+            <svg
+              class="absolute inset-y-2 right-2 w-5 h-5 text-gray-500"
+              fill="none"
+              stroke="currentColor"
+              viewBox="0 0 24 24"
+              xmlns="http://www.w3.org/2000/svg"
+            >
+              <path
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="M11 4a7 7 0 1 0 0 14 7 7 0 0 0 0-14zM21 21l-4.35-4.35"
+              />
+            </svg>
+          </div>
+        </div>
+      </div>
     </div>
+    <section class="flex justify-center">
+      <Button
+        type="button"
+        label="Agregar Característica"
+        icon="pi pi-plus"
+        @click="visible = true"
+      />
+      <Dialog
+        v-model:visible="visible"
+        modal
+        header="Agregar Característica"
+        :style="{ width: '25rem' }"
+      >
+        <span class="text-surface-500 dark:text-surface-400 block mb-8">
+          Agrega una característica especial
+        </span>
+        <div class="flex items-center gap-4 mb-4">
+          <label for="nombre" class="font-semibold w-24">Nombre</label>
+          <InputText
+            id="nombre"
+            v-model="newFeature.name"
+            class="flex-auto"
+            autocomplete="off"
+          />
+        </div>
+        <div class="flex items-center gap-4 mb-8">
+          <label for="descripcion" class="font-semibold w-24"
+            >Descripción</label
+          >
+          <InputText
+            id="descripcion"
+            v-model="newFeature.description"
+            class="flex-auto"
+            autocomplete="off"
+          />
+        </div>
+        <div class="flex justify-end gap-2">
+          <Button
+            type="button"
+            label="Cancel"
+            severity="secondary"
+            @click="visible = false"
+          />
+          <Button type="button" label="Guardar" @click="saveFeature" />
+        </div>
+      </Dialog>
+    </section>
+    <section>
+      <div class="grid grid-cols-8 sm:grid-cols-2 lg:grid-cols-8 gap-4">
+        <Chip
+          v-for="(feature, index) in filteredFeatures"
+          :key="feature.id"
+          :label="feature.name"
+          class="p-1"
+          removable
+          @remove="removeFeature(index, feature.id)"
+        />
+      </div>
+    </section>
+    <Toast ref="toast" position="bottom-right" group="br" />
+
   </div>
 </template>
 
 <script>
+import Axios from "../axios";
+import Button from "primevue/button";
+import Dialog from "primevue/dialog";
+import Card from "primevue/card";
+
+import Chip from "primevue/chip";
+import Toast from "primevue/toast";
+
+import InputText from "primevue/InputText";
+
 export default {
+  components: {
+    Button,
+    Dialog,
+    
+    Card,
+    InputText,
+    Chip,
+    Toast
+  },
   data() {
     return {
       loading: true, // Estado de carga
+      visible: false, // Controla la visibilidad del diálogo
+      searchTerm: "", // Término de búsqueda
+      newFeature: {
+        name: "",
+        description: "",
+      }, // Datos de la nueva característica
+      features: [], // Almacena las características existentes
+      filteredFeatures: [], // Almacena las características filtradas
     };
   },
   mounted() {
-    // Simulación de carga
-    setTimeout(() => {
-      this.loading = false; // Cambia el estado de carga después de 2 segundos
-    }, 2000);
+    this.fetchFeatures(); // Llama a fetchFeatures al montar el componente
+  },
+  methods: {
+    // Método para obtener las características existentes
+    async fetchFeatures() {
+      this.loading = true; // Muestra el indicador de carga
+      try {
+        const response = await Axios.get("/api/features");
+        this.features = response.data; // Almacena las características
+        this.filteredFeatures = response.data; // Inicializa las características filtradas
+      } catch (error) {
+        console.error("Error al obtener características:", error);
+      } finally {
+        this.loading = false; // Cambia el estado de carga a falso
+      }
+    },
+
+    // Método para guardar una nueva característica
+    async saveFeature() {
+      try {
+        const response = await Axios.post("/api/features", this.newFeature);
+        console.log("Característica guardada:", response.data);
+        this.visible = false; // Cierra el diálogo
+        // Resetear los campos
+        this.newFeature.name = "";
+        this.newFeature.description = "";
+        await this.fetchFeatures(); // Actualiza la lista de características
+        this.$refs.toast.add({
+          severity: "success",
+          summary: "Éxito",
+          detail: "Característica guardada",
+        });
+      } catch (error) {
+        console.error("Error al guardar la característica:", error);
+      }
+    },
+
+    // Método para filtrar las características basadas en el término de búsqueda
+    filterFeatures() {
+      this.filteredFeatures = this.features.filter((feature) => {
+        return feature.name
+          .toLowerCase()
+          .includes(this.searchTerm.toLowerCase());
+      });
+    },
+    // Método para eliminar una característica
+    async removeFeature(index, featureId) {
+      try {
+        // Eliminar del servidor
+        await Axios.delete(`/api/features/${featureId}`);
+        // Remover la característica del array local
+        this.features.splice(index, 1);
+        this.filteredFeatures = this.features; // Actualiza la lista filtrada
+        this.$refs.toast.add({
+          severity: "success",
+          summary: "Éxito",
+          detail: "Característica eliminada",
+        });
+      } catch (error) {
+        console.error("Error al eliminar la característica:", error);
+      }
+    },
+  },
+
+  watch: {
+    // Observador para el término de búsqueda
+    searchTerm(newTerm) {
+      this.filterFeatures(); // Filtra las características cada vez que cambia el término
+    },
   },
 };
 </script>
-
-

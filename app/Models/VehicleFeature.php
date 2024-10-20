@@ -4,9 +4,9 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 
-class SpecialFeature extends Model
+class VehicleFeature extends Model
 {
-    protected $fillable = ['vehicle_id', 'feature_id', 'value_override'];
+    protected $fillable = ['vehicle_id', 'feature_id', 'value'];
 
     // Relación con el vehículo
     public function vehicle()

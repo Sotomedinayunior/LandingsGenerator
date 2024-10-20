@@ -55,44 +55,71 @@ class LandingController extends Controller
         }
     }
 
-
-    // Guardar un nuevo landing en la base de datos
     public function store(Request $request)
     {
-        $validatedData = $request->validate([
-            'id_users_landing' => 'required|exists:users,id',
-            'name' => 'required|string|max:255',
-            'logo' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
-            'color_primary' => ['nullable', 'string', 'max:7', 'regex:/^#([0-9a-fA-F]{3}){1,2}$/'],
-            'color_secondary' => ['nullable', 'string', 'max:7', 'regex:/^#([0-9a-fA-F]{3}){1,2}$/'],
-            'published' => 'nullable|boolean',
-        ]);
-
-        if ($request->hasFile('logo')) {
-            $logo = $request->file('logo');
-            $logoName = time() . '_' . $logo->getClientOriginalName();
-            $logo->move(public_path('logos'), $logoName);
-            $logoUrl = asset('logos/' . $logoName);
-        } else {
-            $logoUrl = null;
+        try {
+            // Validar los datos del request
+            $validatedData = $request->validate([
+                'id_users_landing' => 'required|exists:users,id',
+                'name' => 'required|string|max:255',
+                'logo' => 'required|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+                'color_primary' => ['nullable', 'string', 'max:7', 'regex:/^#([0-9a-fA-F]{3}){1,2}$/'],
+                'color_secondary' => ['nullable', 'string', 'max:7', 'regex:/^#([0-9a-fA-F]{3}){1,2}$/'],
+                'default_language' => 'nullable|string|max:10',
+                'published' => 'nullable|boolean',
+            ]);
+            
+            // Manejar el archivo del logo
+            if ($request->hasFile('logo')) {
+                $logo = $request->file('logo');
+                $logoName = time() . '_' . $logo->getClientOriginalName();
+                $logo->move(public_path('logos'), $logoName);
+                $logoUrl = asset('logos/' . $logoName);
+            } else {
+                $logoUrl = null;
+            }
+    
+            // Crear una nueva instancia de Landing
+            $landing = new Landing();
+            $landing->id_users_landing = $validatedData['id_users_landing'];
+            $landing->name = $validatedData['name'];
+            $landing->logo = $logoUrl;
+            $landing->color_primary = $validatedData['color_primary'];
+            $landing->color_secondary = $validatedData['color_secondary'];
+            $landing->default_language = $validatedData['default_language'];
+            $landing->published = $validatedData['published'] ?? false;
+            $landing->save();
+    
+            return response()->json([
+                'message' => 'La Landing Page se ha creado con éxito',
+                'id' => $landing->id,
+                'landing' => $landing,
+                'name' => $landing->name,
+            ], 201);
+    
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Si hay errores de validación
+            return response()->json([
+                'errors' => $e->errors(),
+                'message' => 'Error de validación. Por favor revisa los campos ingresados.',
+            ], 422);
+        } catch (\Exception $e) {
+            // Manejo general de excepciones
+            $errorMessage = 'Error al crear la Landing Page. El nombre que intentas usar ya existe.';
+    
+            // Agregar lógica adicional aquí si es necesario, por ejemplo, detectar el tipo de error de SQL
+            if (strpos($e->getMessage(), 'Duplicate entry') !== false) {
+                $errorMessage = 'El nombre de la Landing Page ya está en uso. Por favor, elige otro nombre.';
+            }
+    
+            return response()->json([
+                'message' => $errorMessage,
+                'error' => $e->getMessage(),
+            ], 500);
         }
-
-        $landing = new Landing();
-        $landing->id_users_landing = $validatedData['id_users_landing'];
-        $landing->name = $validatedData['name'];
-        $landing->logo = $logoUrl;
-        $landing->color_primary = $validatedData['color_primary'];
-        $landing->color_secondary = $validatedData['color_secondary'];
-        $landing->published = $validatedData['published'] ?? false;
-        $landing->save();
-
-        return response()->json([
-            'message' => 'Landing page created successfully',
-            'id' => $landing->id,
-            'landing' => $landing,
-            'name' => $landing->name,
-        ]);
     }
+    
+
 
 
     // Actualizar un landing existente en la base de datos

@@ -4,14 +4,14 @@ import router from './router/index';
 import store from './global/store';
 import '../sass/app.scss';
 import { createMetaManager } from 'vue-meta'; 
-import i18n from './translate'
+import i18n from './translate';
+
 // Importar PrimeVue y sus estilos
 import PrimeVue from 'primevue/config';
 import Aura from '@primevue/themes/aura';
-
-import 'primeicons/primeicons.css'
+import 'primeicons/primeicons.css';
 import ToastService from 'primevue/toastservice';
-
+import KeyFilter from 'primevue/keyfilter';
 
 
 
@@ -33,8 +33,16 @@ app.use(PrimeVue, {
             cssLayer: false
         }
     }
- });
- app.use(ToastService);
+});
+app.use(ToastService);
+
+
+
+
+
+// Registrar la directiva keyfilter
+app.directive('keyfilter', KeyFilter);
+
 // Verificación de sesión antes de montar la aplicación
 store.dispatch('startSessionCheck').then(() => {
     // Monta la aplicación solo después de la verificación de sesión

@@ -16,6 +16,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('last_name');
             $table->string('email')->unique();
+
             $table->text('description')->nullable();
             $table->unsignedBigInteger('id_vehicle');
             $table->string('place_of_departure');
@@ -26,6 +27,8 @@ return new class extends Migration
             $table->date('date_of_arrival');
             $table->time('time_of_arrival');
             $table->integer('total_price')->nullable();
+            $table->string('name_landing');
+            $table->string('url_landing');
             $table->unsignedBigInteger('id_landing');
             $table->timestamps();
             $table->softDeletes();

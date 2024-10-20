@@ -24,6 +24,8 @@ class Landing extends Model
         'og_description',
         'og_image',
         'canonical_url',
+        'favicon',
+        'default_language',
         'robots',
         'published',
         
