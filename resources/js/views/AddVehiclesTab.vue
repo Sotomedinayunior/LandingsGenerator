@@ -17,6 +17,8 @@
         >
           Continuar
         </button>
+        <Toast ref="toast" position="bottom-right" group="br" />
+
 
       </div>
     </div>
@@ -33,13 +35,14 @@
 // Importación correcta del componente CountVehicles
 import CountVehicles from "../components/CountVehicles.vue";
 import TableVehicle from "../components/TableVehicle.vue";
+import Toast from "primevue/toast";
 
 import Tag from 'primevue/tag';
 
 import  Axios  from "../axios";
 export default {
   components: {
-    CountVehicles, TableVehicle , Tag
+    CountVehicles, TableVehicle , Tag , Toast
   },
   data() {
     return {
@@ -79,9 +82,22 @@ export default {
         const response = await Axios.get(`/api/vehicles/${storedId}`);
 
         this.vehicle = response.data.vehicles; // Asigna los datos recibidos
-        console.log(response.data);
+        this.$refs.toast.add({
+            severity: "success",
+            summary: "Éxito",
+            detail: "Vehiculo creado con exito",
+            life: 3000,
+          });
+
       } catch (err) {
         console.error(`Error al obtener los datos: ${err}`);
+        this.$refs.toast.add({
+            severity: "danger",
+            summary: "No se pudo obtener los datos",
+            detail: "No se pudo obtener los datos del vehiculo",
+            life: 3000,
+          });
+
       } finally {
         this.loading = false; // Finaliza el estado de carga
       }

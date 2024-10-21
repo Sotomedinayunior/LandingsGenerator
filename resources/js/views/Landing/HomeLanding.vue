@@ -145,11 +145,58 @@
         <h2 class="text-4xl font-bold text-slate-950 text-left">
           {{ $t("About_vehicle") }}
         </h2>
-        <div v-if="vehicles && vehicles.length" class="grid grid-cols-4 gap-10">
-          <div v-for="item in vehicles.slice(0, 4)" :key="item.id">
-            <CardVehicle :vehicle="item" />
+
+        <!-- Comprobar si hay vehículos -->
+        <div v-if="vehicles && vehicles.length" class="w-full ">
+          <!-- Si hay 3 o más vehículos, usar el carrusel -->
+          <div v-if="vehicles.length >= 3">
+            <Carousel
+              :value="vehicles"
+              numVisible="3"
+              numScroll="1"
+              :circular="true"
+              :autoplayInterval="3000"
+              orientation="horizontal"
+              item-template="vehicleSlot"
+            >
+              <!-- Cada slide muestra la información del vehículo -->
+              <template #vehicleSlot="{ vehicle }">
+                <div class="p-4 text-center">
+                  <img
+                    :src="'storage/' + vehicle.images[0].path_images"
+                    alt="vehicle"
+                    class="w-full h-auto"
+                  />
+                  <h4 class="mt-2 text-xl font-bold">{{ vehicle.name }}</h4>
+                  <p class="text-sm text-gray-600">{{ vehicle.description }}</p>
+                </div>
+              </template>
+            </Carousel>
+          </div>
+
+          <!-- Si hay menos de 3 vehículos, mostrar cards individuales -->
+          <div v-else class="flex" >
+            <div v-for="vehicle in vehicles" :key="vehicle.id" class="p-4">
+              <Card>
+                <template #header>
+                  <img
+                    :src="'storage/' + vehicle.images[0].path_images"
+                    :alt="vehicle.name"
+                    :title="vehicle.name"
+                    width="330"
+                    height="172"
+                    class="w-full h-auto"
+                  />
+                </template>
+                <template #content>
+                  <h4 class="text-xl font-bold">{{ vehicle.name }}</h4>
+                  <p class="text-sm text-gray-600">{{ vehicle.description }}</p>
+                </template>
+              </Card>
+            </div>
           </div>
         </div>
+        <!-- Si no hay vehículos, mostrar un mensaje -->
         <h2 v-else>{{ $t("no_vehicle") }}</h2>
       </section>
 
@@ -223,16 +270,20 @@
 
 <script>
 import { defineAsyncComponent } from "vue";
+const url = import.meta.env.VUE_APP_API_URL || "http://localhost:8000/api"; // Usar variable de entorno
+import Carousel from "primevue/carousel";
+import Card from "primevue/card";
+
 import axios from "axios";
 const HeaderComponents = defineAsyncComponent(() =>
   import("./components/HeaderComponents.vue")
 );
 import CardVehicle from "./components/CardVehicle.vue";
 
-const url = import.meta.env.VUE_APP_API_URL || "http://localhost:8000/api"; // Usar variable de entorno
+ // Usar variable de entorno
 
 export default {
-  components: { CardVehicle, HeaderComponents },
+  components: { CardVehicle, HeaderComponents, Carousel, Card },
   data() {
     return {
       landing: null, // Para almacenar los datos de la landing si se encuentran
@@ -249,7 +300,9 @@ export default {
         date_of_arrival: "",
         time_of_arrival: "",
         id_landing: "",
+
       },
+      
 
       vehicles: [],
       currentLanguage: "en",
@@ -258,7 +311,6 @@ export default {
 
   mounted() {
     this.getLanding();
-  
   },
 
   methods: {
@@ -304,6 +356,7 @@ export default {
           this.landing = response.data.landing;
           this.locations = response.data.landing.locations;
           this.vehicles = response.data.landing.vehicles;
+          console.log(response.data.landing.vehicles);
 
           console.log(
             `aqui esta los locations`,
@@ -381,9 +434,6 @@ export default {
   background-color: var(--primary-color);
   color: #fff;
 }
-
-
-
 
 .pickup {
   display: flex;

@@ -18,6 +18,7 @@ import LogoColorsTab from '../views/LogoColorsTab.vue';
 import MainLayout from '../views/MainLayout.vue';
 import NotFoundDashboard from '../views/NotFoundDashorad.vue'; // 404 para usuarios autenticados
 import Published from '../views/Published.vue';
+import PublishedTab from '../views/PublishedTab.vue';
 import Reservation from '../views/Reservation.vue';
 import ReviewLanding from '../views/Landing/ReviewLanding.vue';
 import ReviewComponent from '../views/ReviewComponent.vue';
@@ -26,7 +27,6 @@ import ThanksLanding from '../views/Landing/ThanksLanding.vue';
 import VehicleDetail from '../views/Landing/VehicleDetail.vue';
 import ViewConfigLanding from '../views/ViewConfigLanding.vue';
 import store from '../global/store';
-
 
 
 const routes = [
@@ -140,9 +140,12 @@ const routes = [
   {
     path:'/published',
     component: Published,
-    meta:{title:'Layout published - Nelly app' , requiresAuth:true ,
-
-    }
+    meta:{title:'Layout published - Nelly app' , requiresAuth:true},
+  },
+  {
+    path:'/publishedTap',
+    component: PublishedTab ,
+    meta:{title:'published - Nelly app' , requiresAuth:true},
 
   },
   // Ruta catch-all para usuarios autenticados

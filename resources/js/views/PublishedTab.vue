@@ -58,7 +58,7 @@ export default {
   methods: {
     CargaData() {
       let userId = localStorage.getItem('NellyUserId');
-      let landingId = localStorage.getItem('NellyLandingCreate');
+      let landingId = localStorage.getItem('NellyLandingP');
       Axios.get(`/api/landings/${userId}/${landingId}`)
         .then((response) => {
           this.landing = response.data;
@@ -87,5 +87,5 @@ export default {
 </script>
 
 <style scoped>
-/* Estilos */
+
 </style>

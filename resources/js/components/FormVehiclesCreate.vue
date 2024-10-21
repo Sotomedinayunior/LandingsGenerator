@@ -190,7 +190,7 @@
 
       <Dialog header="Confirmación" v-model:visible="showError" modal >
         <div class="flex justify-around">
-          <p>Error al crear el vehiculo </p>
+          <p>Error al crear </p>
         </div>
         <button @click="closeDialog">Cerrar</button>
       </Dialog>
@@ -200,11 +200,11 @@
 
 <script>
 const url = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
-import Toast from "primevue/toast";
 
 import AutoComplete from "primevue/autocomplete";
 
-import InputNumber from "primevue/inputNumber";
+
+import InputNumber from 'primevue/inputnumber';
 
 import Select from "primevue/select";
 import Tooltip from "primevue/tooltip";
@@ -214,14 +214,15 @@ import Tag from "primevue/tag";
 import Dialog from "primevue/dialog";
 
 import Axios from "../axios";
+import Toast from "primevue/toast";
 export default {
   components: {
     AutoComplete,
     Dialog,
     Select,
     InputNumber,
-    Tooltip,
     Toast,
+    Tooltip,
     Tag,
   },
   name: "FormVehicles",
@@ -398,6 +399,7 @@ export default {
         const response = await Axios.get("/api/features");
         this.features = response.data; // Almacena las características
         console.log("features", this.features);
+
       } catch (error) {
         console.error("Error al obtener características:", error);
       } finally {
@@ -463,10 +465,11 @@ export default {
             "Content-Type": "multipart/form-data",
           },
         });
+        this.showDialog = true;
         this.$refs.toast.add({
             severity: "success",
             summary: "Éxito",
-            detail: "Vehiculo creado",
+            detail: "Vehiculo creado con exito",
             life: 3000,
           });
 
@@ -487,6 +490,12 @@ export default {
       } catch (error) {
         if (error.response && error.response.status === 422) {
           console.log("Errores de validación:", error.response.data.errors);
+          this.$refs.toast.add({
+            severity: "success",
+            summary: "Éxito",
+            detail: "Vehiculo creado con exito",
+            life: 3000,
+          });
           // Aquí puedes manejar los errores y mostrarlos en tu UI
         } else {
           console.error("Error inesperado:", error);

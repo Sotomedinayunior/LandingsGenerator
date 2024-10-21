@@ -97,7 +97,7 @@
           <div class="flex justify-between gap-10">
             <button
               class="px-4 py-2 m-6 border-orange-500 border text-orange-500 rounded transition-colors"
-              @clik="handlePreview"
+              @click="handlePreview"
             >
               Previsualizar
             </button>
@@ -288,7 +288,8 @@ export default {
         });
     },
     handlePreview() {
-      IdLanding = this.$route.params.name;
+      const IdLanding = this.LandingInfo.name;
+      console.log(`IdLanding: ${IdLanding}`);
       this.$router.push(`/review-component/${IdLanding}`);
     },
     previewImage(event) {
@@ -298,6 +299,7 @@ export default {
         this.LandingInfo.logoUrl = URL.createObjectURL(file);
       }
     },
+    
     confirmModal() {
       this.isModalVisible = false;
     },

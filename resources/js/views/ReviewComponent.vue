@@ -10,6 +10,7 @@
       </div>
       <button
         class="px-4 py-2 m-6 border-orange-500 border text-orange-500 rounded transition-colors"
+        @click="publicar"
       >
         Publicar
       </button>
@@ -167,16 +168,49 @@ export default {
   methods: {
     getLayoutLanding() {
       let IdLanding = this.$route.params.name;
+      
       Axios.get(`/api/reviews/${IdLanding}`).then((response) => {
         this.LayoutLanding = response.data.landing;
         this.vehicles = response.data.vehicles;
+        console.log("LayoutLanding", this.LayoutLanding.id);
+        localStorage.setItem("NellyLandingP", this.LayoutLanding.id);
         console.log("Vehicles", this.vehicles);
-        console.log("LayoutLanding", this.LayoutLanding);
+       
       });
+    },
+    async publicar() {
+      let userId = localStorage.getItem("NellyUserId");
+      let landingId = this.LayoutLanding.id;
+
+      if (userId && landingId) {
+        try {
+          await Axios.patch(
+            "/api/landing/status",
+            {
+              landing_id: landingId,
+              user_id: userId,
+            },
+            {
+              headers: {
+                "Content-Type": "application/json",
+              },
+            }
+          );
+         
+
+          this.$router.push("/publishedTap");
+        } catch (error) {
+          console.error("Error al actualizar el estado:", error);
+        }
+      } else {
+        alert("Falta el ID de usuario o de landing");
+      }
     },
     async obtener() {
       let userId = localStorage.getItem("NellyUserId");
       let landingId = this.layoutLanding.id;
+      localStorage.setItem("NellyLandingP", this.landingId );
+      console.log("landingId", landingId);  
 
       if (userId && landingId) {
         try {
