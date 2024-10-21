@@ -10,91 +10,41 @@
     />
     <TabsComponents />
     <section class="wrapper">
-      <div
-        id="controls-carousel"
-        class="relative w-full"
-        data-carousel="static"
-      >
-        <!-- Carousel wrapper -->
-        <div class="relative h-56 overflow-hidden rounded-lg md:h-96">
-          <!-- Carousel Item -->
-          <div
-            v-for="(image, index) in vehicle.images"
-            :key="index"
-            class="hidden duration-700 ease-in-out"
-            :class="{ block: index === activeIndex }"
-            data-carousel-item
-          >
+      <div class="column1">
+        <!-- Mostrar Galleria si hay más de 3 imágenes -->
+        <Galleria
+          v-if="vehicle.images && vehicle.images.length > 3"
+          :value="galleryImages"
+          :responsiveOptions="responsiveOptions"
+          :numVisible="5"
+          :circular="true"
+          containerStyle="max-width: 640px"
+        >
+          <template #item="slotProps">
             <img
-              :src="url + '/' + vehicle.images[0].path_images"
-              class="absolute block w-full h-full object-cover -translate-x-1/2 -translate-y-1/2 top-1/2 left-1/2"
-              :alt="`Image ${index + 1}`"
+              :src="slotProps.item.itemImageSrc"
+              :alt="slotProps.item.alt"
+              style="width: 100%; display: block;"
             />
-          </div>
-        </div>
+          </template>
+          <template #thumbnail="slotProps">
+            <img
+              :src="slotProps.item.thumbnailImageSrc"
+              :alt="slotProps.item.alt"
+              style="width: 50%; display: block;"
+            />
+          </template>
+        </Galleria>
 
-        <!-- Slider controls -->
-        <button
-          type="button"
-          class="absolute top-0 left-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
-          @click="prevImage"
-        >
-          <span
-            class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 group-hover:bg-white/50 focus:ring-4 focus:ring-white"
-          >
-            <svg
-              class="w-4 h-4 text-white"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 6 10"
-            >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="M5 1 1 5l4 4"
-              />
-            </svg>
-            <span class="sr-only">Previous</span>
-          </span>
-        </button>
-        <button
-          type="button"
-          class="absolute top-0 right-0 z-30 flex items-center justify-center h-full px-4 cursor-pointer group focus:outline-none"
-          @click="nextImage"
-        >
-          <span
-            class="inline-flex items-center justify-center w-10 h-10 rounded-full bg-white/30 group-hover:bg-white/50 focus:ring-4 focus:ring-white"
-          >
-            <svg
-              class="w-4 h-4 text-white"
-              aria-hidden="true"
-              xmlns="http://www.w3.org/2000/svg"
-              fill="none"
-              viewBox="0 0 6 10"
-            >
-              <path
-                stroke="currentColor"
-                stroke-linecap="round"
-                stroke-linejoin="round"
-                stroke-width="2"
-                d="m1 9 4-4-4-4"
-              />
-            </svg>
-            <span class="sr-only">Next</span>
-          </span>
-        </button>
-      </div>
-      <div class="column1" v-if="vehicle.images && vehicle.images.length > 0">
-        <img
-          :src="url + '/' + vehicle.images[0].path_images"
+        <!-- Mostrar Image si hay 3 o menos imágenes -->
+        <Image
+          v-else
+          v-for="(image, index) in vehicle.images"
+          :key="index"
+          :src="url + '/' + image.path_images"
           :alt="vehicle.name"
-          width="500"
-          height="400"
-          class="h-auto text-left"
-          :title="vehicle.name"
+          width="600"
+          preview
         />
       </div>
       <div class="column2">
@@ -177,32 +127,31 @@
             </div>
           </div>
         </div>
-     
-        <h2 class="font-bold text-gray-400 " v-if="specialFeatures.length">Especial feature</h2>
-          <ul v-if="specialFeatures.length" class="flex">
-            
-            <li v-for="(featureSet, index) in specialFeatures" :key="index">
-              <ul v-if="featureSet.features.length" class="flex">
-                <li
-                  v-for="(feature, featureIndex) in featureSet.features"
-                  :key="featureIndex"
-                  class="flex m-2"
+
+        <h2 class="font-bold text-gray-400" v-if="specialFeatures.length">
+          Especial feature
+        </h2>
+        <ul v-if="specialFeatures.length" class="flex">
+          <li v-for="(featureSet, index) in specialFeatures" :key="index">
+            <ul v-if="featureSet.features.length" class="flex">
+              <li
+                v-for="(feature, featureIndex) in featureSet.features"
+                :key="featureIndex"
+                class="flex m-2"
+              >
+                <input
+                  type="checkbox"
+                  :checked="!!feature.value"
+                  disabled
+                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
+                />
+                <label class="ms-2 text-sm font-medium text-gray-900"
+                  ><strong>{{ feature.name }}</strong></label
                 >
-                  <input
-                    type="checkbox"
-                    :checked="!!feature.value"
-                    disabled
-                    class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                  />
-                  <label class="ms-2 text-sm font-medium text-gray-900"
-                    ><strong>{{ feature.name }}</strong></label
-                  >
-                </li>
-              </ul>
-            </li>
-          </ul>
-       
- 
+              </li>
+            </ul>
+          </li>
+        </ul>
       </div>
     </section>
   </div>
@@ -210,17 +159,29 @@
 
 <script>
 import TabsComponents from "./components/TabsComponents.vue";
+
+import Galleria from "primevue/galleria";
+
+import Carousel from "primevue/carousel";
+
 import NavComponents from "./components/NavComponents.vue";
 const url = import.meta.env.VUE_APP_API_URL || "http://localhost:8000/api"; // Usar variable de entorno
 import axios from "axios";
+
+import Image from "primevue/image";
+
 export default {
   components: {
     TabsComponents,
     NavComponents,
+    Image,
+    Carousel,
+    Galleria,
   },
   data() {
     return {
       currentLanguage: "en",
+      galleryImages: [],
       specialFeatures: [],
       activeIndex: 0,
       logoLanding: "",
@@ -373,6 +334,13 @@ export default {
           this.color1 = response.data.landing.color_primary;
           this.color2 = response.data.landing.color_secondary;
           this.vehicles = response.data.landing.vehicles;
+          // Mapear las imágenes del vehículo a galleryImages
+          this.galleryImages = this.vehicle.images.map((image) => ({
+            itemImageSrc: this.url + "/" + image.path_images,
+            thumbnailImageSrc: this.url + "/" + image.path_images,
+            alt: this.vehicle.name,
+          }));
+
           console.log("Info de la landing", this.landing);
           this.updateMetaTags();
         })
