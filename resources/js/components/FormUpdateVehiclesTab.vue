@@ -12,7 +12,7 @@
     <div v-else class="mx-w-md">
       <form
         @submit.prevent="updateVehicle"
-        class="grid grid-cols-1 md:grid-cols-2 gap-5"
+        class="grid grid-cols-2 gap-4 p-4"
         enctype="multipart/form-data"
       >
         <div class="">
@@ -81,7 +81,7 @@
               id="name"
               type="text"
               placeholder="Nombre del Vehículo"
-              class="mt-1 block text-sm w-[450px] border outline-none border-gray-300 rounded-md p-3"
+              class="mt-1 block text-xs w-[450px] border outline-none border-gray-300 rounded-md p-3"
             />
           </div>
           <div class="mb-4">
@@ -103,195 +103,64 @@
           </div>
           <div class="mb-4">
             <h2 class="text-lg font-bold mb-4">Seleccionar característica</h2>
-            <div class="flex space-x-4">
-              <div class="relative inline-block">
-                <select
-                  class="appearance-none pl-10 pr-6 py-2 border text-sm rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
-                  v-model="currentVehicle.luggage"
-                  name="luggage"
-                >
-                  <option disabled>Equipaje</option>
-                  <option value="2">2</option>
-                  <option value="4">4</option>
-                  <option value="8">8</option>
-                </select>
-                <div class="absolute inset-y-0 left-0 flex items-center pl-2">
-                  <i class="fa-solid fa-suitcase text-gray-500"></i>
+            <div class="flex flex-col">
+              <!-- Grupo 1 -->
+              <div class="flex space-x-3">
+                <div class="relative inline-block">
+                  <select
+                    class="appearance-none pl-10 pr-6 py-2 border text-xs rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
+                    v-model="currentVehicle.luggage"
+                    name="luggage"
+                  >
+                    <option disabled>Equipaje</option>
+                    <option value="2">2</option>
+                    <option value="4">4</option>
+                    <option value="8">8</option>
+                  </select>
                 </div>
-                <div
-                  class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
-                >
-                  <i class="fas fa-chevron-down text-gray-500"></i>
+
+                <div class="relative inline-block">
+                  <select
+                    class="appearance-none pl-10 pr-6 py-2 border text-xs rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
+                    v-model="currentVehicle.people"
+                    name="people"
+                  >
+                    <option disabled>Capacidad</option>
+                    <option value="2">2 Personas</option>
+                    <option value="4">4 Personas</option>
+                    <option value="6">6 Personas</option>
+                  </select>
                 </div>
               </div>
 
-              <div class="relative inline-block">
-                <select
-                  class="appearance-none pl-10 pr-6 py-2 border text-sm rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
-                  v-model="currentVehicle.people"
-                  name="people"
-                >
-                  <option disabled>Capacidad</option>
-                  <option value="2">2 Personas</option>
-                  <option value="4">4 Personas</option>
-                  <option value="6">6 Personas</option>
-                </select>
-                <div class="absolute inset-y-0 left-0 flex items-center pl-2">
-                  <i class="fa-solid fa-users text-gray-500"></i>
+              <!-- Grupo 2 -->
+              <div class="flex space-x-3">
+                <div class="relative inline-block">
+                  <select
+                    class="appearance-none pl-10 pr-6 py-2 border text-xs rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
+                    v-model="currentVehicle.type_of_car"
+                    name="type_of_car"
+                  >
+                    <option disabled>Tipo</option>
+                    <option value="sedan">Sedan</option>
+                    <option value="suv">SUV</option>
+                    <option value="camioneta">Camioneta</option>
+                  </select>
                 </div>
-                <div
-                  class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
-                >
-                  <i class="fas fa-chevron-down text-gray-500"></i>
-                </div>
-              </div>
 
-              <div class="relative inline-block">
-                <select
-                  class="appearance-none pl-10 pr-6 py-2 border text-sm rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
-                  v-model="currentVehicle.type_of_car"
-                  name="type_of_car"
-                >
-                  <option disabled>Tipo</option>
-                  <option value="sedan">Sedan</option>
-                  <option value="suv">SUV</option>
-                  <option value="camioneta">Camioneta</option>
-                </select>
-                <div class="absolute inset-y-0 left-0 flex items-center pl-2">
-                  <i class="fas fa-car text-gray-500"></i>
-                </div>
-                <div
-                  class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
-                >
-                  <i class="fas fa-chevron-down text-gray-500"></i>
+                <div class="relative inline-block">
+                  <select
+                    class="appearance-none pl-6 pr-6 py-2 border text-xs rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
+                    v-model="currentVehicle.transmision"
+                    name="transmision"
+                  >
+                    <option disabled>Transmisión</option>
+                    <option value="automatica">automática</option>
+                    <option value="cvt">CVT</option>
+                    <option value="secuencial">secuencial</option>
+                  </select>
                 </div>
               </div>
-
-              <div class="relative inline-block">
-                <select
-                  class="appearance-none pl-10 pr-6 py-2 border text-sm rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
-                  v-model="currentVehicle.transmision"
-                  name="transmision"
-                >
-                  <option disabled>Transmisión</option>
-                  <option value="automatica">automática</option>
-                  <option value="cvt">CVT</option>
-                  <option value="secuencial">secuencial</option>
-                </select>
-                <div class="absolute inset-y-0 left-0 flex items-center pl-2">
-                  <i class="fa-solid fa-gears text-gray-500"></i>
-                </div>
-                <div
-                  class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
-                >
-                  <i class="fas fa-chevron-down text-gray-500"></i>
-                </div>
-              </div>
-            </div>
-          </div>
-          <div class="mb-4">
-            <h3 class="text-lg font-bold mb-4">
-              Seleccione características adicionales
-            </h3>
-            <div class="flex space-x-4">
-              <div class="flex items-center">
-                <input
-                  id="checked-bluetooth"
-                  type="checkbox"
-                  v-model="currentVehicle.bluetooth"
-                  name="bluetooth"
-                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                />
-                <label
-                  for="checked-bluetooth"
-                  class="ms-2 text-sm font-medium text-gray-900"
-                  >Bluetooth</label
-                >
-              </div>
-              <div class="flex items-center">
-                <input
-                  id="checked-siriusxm"
-                  type="checkbox"
-                  name="siriusxm"
-                  v-model="currentVehicle.siriusxm"
-                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                />
-                <label
-                  for="checked-siriusxm"
-                  class="ms-2 text-sm font-medium text-gray-900"
-                  >SiriusXM</label
-                >
-              </div>
-              <div class="flex items-center">
-                <input
-                  id="checked-gps"
-                  type="checkbox"
-                  name="gps"
-                  v-model="currentVehicle.gps"
-                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                />
-                <label
-                  for="checked-gps"
-                  class="ms-2 text-sm font-medium text-gray-900"
-                  >GPS</label
-                >
-              </div>
-              <div class="flex items-center">
-                <input
-                  id="checked-automatic"
-                  type="checkbox"
-                  name="automatic"
-                  v-model="currentVehicle.automatic"
-                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                />
-                <label
-                  for="checked-automatic"
-                  class="ms-2 text-sm font-medium text-gray-900"
-                  >Transmisión</label
-                >
-              </div>
-              <div class="flex items-center">
-                <input
-                  id="checked-air-conditioning"
-                  type="checkbox"
-                  name="air_conditioning"
-                  v-model="currentVehicle.apple_car"
-                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                />
-                <label
-                  for="checked-air-conditioning"
-                  class="ms-2 text-sm font-medium text-gray-900"
-                  >Apple Car</label
-                >
-              </div>
-            </div>
-
-            <div class="mt-4">
-              <h4 class="text-md font-bold mb-2">
-                Características especiales adiccionales
-              </h4>
-              <ul v-if="specialFeatures.length" class="flex space-y-2">
-                <li v-for="(featureSet, index) in specialFeatures" :key="index">
-                  <ul v-if="featureSet.features.length" class="flex">
-                    <li
-                      v-for="(feature, featureIndex) in featureSet.features"
-                      :key="featureIndex"
-                      class="flex m-2"
-                    >
-                      <input
-                        type="checkbox"
-                        :checked="!!feature.value"
-                        disabled
-                        class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                      />
-                      <label class="ms-2 text-sm font-medium text-gray-900"
-                        ><strong>{{ feature.name }}</strong></label
-                      >
-                    </li>
-                  </ul>
-                </li>
-              </ul>
-              <p v-else>No hay características especiales.</p>
             </div>
           </div>
 
@@ -304,74 +173,76 @@
         </div>
       </form>
     </div>
-    <button
-      @click="openFeatureModal"
-      class="px-4 py-2 ml-80 mt-5 text-[#F57200] bg-white font-bold border border-[#F57200] rounded hover:bg-[#F57200] hover:text-white transition-colors"
-    >
-      Mas características
-    </button>
     <div
-      v-if="showModalfeature"
-      class="fixed inset-0 z-50 flex items-center justify-center bg-gray-900 bg-opacity-50"
+      v-if="showToast"
+      id="toast-container"
+      class="fixed top-0 right-0 p-4 z-50"
     >
-      <div class="bg-white p-6 rounded shadow-lg w-1/3">
-        <h3 class="text-xl font-bold mb-4">Agregar nueva característica</h3>
-
-        <form @submit.prevent="addFeature">
-          <div class="mb-4">
-            <label class="block mb-2 font-medium"
-              >Nombre de la característica</label
-            >
-            <input
-              v-model="newFeature.name"
-              type="text"
-              class="w-full p-2 border rounded"
-              placeholder="Nombre de la característica"
-              required
-            />
-          </div>
-
-          <div class="mb-4">
-            <label class="block mb-2 font-medium">valor</label>
-            <textarea
-              v-model="newFeature.value"
-              class="w-full p-2 border rounded"
-              placeholder="Descripción"
-              required
-            ></textarea>
-          </div>
-
-          <div class="flex justify-end">
-            <button
-              type="button"
-              @click="closeModal"
-              class="mr-4 px-4 py-2 bg-gray-500 text-white rounded"
-            >
-              Cancelar
-            </button>
-            <button
-              type="submit"
-              class="px-4 py-2 bg-[#F57200] text-white rounded"
-            >
-              Agregar
-            </button>
-          </div>
-        </form>
-      </div>
-    </div>
-    <div
-      class="fixed inset-0 flex items-center justify-center z-50"
-      v-if="showModal"
-      @click.self="closeModal"
-    >
-      <div class="bg-white p-4 rounded shadow-lg max-w-sm">
-        <p class="text-lg font-bold mb-2">Imágenes agregadas exitosamente</p>
-        <button
-          @click="closeModal"
-          class="px-4 py-2 bg-[#F57200] text-white font-bold rounded hover:bg-[#d06b2e] transition-colors"
+      <div
+        id="toast-success"
+        class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+        role="alert"
+      >
+        <div
+          class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200"
         >
-          Ok
+          <svg
+            class="w-5 h-5"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"
+            />
+          </svg>
+          <span class="sr-only">Check icon</span>
+        </div>
+        <div class="ms-3 text-sm font-normal">
+          Vehículo Actualizado con exito.
+        </div>
+        <button
+          type="button"
+          class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+          @click="closeToast"
+          aria-label="Close"
+        >
+          <span class="sr-only">Close</span>
+          <svg
+            class="w-3 h-3"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 14 14"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+            />
+          </svg>
         </button>
+      </div>
+
+      <div
+        v-if="showErrorModal"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+      >
+        <div class="bg-white rounded-lg shadow-lg p-4 max-w-sm w-full">
+          <h2 class="text-lg font-semibold text-red-600">Error</h2>
+          <p class="mt-2 text-gray-700">{{ errorMessage }}</p>
+          <div class="mt-4 flex justify-end">
+            <button
+              @click="closeErrorModal"
+              class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
       </div>
     </div>
   </div>
@@ -384,6 +255,8 @@ export default {
   data() {
     return {
       showModal: false,
+      showToast: false, // Controla la visibilidad del toast
+
       currentVehicle: {
         name: "",
         description: "",
@@ -407,7 +280,9 @@ export default {
         name: "",
         value: "",
       },
-      specialFeatures: [],
+  
+      showErrorModal: false, // Controla la visibilidad del modal
+      errorMessage: '', // Mensaje de error
       vehicleImages: [],
     };
   },
@@ -468,10 +343,17 @@ export default {
           `/api/vehicles/${landingId}/${vehicleId}`,
           this.currentVehicle
         );
-        console.log("Vehículo actualizado:", response.data);
-        alert("Vehículo actualizado con éxito");
+        // Mostrar el toast
+        this.showToast = true;
+
+        // Ocultar el toast después de unos segundos
+        setTimeout(() => {
+          this.showToast = false; // Esto oculta el toast
+        }, 3000); // 3000 ms = 3 segundos
       } catch (error) {
         console.error("Error actualizando el vehículo:", error);
+        this.errorMessage = "Hubo un error al enviar los datos del vehículo."; // Asigna el mensaje de error
+        this.showErrorModal = true; // Muestra el modal de error
       }
     },
 
@@ -496,7 +378,7 @@ export default {
     },
 
     prev() {
-      this.$router.push("/layout-designer/add-vehicles");
+      this.$router.go(-1);
     },
 
     openFeatureModal() {
@@ -523,7 +405,6 @@ export default {
         await Axios.post(`/api/special-feature/${vehicleId}`, featureData);
         alert("Característica agregada con éxito");
         this.closeModal();
-        this.loadSpecialFeatures();
       } catch (error) {
         console.error("Error al agregar la característica:", error);
         alert("Hubo un error al agregar la característica.");
@@ -538,6 +419,4 @@ export default {
 };
 </script>
 
-<style scoped>
-
-</style>
+<style scoped></style>

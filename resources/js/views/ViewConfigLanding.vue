@@ -47,8 +47,9 @@
         @click="activeTab = 'reservations'"
         :class="{
           'py-2 px-4 flex items-center text-sm': true,
-          'text-orange-500 border-b-2 border-orange-500 font-bold text-sm': activeTab === 'reservations',
-          'text-gray-500 text-sm': activeTab !== 'reservations'
+          'text-orange-500 border-b-2 border-orange-500 font-bold text-sm':
+            activeTab === 'reservations',
+          'text-gray-500 text-sm': activeTab !== 'reservations',
         }"
       >
         Reservas
@@ -56,7 +57,8 @@
           :class="{
             'flex justify-center items-center w-5 h-5 rounded-full ml-2 text-sm': true,
             'bg-orange-500 text-white text-sm': activeTab === 'reservations',
-            'border border-gray-500 text-gray-500 text-sm': activeTab !== 'reservations'
+            'border border-gray-500 text-gray-500 text-sm':
+              activeTab !== 'reservations',
           }"
         >
           {{ landing.reservations.length }}
@@ -67,8 +69,9 @@
         @click="activeTab = 'vehicles'"
         :class="{
           'py-2 px-4 flex items-center text-sm': true,
-          'text-orange-500 border-b-2 border-orange-500 font-bold text-sm': activeTab === 'vehicles',
-          'text-gray-500 text-sm': activeTab !== 'vehicles'
+          'text-orange-500 border-b-2 border-orange-500 font-bold text-sm':
+            activeTab === 'vehicles',
+          'text-gray-500 text-sm': activeTab !== 'vehicles',
         }"
       >
         Vehículos
@@ -76,7 +79,7 @@
           :class="{
             'flex justify-center items-center w-5 h-5 rounded-full ml-2 text-xs': true,
             'bg-orange-500 text-white': activeTab === 'vehicles',
-            'border border-gray-500 text-gray-500': activeTab !== 'vehicles'
+            'border border-gray-500 text-gray-500': activeTab !== 'vehicles',
           }"
         >
           {{ landing.vehicles.length }}
@@ -87,8 +90,9 @@
         @click="activeTab = 'config'"
         :class="{
           'py-2 px-4 flex items-center': true,
-          'text-orange-500 border-b-2 border-orange-500 font-bold': activeTab === 'config',
-          'text-gray-500': activeTab !== 'config'
+          'text-orange-500 border-b-2 border-orange-500 font-bold':
+            activeTab === 'config',
+          'text-gray-500': activeTab !== 'config',
         }"
       >
         Configuración
@@ -99,8 +103,9 @@
         @click="activeTab = 'seo'"
         :class="{
           'py-2 px-4 flex items-center': true,
-          'text-orange-500 border-b-2 border-orange-500 font-bold': activeTab === 'seo',
-          'text-gray-500': activeTab !== 'seo'
+          'text-orange-500 border-b-2 border-orange-500 font-bold':
+            activeTab === 'seo',
+          'text-gray-500': activeTab !== 'seo',
         }"
       >
         SEO
@@ -108,27 +113,33 @@
     </div>
 
     <!-- Tab Content -->
-    <div class="container mx-auto mt-4 flex ">
+    <div class="container mx-auto mt-4 flex">
       <!-- Loading State -->
       <div v-if="isLoading">Cargando datos...</div>
 
       <!-- Reservations Tab -->
       <TabReservation
-        v-if="!isLoading && activeTab === 'reservations' && landing.reservations.length > 0"
+        v-if="
+          !isLoading &&
+          activeTab === 'reservations' &&
+          landing.reservations.length > 0
+        "
         :reservations="landing.reservations"
       />
-      <div v-if="!isLoading && activeTab === 'reservations' && landing.reservations.length === 0">
+      <div
+        v-if="
+          !isLoading &&
+          activeTab === 'reservations' &&
+          landing.reservations.length === 0
+        "
+      >
         No hay reservas disponibles.
       </div>
 
-      <!-- Vehicles Tab -->
       <TabVehicle
-        v-if="!isLoading && activeTab === 'vehicles' && landing.vehicles.length > 0"
+        v-show="activeTab === 'vehicles'"
         :vehicles="landing.vehicles"
       />
-      <div v-if="!isLoading && activeTab === 'vehicles' && landing.vehicles.length === 0">
-        No hay vehículos disponibles.
-      </div>
 
       <!-- Config Tab -->
       <TabConfig v-if="!isLoading && activeTab === 'config'" />
@@ -173,7 +184,9 @@ export default {
           throw new Error("Usuario o ID de landing no encontrado");
         }
 
-        const response = await Axios.get(`/api/landings/${userId}/${landingId}`);
+        const response = await Axios.get(
+          `/api/landings/${userId}/${landingId}`
+        );
         this.landing = response.data;
       } catch (error) {
         console.error("Error fetching landing:", error);

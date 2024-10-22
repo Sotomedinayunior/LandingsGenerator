@@ -1,9 +1,8 @@
 <template>
-  <div>
-    <div></div>
+  <div class="w-full">
     <button
       @click="prev"
-      class="flex items-center mb-4 px-4 py-2 ml-10 text-[#F57200] font-bold border border-[#F57200] rounded hover:bg-[#F57200] hover:text-white transition-colors"
+      class="flex items-center mb-4 px-4 py-2 text-[#F57200] font-bold border border-[#F57200] rounded hover:bg-[#F57200] hover:text-white transition-colors"
     >
       <i class="fa fa-arrow-left mr-2"></i>Atrás
     </button>
@@ -11,10 +10,10 @@
       <!-- Carousel de imágenes del vehículo -->
       <form
         @submit.prevent="addVehicle"
-        class="grid grid-cols-1 md:grid-cols-2 gap-5"
+        class="form w-full p-5"
         enctype="multipart/form-data"
       >
-        <div class="pl-10">
+        <div class="mr-20">
           <!-- Contenedor de carga de imágenes -->
           <div
             class="border-2 border-dashed border-gray-300 bg-[#DDDDDD33] p-8 w-full h-80 flex items-center justify-center relative"
@@ -109,28 +108,21 @@
           </div>
           <div class="mb-4">
             <h2 class="text-lg font-bold mb-4">Seleccionar característica</h2>
-            <div class="flex space-x-4">
+            <div class="flex">
               <!-- Select Equipaje -->
-              <div class="relative inline-block">
+              <div>
                 <select
                   class="appearance-none pl-10 pr-6 py-2 border text-sm rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
                   v-model="newVehicle.luggage"
                   name="luggage"
                   required
                 >
-                  <option disabled>Equipaje</option>
+                  <option value="" disabled>Equipaje</option>
+                  <!-- Actúa como un placeholder -->
                   <option value="2">2</option>
                   <option value="4">4</option>
                   <option value="8">8</option>
                 </select>
-                <div class="absolute inset-y-0 left-0 flex items-center pl-2">
-                  <i class="fa-solid fa-suitcase text-gray-500"></i>
-                </div>
-                <div
-                  class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
-                >
-                  <i class="fas fa-chevron-down text-gray-500"></i>
-                </div>
               </div>
 
               <!-- Select Capacidad -->
@@ -141,44 +133,29 @@
                   name="people"
                   required
                 >
-                  <option disabled>Capacidad</option>
+                  <option value="">Capacidad</option>
                   <option value="2">2 Personas</option>
                   <option value="4">4 Personas</option>
                   <option value="6">6 Personas</option>
                 </select>
-                <div class="absolute inset-y-0 left-0 flex items-center pl-2">
-                  <i class="fa-solid fa-users text-gray-500"></i>
-                </div>
-                <div
-                  class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
-                >
-                  <i class="fas fa-chevron-down text-gray-500"></i>
-                </div>
               </div>
+            </div>
 
+            <div class="flex">
               <!-- Select Tipo -->
-              <div class="relative inline-block">
+              <div class="relative inline-block m-2">
                 <select
                   class="appearance-none pl-10 pr-6 py-2 border text-sm rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
                   v-model="newVehicle.type_of_car"
                   name="type_of_car"
                   required
                 >
-                  <option disabled>Tipo</option>
+                  <option value="">Tipo</option>
                   <option value="sedan">Sedan</option>
                   <option value="suv">SUV</option>
                   <option value="camioneta">Camioneta</option>
                 </select>
-                <div class="absolute inset-y-0 left-0 flex items-center pl-2">
-                  <i class="fas fa-car text-gray-500"></i>
-                </div>
-                <div
-                  class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
-                >
-                  <i class="fas fa-chevron-down text-gray-500"></i>
-                </div>
               </div>
-
               <!-- Select Tipo -->
               <div class="relative inline-block">
                 <select
@@ -187,19 +164,11 @@
                   v-model="newVehicle.transmision"
                   name="transmision"
                 >
-                  <option disabled>Transmision</option>
+                  <option>Transmision</option>
                   <option value="automatica">automática</option>
                   <option value="cvt">CVT</option>
                   <option value="secuencial">secuencial</option>
                 </select>
-                <div class="absolute inset-y-0 left-0 flex items-center pl-2">
-                  <i class="fa-solid fa-gears text-gray-500"></i>
-                </div>
-                <div
-                  class="absolute inset-y-0 right-0 flex items-center pr-2 pointer-events-none"
-                >
-                  <i class="fas fa-chevron-down text-gray-500"></i>
-                </div>
               </div>
             </div>
           </div>
@@ -207,66 +176,7 @@
             <h3 class="text-lg font-bold mb-4">
               Seleccione características adicionales
             </h3>
-            <div class="flex space-x-3">
-              <div class="flex items-center">
-                <input
-                  id="checked-bluetooth"
-                  type="checkbox"
-                  v-model="newVehicle.bluetooth"
-                  name="bluetooth"
-                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                />
-                <label
-                  for="checked-bluetooth"
-                  class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                  >Bluetooth</label
-                >
-              </div>
-
-              <div class="flex items-center">
-                <input
-                  id="checked-siriusxm"
-                  type="checkbox"
-                  name="siriusxm"
-                  v-model="newVehicle.siriusxm"
-                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                />
-                <label
-                  for="checked-siriusxm"
-                  class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                  >SiriusXM</label
-                >
-              </div>
-
-              <div class="flex items-center">
-                <input
-                  id="checked-gps"
-                  type="checkbox"
-                  name="gps"
-                  v-model="newVehicle.gps"
-                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                />
-                <label
-                  for="checked-gps"
-                  class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                  >GPS</label
-                >
-              </div>
-
-              <div class="flex items-center">
-                <input
-                  id="checked-apple-car"
-                  type="checkbox"
-                  v-model="newVehicle.apple_car"
-                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500 dark:focus:ring-blue-600 dark:ring-offset-gray-800 focus:ring-2 dark:bg-gray-700 dark:border-gray-600"
-                />
-                <label
-                  for="checked-apple-car"
-                  class="ms-2 text-sm font-medium text-gray-900 dark:text-gray-300"
-                  >Apple Car</label
-                >
-              </div>
-            </div>
+            <div class="flex space-x-3"></div>
           </div>
 
           <button
@@ -277,7 +187,75 @@
           </button>
         </div>
       </form>
-     
+    </div>
+    <div
+      v-if="showToast"
+      id="toast-container"
+      class="fixed top-0 right-0 p-4 z-50"
+    >
+      <div
+        id="toast-success"
+        class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+        role="alert"
+      >
+        <div
+          class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200"
+        >
+          <svg
+            class="w-5 h-5"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="currentColor"
+            viewBox="0 0 20 20"
+          >
+            <path
+              d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"
+            />
+          </svg>
+          <span class="sr-only">Check icon</span>
+        </div>
+        <div class="ms-3 text-sm font-normal">Vehículo agregado con éxito.</div>
+        <button
+          type="button"
+          class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+          @click="closeToast"
+          aria-label="Close"
+        >
+          <span class="sr-only">Close</span>
+          <svg
+            class="w-3 h-3"
+            aria-hidden="true"
+            xmlns="http://www.w3.org/2000/svg"
+            fill="none"
+            viewBox="0 0 14 14"
+          >
+            <path
+              stroke="currentColor"
+              stroke-linecap="round"
+              stroke-linejoin="round"
+              stroke-width="2"
+              d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+            />
+          </svg>
+        </button>
+      </div>
+    </div>
+    <div
+      v-if="showErrorModal"
+      class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+    >
+      <div class="bg-white rounded-lg shadow-lg p-4 max-w-sm w-full">
+        <h2 class="text-lg font-semibold text-red-600">Error</h2>
+        <p class="mt-2 text-gray-700">{{ errorMessage }}</p>
+        <div class="mt-4 flex justify-end">
+          <button
+            @click="closeErrorModal"
+            class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+          >
+            Cerrar
+          </button>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -289,6 +267,8 @@ export default {
   name: "FormVehicles",
   data() {
     return {
+      showToast: false, // Controla la visibilidad del toast
+
       vehicleImages: [], // Array para almacenar las imágenes cargadas
       currentImage: null, // Imagen seleccionada para previsualización
       newVehicle: {
@@ -305,13 +285,13 @@ export default {
         siriusxm: false,
         gps: false,
       },
-      showModal: false,
+      showErrorModal: false, // Controla la visibilidad del modal
+      errorMessage: '', // Mensaje de error
       // Nueva característica
       newFeature: {
         name: "",
         value: "",
       },
-      
     };
   },
   created() {
@@ -321,7 +301,6 @@ export default {
     }
   },
   methods: {
-    
     handleImageUpload(event) {
       const files = event.target.files;
       if (files.length + this.vehicleImages.length > 12) {
@@ -360,21 +339,34 @@ export default {
           },
         });
 
-        alert("Vehículo agregado con éxito");
+        // Mostrar el toast
+        this.showToast = true;
+
+        // Ocultar el toast después de unos segundos
         setTimeout(() => {
-          this.$router.push(`view-landing/${`${this.newVehicle.id_landing}`}`);
-        }, 2000);
+          this.showToast = false; // Esto oculta el toast
+        }, 3000); // 3000 ms = 3 segundos
       } catch (error) {
         console.error("Error al agregar el vehículo:", error);
-        alert("Hubo un error al enviar los datos del vehículo.");
+        this.errorMessage = "Hubo un error al enviar los datos del vehículo."; // Asigna el mensaje de error
+        this.showErrorModal = true; // Muestra el modal de error
       }
     },
-    
+    prev() {
+      this.$router.go(-1);
+    },
+    closeErrorModal() {
+      this.showErrorModal = false; // Cierra el modal
+    },
   },
 };
 </script>
 
 <style scoped lang="scss">
+.form {
+  display: grid;
+  grid-template-columns: auto auto;
+}
 .modal-backdrop {
   position: fixed;
   top: 0;
@@ -401,5 +393,17 @@ export default {
   border-radius: 8px;
   padding: 14px 25px;
   color: $color-font-tertiary;
+}
+#toast-container {
+  position: fixed;
+  top: 1rem; /* Distancia desde la parte superior */
+  right: 1rem; /* Distancia desde la derecha */
+  z-index: 9999; /* Asegúrate de que esté por encima de otros elementos */
+}
+#toast-container {
+  position: fixed;
+  top: 1rem; /* Distancia desde la parte superior */
+  right: 1rem; /* Distancia desde la derecha */
+  z-index: 9999; /* Asegúrate de que esté por encima de otros elementos */
 }
 </style>

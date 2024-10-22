@@ -15,5 +15,10 @@ export default defineConfig({
                 additionalData: `@import "resources/sass/variables.scss";`
             }
         }
+    },
+    build: {
+        rollupOptions: {
+            external: ['primevue'] // Agregar primevue como externo
+        }
     }
 });

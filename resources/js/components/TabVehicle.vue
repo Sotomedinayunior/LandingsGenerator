@@ -1,22 +1,53 @@
 <template>
-  <div>
-    <CountVehiclesTab :vehicles="vehicle" v-if="!showCreateForm && !showEditForm" @redirect-to-create="goToCreateVehicle"/>
+  <div class="w-full">
+    <!-- Contador de vehículos se renderiza si hay vehículos -->
+    <CountVehiclesTab
+      :vehicles="vehicle"
+      v-if="vehicle.length > 0 && currentForm === 'table' && !loading"
+      @redirect-to-create="goToCreateVehicle"
+      @search-query="updateSearchQuery"
+    />
+
+    <!-- Si no hay vehículos -->
+    <div
+      v-if="vehicle.length === 0 && !loading && currentForm === 'table'"
+      class="flex justify-between items-center w-full"
+    >
+      <p>No existen vehículos en esta landing.</p>
+      <button
+        @click="goToCreateVehicle"
+        class="mt-4 bg-orange-500 text-white px-4 py-2 rounded"
+      >
+        Aceptar
+      </button>
+    </div>
+
+    <!-- Indicador de carga -->
+    <div v-if="loading">Cargando vehículos...</div>
 
     <!-- Formulario de creación -->
-    <FormVehiclesCreateTab v-if="showCreateForm" @add-vehicle="addVehicle" />
+    <FormVehiclesCreateTab
+      v-if="currentForm === 'create'"
+      @add-vehicle="addVehicle"
+    />
 
     <!-- Formulario de edición -->
-    <FormUpdateVehiclesTab v-if="showEditForm" :vehicle="vehicleToEdit" @update-vehicle="updateVehicle" />
+    <FormUpdateVehiclesTab
+      v-if="currentForm === 'edit'"
+      :vehicle="vehicleToEdit"
+      @update-vehicle="updateVehicle"
+    />
 
     <!-- Tabla de vehículos -->
     <TableVehiclesTab
       :vehicles="vehicle"
-      v-if="!showCreateForm && !showEditForm"
+      v-if="vehicle.length > 0 && currentForm === 'table' && !loading"
       @edit-vehicle="goToEditVehicle"
+      @redirect-to-create="goToCreateVehicle"
+      @refresh-vehicles="getVehicles"
     />
   </div>
 </template>
-
 
 <script>
 import CountVehiclesTab from "../components/CountVehiclesTab.vue";
@@ -30,21 +61,39 @@ export default {
     CountVehiclesTab,
     TableVehiclesTab,
     FormVehiclesCreateTab,
-    FormUpdateVehiclesTab
+    FormUpdateVehiclesTab,
   },
   data() {
     return {
       error: false,
-      showCreateForm: false, // Bandera para mostrar el formulario de creación
-      showEditForm: false, // Bandera para mostrar el formulario de edición
-      vehicle: [], // Asegúrate de que vehicle es un array
+      currentForm: "table", // Maneja el estado del formulario: 'create', 'edit', 'table'
+      vehicle: [],
       vehicleToEdit: null, // Almacena el vehículo seleccionado para editar
+      loading: false, // Indicador de carga
+ 
     };
+  },
+  computed: {
+    // Propiedad computada para filtrar los vehículos
+    filteredVehicles() {
+      if (!this.searchQuery) {
+        return this.vehicle;
+      }
+      const query = this.searchQuery.toLowerCase();
+      return this.vehicle.filter((vehicle) => {
+        return (
+          vehicle.name.toLowerCase().includes(query) ||
+          vehicle.type_of_car.toLowerCase().includes(query) ||
+          vehicle.transmision.toLowerCase().includes(query)
+        );
+      });
+    },
   },
   mounted() {
     this.getVehicles(); // Llama a getVehicles cuando el componente se monta
   },
   methods: {
+  
     async getVehicles() {
       const landingId = this.$route.params.id;
       this.loading = true; // Indicar que está cargando
@@ -59,39 +108,44 @@ export default {
     },
 
     goToCreateVehicle() {
-      // Mostrar el formulario de creación
-      this.showCreateForm = true;
+      // Cambia al formulario de creación
+      this.currentForm = "create";
     },
 
     goToEditVehicle(vehicle) {
-      // Mostrar el formulario de edición y pasar el vehículo seleccionado
+      // Cambia al formulario de edición y pasa el vehículo seleccionado
       this.vehicleToEdit = vehicle;
-      this.showEditForm = true;
+      this.currentForm = "edit";
+    },
+
+    async addVehicle(newVehicle) {
+      try {
+        await Axios.post("/api/vehicles", newVehicle);
+        alert("Vehículo agregado con éxito");
+        this.getVehicles(); // Actualiza la lista de vehículos
+        this.currentForm = "table"; // Regresa a la tabla
+      } catch (error) {
+        console.error("Error al agregar el vehículo:", error);
+        alert("Hubo un error al agregar el vehículo.");
+      }
     },
 
     async updateVehicle(updatedVehicle) {
       try {
         await Axios.put(`/api/vehicle/${updatedVehicle.id}`, updatedVehicle);
         alert("Vehículo actualizado con éxito");
-        this.getVehicles(); // Actualizar la lista de vehículos
-        this.showEditForm = false; // Ocultar el formulario de edición
+        this.getVehicles(); // Actualiza la lista de vehículos
+        this.currentForm = "table"; // Regresa a la tabla
       } catch (error) {
         console.error("Error al actualizar el vehículo:", error);
         alert("Hubo un error al actualizar los datos del vehículo.");
       }
     },
+
+    confirmModal() {
+      // Lógica para manejar el botón "Aceptar"
+      alert("Modal confirmado"); // Cambiar esto según lo que quieras hacer
+    },
   },
 };
 </script>
-
-
-
-<style scoped lang="scss">
-.btn-new {
-  background-color: $color-background-secondary;
-  font-size: clamp(12px, 1vw, 1.5rem);
-  border-radius: 8px;
-  padding: 14px 25px;
-  color: $color-font-tertiary;
-}
-</style>

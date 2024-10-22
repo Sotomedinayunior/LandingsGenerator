@@ -59,28 +59,34 @@
         </div>
       </div>
     </div>
-    <section class="flex justify-center">
-      <Button
+
+    <!-- Botón para agregar característica -->
+    <section class="flex justify-center mb-4">
+      <button
         type="button"
-        label="Agregar Característica"
-        icon="pi pi-plus"
+        class="bg-orange-500 text-white px-4 py-2 rounded"
         @click="visible = true"
-      />
-      <Dialog
-        v-model:visible="visible"
-        modal
-        header="Agregar Característica"
-        :style="{ width: '25rem' }"
       >
-        <span class="text-surface-500 dark:text-surface-400 block mb-8">
-          Agrega una característica especial
-        </span>
+        Agregar Característica
+      </button>
+    </section>
+
+    <!-- Diálogo para agregar característica -->
+    <div
+      v-if="visible"
+      class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50"
+    >
+      <div class="bg-white p-6 rounded shadow-lg" style="width: 25rem;">
+        <h2 class="font-bold mb-4">Agregar Característica</h2>
+        <span class="text-gray-600 block mb-4"
+          >Agrega una característica especial</span
+        >
         <div class="flex items-center gap-4 mb-4">
           <label for="nombre" class="font-semibold w-24">Nombre</label>
-          <InputText
+          <input
             id="nombre"
             v-model="newFeature.name"
-            class="flex-auto"
+            class="flex-auto border border-gray-300 rounded-md p-2"
             autocomplete="off"
           />
         </div>
@@ -88,114 +94,225 @@
           <label for="descripcion" class="font-semibold w-24"
             >Descripción</label
           >
-          <InputText
+          <input
             id="descripcion"
             v-model="newFeature.description"
-            class="flex-auto"
+            class="flex-auto border border-gray-300 rounded-md p-2"
             autocomplete="off"
           />
         </div>
         <div class="flex justify-end gap-2">
-          <Button
+          <button
             type="button"
-            label="Cancel"
-            severity="secondary"
+            class="bg-gray-300 text-black px-4 py-2 rounded"
             @click="visible = false"
-          />
-          <Button type="button" label="Guardar" @click="saveFeature" />
+          >
+            Cancelar
+          </button>
+          <button
+            type="button"
+            class="bg-blue-500 text-white px-4 py-2 rounded"
+            @click="saveFeature"
+          >
+            Guardar
+          </button>
         </div>
-      </Dialog>
-    </section>
+      </div>
+    </div>
+
+    <!-- Sección de características -->
     <section>
       <div class="grid grid-cols-8 sm:grid-cols-2 lg:grid-cols-8 gap-4">
-        <Chip
+        <span
           v-for="(feature, index) in filteredFeatures"
           :key="feature.id"
-          :label="feature.name"
-          class="p-1"
-          removable
-          @remove="removeFeature(index, feature.id)"
-        />
+          class="bg-gray-200 text-gray-700 px-2 py-1 rounded inline-flex items-center justify-between"
+        >
+          {{ feature.name }}
+          <button
+            type="button"
+            class="ml-2 text-red-500"
+            @click="removeFeature(index, feature.id)"
+          >
+            &times;
+          </button>
+        </span>
+      </div>
+      <div
+        v-if="showToast"
+        id="toast-container"
+        class="fixed top-0 right-0 p-4 z-50"
+      >
+        <div
+          id="toast-success"
+          class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+          role="alert"
+        >
+          <div
+            class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200"
+          >
+            <svg
+              class="w-5 h-5"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"
+              />
+            </svg>
+            <span class="sr-only">Check icon</span>
+          </div>
+          <div class="ms-3 text-sm font-normal">
+            Vehículo agregado con éxito.
+          </div>
+          <button
+            type="button"
+            class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+            @click="closeToast"
+            aria-label="Close"
+          >
+            <span class="sr-only">Close</span>
+            <svg
+              class="w-3 h-3"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 14 14"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div
+        v-if="DeleteToast"
+        id="toast-container"
+        class="fixed top-0 right-0 p-4 z-50"
+      >
+        <div
+          id="toast-success"
+          class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+          role="alert"
+        >
+          <div
+            class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-white bg-green-100 rounded-lg dark:bg-red-800 dark:text-green-200"
+          >
+            <svg
+              class="w-5 h-5"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"
+              />
+            </svg>
+            <span class="sr-only">Check icon</span>
+          </div>
+          <div class="ms-3 text-sm font-normal">
+            Borrado exitoso.
+          </div>
+          <button
+            type="button"
+            class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+            @click="closeToast"
+            aria-label="Close"
+          >
+            <span class="sr-only">Close</span>
+            <svg
+              class="w-4 h-4"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 14 14"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+              />
+            </svg>
+          </button>
+        </div>
       </div>
     </section>
-    <Toast ref="toast" position="bottom-right" group="br" />
-
   </div>
 </template>
 
 <script>
 import Axios from "../axios";
-import Button from "primevue/button";
-import Dialog from "primevue/dialog";
-import Card from "primevue/card";
-
-import Chip from "primevue/chip";
-import Toast from "primevue/toast";
-
-import InputText from "primevue/InputText";
 
 export default {
-  components: {
-    Button,
-    Dialog,
-    
-    Card,
-    InputText,
-    Chip,
-    Toast
-  },
   data() {
     return {
-      loading: true, // Estado de carga
-      visible: false, // Controla la visibilidad del diálogo
-      searchTerm: "", // Término de búsqueda
+      showToast: false,
+      DeleteToast: false,
+      loading: true,
+      visible: false,
+      errorModalVisible: false,
+      errorMessage: "",
+      deleteErrorModalVisible: false,
+      deleteErrorMessage: "",
+      searchTerm: "",
       newFeature: {
         name: "",
         description: "",
-      }, // Datos de la nueva característica
-      features: [], // Almacena las características existentes
-      filteredFeatures: [], // Almacena las características filtradas
+      },
+      features: [],
+      filteredFeatures: [],
     };
   },
   mounted() {
-    this.fetchFeatures(); // Llama a fetchFeatures al montar el componente
+    this.fetchFeatures();
   },
   methods: {
-    // Método para obtener las características existentes
     async fetchFeatures() {
-      this.loading = true; // Muestra el indicador de carga
+      this.loading = true;
       try {
         const response = await Axios.get("/api/features");
-        this.features = response.data; // Almacena las características
-        this.filteredFeatures = response.data; // Inicializa las características filtradas
+        this.features = response.data;
+        this.filteredFeatures = response.data;
       } catch (error) {
         console.error("Error al obtener características:", error);
       } finally {
-        this.loading = false; // Cambia el estado de carga a falso
+        this.loading = false;
       }
     },
 
-    // Método para guardar una nueva característica
     async saveFeature() {
       try {
         const response = await Axios.post("/api/features", this.newFeature);
         console.log("Característica guardada:", response.data);
-        this.visible = false; // Cierra el diálogo
-        // Resetear los campos
+        this.visible = false;
         this.newFeature.name = "";
         this.newFeature.description = "";
-        await this.fetchFeatures(); // Actualiza la lista de características
-        this.$refs.toast.add({
-          severity: "success",
-          summary: "Éxito",
-          detail: "Característica guardada",
-        });
+        await this.fetchFeatures();
+        // Mostrar el toast
+        this.showToast = true;
+
+        // Ocultar el toast después de unos segundos
+        setTimeout(() => {
+          this.showToast = false; // Esto oculta el toast
+        }, 3000); // 3000 ms = 3 segundos
       } catch (error) {
         console.error("Error al guardar la característica:", error);
+        this.errorMessage =
+          "Error al crear la característica. Inténtalo de nuevo.";
+        this.errorModalVisible = true; // Mostrar modal de error
       }
     },
 
-    // Método para filtrar las características basadas en el término de búsqueda
     filterFeatures() {
       this.filteredFeatures = this.features.filter((feature) => {
         return feature.name
@@ -203,30 +320,36 @@ export default {
           .includes(this.searchTerm.toLowerCase());
       });
     },
-    // Método para eliminar una característica
+
     async removeFeature(index, featureId) {
       try {
-        // Eliminar del servidor
         await Axios.delete(`/api/features/${featureId}`);
-        // Remover la característica del array local
         this.features.splice(index, 1);
-        this.filteredFeatures = this.features; // Actualiza la lista filtrada
-        this.$refs.toast.add({
-          severity: "success",
-          summary: "Éxito",
-          detail: "Característica eliminada",
-        });
+        this.filteredFeatures = this.features;
+        // Mostrar el toast
+        this.DeleteToast = true;
+
+        // Ocultar el toast después de unos segundos
+        setTimeout(() => {
+          this.DeleteToast = false; // Esto oculta el toast
+        }, 3000); // 3000 ms = 3 segundos
       } catch (error) {
         console.error("Error al eliminar la característica:", error);
+        this.deleteErrorMessage =
+          "Error al eliminar la característica. Inténtalo de nuevo.";
+        this.deleteErrorModalVisible = true; // Mostrar modal de error
       }
     },
   },
 
   watch: {
-    // Observador para el término de búsqueda
     searchTerm(newTerm) {
-      this.filterFeatures(); // Filtra las características cada vez que cambia el término
+      this.filterFeatures();
     },
   },
 };
 </script>
+
+<style>
+/* Estilos adicionales si es necesario */
+</style>

@@ -112,6 +112,7 @@ export default {
         .then(() => {
           
           this.showModal = false;
+          this.$emit('refresh-vehicles');  // Emitimos un evento para actualizar los vehículos
           
         })
         .catch(() => {
