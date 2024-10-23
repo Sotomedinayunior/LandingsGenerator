@@ -160,24 +160,18 @@
 <script>
 import TabsComponents from "./components/TabsComponents.vue";
 
-import Galleria from "primevue/galleria";
+// import Galleria from "primevue/galleria";
 
-import Carousel from "primevue/carousel";
+// import Carousel from "primevue/carousel";
 
 import NavComponents from "./components/NavComponents.vue";
 const url = import.meta.env.VUE_APP_API_URL || "http://localhost:8000/api"; // Usar variable de entorno
 import axios from "axios";
 
-import Image from "primevue/image";
+// import Image from "primevue/image";
 
 export default {
-  components: {
-    TabsComponents,
-    NavComponents,
-    Image,
-    Carousel,
-    Galleria,
-  },
+ 
   data() {
     return {
       currentLanguage: "en",

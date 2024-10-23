@@ -170,12 +170,9 @@
 
 <script>
 import Axios from "../axios";
-import Card from "primevue/card";
 
 export default {
-  components: {
-    Card,
-  },
+ 
   data() {
     return {
       LayoutLanding: {},

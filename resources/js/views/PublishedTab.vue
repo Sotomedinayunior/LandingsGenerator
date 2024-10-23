@@ -38,15 +38,12 @@
 </template>
 
 <script>
-import Button from 'primevue/button';
-import Toast from 'primevue/toast'; // Importar el componente Toast
+// import Button from 'primevue/button';
+// import Toast from 'primevue/toast'; // Importar el componente Toast
 import Axios from "../axios";
 
 export default {
-  components: {
-    Button,
-    Toast, // Registrar el componente Toast
-  },
+ 
   data() {
     return {
       landing: [],

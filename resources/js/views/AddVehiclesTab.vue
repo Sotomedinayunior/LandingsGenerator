@@ -35,14 +35,14 @@
 // Importación correcta del componente CountVehicles
 import CountVehicles from "../components/CountVehicles.vue";
 import TableVehicle from "../components/TableVehicle.vue";
-import Toast from "primevue/toast";
 
-import Tag from 'primevue/tag';
+
+
 
 import  Axios  from "../axios";
 export default {
   components: {
-    CountVehicles, TableVehicle , Tag , Toast
+    CountVehicles, TableVehicle
   },
   data() {
     return {
@@ -142,6 +142,7 @@ export default {
 </script>
 
 <style scoped lang="scss">
+
 .btn-new {
   background-color: $color-background-secondary;
   font-size: clamp(12px, 1vw, 1.5rem);

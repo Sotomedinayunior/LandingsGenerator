@@ -7,11 +7,11 @@ import { createMetaManager } from 'vue-meta';
 import i18n from './translate';
 
 // Importar PrimeVue y sus estilos
-import PrimeVue from 'primevue/config';
-import Aura from '@primevue/themes/aura';
-import 'primeicons/primeicons.css';
-import ToastService from 'primevue/toastservice';
-import KeyFilter from 'primevue/keyfilter';
+// import PrimeVue from 'primevue/config';
+// import Aura from '@primevue/themes/aura';
+// import 'primeicons/primeicons.css';
+// import ToastService from 'primevue/toastservice';
+// import KeyFilter from 'primevue/keyfilter';
 
 
 
@@ -24,24 +24,24 @@ app.use(i18n); // Usa i18n para la internacionalización
 app.use(store); // Usa el store (Vuex)
 app.use(router); // Usa el router
 app.use(metaManager); // Usa el meta manager
-app.use(PrimeVue, {
-    theme: {
-        preset: Aura,
-        options: {
-            prefix: 'p',
-            darkModeSelector: 'system',
-            cssLayer: false
-        }
-    }
-});
-app.use(ToastService);
+// app.use(PrimeVue, {
+//     theme: {
+//         preset: Aura,
+//         options: {
+//             prefix: 'p',
+//             darkModeSelector: 'system',
+//             cssLayer: false
+//         }
+//     }
+// });
+// app.use(ToastService);
 
 
 
 
 
 // Registrar la directiva keyfilter
-app.directive('keyfilter', KeyFilter);
+// app.directive('keyfilter', KeyFilter);
 
 // Verificación de sesión antes de montar la aplicación
 store.dispatch('startSessionCheck').then(() => {

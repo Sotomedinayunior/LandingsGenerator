@@ -303,23 +303,16 @@
 <script>
 import Axios from "../axios";
 
-import KeyFilter from "primevue/keyfilter";
-import ColorPicker from "primevue/colorpicker";
+// import KeyFilter from "primevue/keyfilter";
+// import ColorPicker from "primevue/colorpicker";
 
-import InputText from "primevue/InputText";
-import Button from "primevue/button";
+// import InputText from "primevue/InputText";
+// import Button from "primevue/button";
 
-import RadioButton from "primevue/radiobutton";
-import Dialog from "primevue/dialog";
+// import RadioButton from "primevue/radiobutton";
+// import Dialog from "primevue/dialog";
 export default {
-  components: {
-    KeyFilter,
-    InputText,
-    ColorPicker,
-    RadioButton,
-    Dialog,
-    Button,
-  },
+
 
   data() {
     return {

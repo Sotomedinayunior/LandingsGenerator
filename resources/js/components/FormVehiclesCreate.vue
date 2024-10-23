@@ -201,30 +201,22 @@
 <script>
 const url = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
 
-import AutoComplete from "primevue/autocomplete";
+// import AutoComplete from "primevue/autocomplete";
 
 
-import InputNumber from 'primevue/inputnumber';
+// import InputNumber from 'primevue/inputnumber';
 
-import Select from "primevue/select";
-import Tooltip from "primevue/tooltip";
+// import Select from "primevue/select";
+// import Tooltip from "primevue/tooltip";
 
-import Tag from "primevue/tag";
+// import Tag from "primevue/tag";
 
-import Dialog from "primevue/dialog";
+// import Dialog from "primevue/dialog";
 
 import Axios from "../axios";
-import Toast from "primevue/toast";
+// import Toast from "primevue/toast";
 export default {
-  components: {
-    AutoComplete,
-    Dialog,
-    Select,
-    InputNumber,
-    Toast,
-    Tooltip,
-    Tag,
-  },
+ 
   name: "FormVehicles",
   data() {
     return {

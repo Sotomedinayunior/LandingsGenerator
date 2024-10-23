@@ -29,13 +29,13 @@
       </div>
     </div>
 
-    <!-- Mostrar indicador de carga mientras se obtienen las reservas -->
+    <!-- Mostrar indicador de carga nativo mientras se obtienen las reservas -->
     <div v-if="loading" class="flex justify-center items-center">
-      <ProgressSpinner />
+      <progress class="w-full" value="0" max="100"></progress>
     </div>
 
-     <!-- Mostrar mensaje si no hay reservas -->
-     <div v-else-if="filteredReservations.length === 0" class="text-center">
+    <!-- Mostrar mensaje si no hay reservas -->
+    <div v-else-if="filteredReservations.length === 0" class="text-center">
       <p class="text-lg">No hay datos disponibles.</p>
     </div>
 
@@ -73,21 +73,14 @@
 </template>
 
 <script>
-import  DataTable from 'primevue/datatable';
-import Column from 'primevue/column';
-import ColumnGroup from 'primevue/columngroup';   // optional
-import Row from 'primevue/row';  
+// import DataTable from 'primevue/datatable';
+// import Column from 'primevue/column';
+// import ColumnGroup from 'primevue/columngroup'; // optional
+// import Row from 'primevue/row';  
 import Axios from '../axios';
 
-import ProgressSpinner from 'primevue/progressspinner';
-
-
 export default {
-  components: {
-    DataTable,
-    Column,
-    ProgressSpinner,
-  },
+
   data() {
     return {
       reservations: [],
@@ -144,5 +137,23 @@ export default {
 </script>
 
 <style scoped>
-/* Aquí puedes mantener los estilos de tu tabla o ajustarlos */
+/* Estilos para el indicador de carga nativo */
+progress {
+  appearance: none;
+  width: 100%; /* Ancho completo */
+  height: 10px; /* Ajusta la altura según lo necesites */
+  border-radius: 5px; /* Bordes redondeados */
+}
+
+progress::-webkit-progress-bar {
+  background-color: #f3f4f6; /* Color de fondo */
+}
+
+progress::-webkit-progress-value {
+  background-color: #3b82f6; /* Color del progreso */
+}
+
+progress::-moz-progress-bar {
+  background-color: #3b82f6; /* Color del progreso para Firefox */
+}
 </style>

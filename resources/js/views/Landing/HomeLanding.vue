@@ -271,8 +271,8 @@
 <script>
 import { defineAsyncComponent } from "vue";
 const url = import.meta.env.VUE_APP_API_URL || "http://localhost:8000/api"; // Usar variable de entorno
-import Carousel from "primevue/carousel";
-import Card from "primevue/card";
+// import Carousel from "primevue/carousel";
+// import Card from "primevue/card";
 
 import axios from "axios";
 const HeaderComponents = defineAsyncComponent(() =>
@@ -283,7 +283,7 @@ import CardVehicle from "./components/CardVehicle.vue";
  // Usar variable de entorno
 
 export default {
-  components: { CardVehicle, HeaderComponents, Carousel, Card },
+ 
   data() {
     return {
       landing: null, // Para almacenar los datos de la landing si se encuentran

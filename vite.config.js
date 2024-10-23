@@ -5,20 +5,16 @@ export default defineConfig({
     plugins: [
         vue(),
         laravel({
-            input: ['resources/js/main.js'],
+            input: ['resources/js/main.js' , 'resources/sass/app.scss'],
             refresh: true,
         }),
     ],
     css:{
         preprocessorOptions:{
             scss:{
-                additionalData: `@import "resources/sass/variables.scss";`
+                additionalData: `@use "resources/sass/variables" as *;`
             }
         }
     },
-    build: {
-        rollupOptions: {
-            external: ['primevue'] // Agregar primevue como externo
-        }
-    }
+   
 });
