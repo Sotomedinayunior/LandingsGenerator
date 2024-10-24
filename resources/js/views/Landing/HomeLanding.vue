@@ -146,58 +146,37 @@
           {{ $t("About_vehicle") }}
         </h2>
 
-        <!-- Comprobar si hay vehículos -->
-        <div v-if="vehicles && vehicles.length" class="w-full ">
-          <!-- Si hay 3 o más vehículos, usar el carrusel -->
-          <div v-if="vehicles.length >= 3">
-            <Carousel
-              :value="vehicles"
-              numVisible="3"
-              numScroll="1"
-              :circular="true"
-              :autoplayInterval="3000"
-              orientation="horizontal"
-              item-template="vehicleSlot"
-            >
-              <!-- Cada slide muestra la información del vehículo -->
-              <template #vehicleSlot="{ vehicle }">
-                <div class="p-4 text-center">
-                  <img
-                    :src="'storage/' + vehicle.images[0].path_images"
-                    alt="vehicle"
-                    class="w-full h-auto"
-                  />
-                  <h4 class="mt-2 text-xl font-bold">{{ vehicle.name }}</h4>
-                  <p class="text-sm text-gray-600">{{ vehicle.description }}</p>
-                </div>
-              </template>
-            </Carousel>
-          </div>
+        <!-- Validar si hay vehículos disponibles -->
+        <div v-if="vehicles.length > 0" class="grid grid-cols-2 gap-4 mt-5">
+          <CardVehicle
+            v-for="vehicle in vehicles"
+            :key="vehicle.id"
+            :vehicle="vehicle"
+            :primaryColor="landing.color_primary"
+            :secondaryColor="landing.color_secondary"
+            @show-modal="openModal(vehicle)" 
 
-          <!-- Si hay menos de 3 vehículos, mostrar cards individuales -->
-          <div v-else class="flex" >
-            <div v-for="vehicle in vehicles" :key="vehicle.id" class="p-4">
-              <Card>
-                <template #header>
-                  <img
-                    :src="'storage/' + vehicle.images[0].path_images"
-                    :alt="vehicle.name"
-                    :title="vehicle.name"
-                    width="330"
-                    height="172"
-                    class="w-full h-auto"
-                  />
-                </template>
-                <template #content>
-                  <h4 class="text-xl font-bold">{{ vehicle.name }}</h4>
-                  <p class="text-sm text-gray-600">{{ vehicle.description }}</p>
-                </template>
-              </Card>
-            </div>
+          />
+
+          <div v-if="showModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
+        <div class="bg-white rounded-lg p-4 w-11/12 max-w-lg">
+          <h3 class="text-lg font-semibold text-gray-900">{{ selectedVehicle?.name }}</h3>
+          <img :src="selectedVehicle?.imageSrc" :alt="selectedVehicle?.name" class="w-full h-48 object-cover object-center rounded-lg mt-4" />
+          <p class="text-gray-600 mt-2">{{ selectedVehicle?.description }}</p>
+          <div class="mt-4 flex justify-end">
+            <button @click="closeModal" class="px-4 py-2 bg-red-500 text-white rounded-lg">
+              Cerrar
+            </button>
           </div>
         </div>
-        <!-- Si no hay vehículos, mostrar un mensaje -->
-        <h2 v-else>{{ $t("no_vehicle") }}</h2>
+      </div>
+        </div>
+
+        <!-- Mensaje si no hay vehículos disponibles -->
+        <div v-else class="text-center text-gray-500 mt-5">
+          <p>{{ $t("no_vehicles_available") }}</p>
+          <!-- Mensaje de no disponibilidad -->
+        </div>
       </section>
 
       <section
@@ -270,20 +249,26 @@
 
 <script>
 import { defineAsyncComponent } from "vue";
-const url = import.meta.env.VUE_APP_API_URL || "http://localhost:8000/api"; // Usar variable de entorno
-// import Carousel from "primevue/carousel";
-// import Card from "primevue/card";
+const url =
+  import.meta.env.VUE_APP_API_URL ||
+  (import.meta.env.PROD
+    ? "https://generator.nellyrac.do/api"
+    : "http://localhost:8000/api");
 
 import axios from "axios";
 const HeaderComponents = defineAsyncComponent(() =>
   import("./components/HeaderComponents.vue")
 );
-import CardVehicle from "./components/CardVehicle.vue";
-
- // Usar variable de entorno
+const CardVehicle = defineAsyncComponent(() =>
+  import("./components/CardVehicle.vue")
+);
 
 export default {
- 
+  components: {
+    HeaderComponents,
+    CardVehicle,
+  },
+
   data() {
     return {
       landing: null, // Para almacenar los datos de la landing si se encuentran
@@ -300,12 +285,10 @@ export default {
         date_of_arrival: "",
         time_of_arrival: "",
         id_landing: "",
-
       },
-      
 
       vehicles: [],
-      currentLanguage: "en",
+      currentLanguage: null,
     };
   },
 
@@ -357,6 +340,9 @@ export default {
           this.locations = response.data.landing.locations;
           this.vehicles = response.data.landing.vehicles;
           console.log(response.data.landing.vehicles);
+          const landingLanguage = this.landing.default_language; // Aquí puedes cambiar 'es' por el idioma que quieras como predeterminado
+
+          this.changeLanguage(landingLanguage);
 
           console.log(
             `aqui esta los locations`,

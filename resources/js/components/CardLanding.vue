@@ -16,7 +16,7 @@
           <div class="ml-3">
             <h2 class="text-base font-bold">{{ landing.name }}</h2>
             <p class="text-xs text-wrap">
-              {{ `http://localhost:8000/${landing.name}` }}
+              {{ fullURL }}
             </p>
           </div>
         </div>
@@ -124,6 +124,7 @@
 
 <script>
 import Axios from "../axios";
+
 export default {
   name: "CardLanding",
   props: {
@@ -137,6 +138,14 @@ export default {
       URL: `/${this.landing.name}`,
       showModal: false, // Estado del modal
     };
+  },
+  computed: {
+    fullURL() {
+    const baseURL = import.meta.env.MODE === 'production'
+      ? `https://generator.nellyrac.do/`
+      : `http://localhost:8000/`;
+    return `${baseURL}${this.landing.name}`;
+  }
   },
   methods: {
     handle(id) {

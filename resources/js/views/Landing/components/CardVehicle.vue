@@ -1,47 +1,49 @@
 <template>
-  <div
-    class="flex justify-between items-center bg-white py-4 rounded-lg  w-[220px]"
-  >
-    <!-- Columna izquierda: Información del vehículo -->
-    <div class="flex flex-col gap-2">
-      <!-- Título del vehículo -->
-      <h2 class="text-[#333333] text-xl font-bold mb-3">
-        {{ vehicle.name }}
-      </h2>
+  <div class="p-4 max-w-sm bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+    <!-- Imagen del vehículo -->
+    <img
+      :src="imageSrc"
+      :alt="vehicle.name"
+      :title="vehicle.name"
+      class="w-full h-48 object-cover object-center rounded-t-lg"
+    />
 
-      <!-- Características del vehículo (iconos) -->
-      <div class="flex gap-4 text-gray-500">
-        <!-- Capacidad de pasajeros -->
-        <div class="flex items-center gap-1 p-1  bg-gray-300 rounded-lg">
-          <i class="fas fa-user text-black text-xs"></i>
-          <span class="text-xs">{{ vehicle.people }}</span>
-        </div>
-        <!-- Equipaje -->
-        <div class="flex items-center gap-1 p-1  bg-gray-300 rounded-lg">
-          <i class="fas fa-suitcase text-black text-xs"></i>
-          <span>{{ vehicle.luggage }}</span>
-        </div>
+    <!-- Información del vehículo -->
+    <div class="p-4">
+      <!-- Nombre del vehículo -->
+      <h3 class="text-lg font-semibold text-gray-900">{{ vehicle.name }}</h3>
+
+      <!-- Descripción corta -->
+      <p class="text-gray-600 mt-2">
+        {{
+          vehicle.description.length > 100
+            ? vehicle.description.slice(0, 100) + "..."
+            : vehicle.description
+        }}
+      </p>
+
+      <!-- Precio del vehículo -->
+      <div class="mt-4 flex justify-between items-center">
+        <span :style="{ color: primaryColor }" class="text-xl font-bold">${{ vehicle.price }}</span>
+        <button
+          :style="{ backgroundColor: hover ? secondaryColor : primaryColor }"
+          class="px-3 py-2 text-white text-xs font-bold uppercase rounded transition-colors duration-200"
+          @mouseover="hover = true"
+          @mouseleave="hover = false"
+        >
+          Ver Detalles
+        </button>
+         <!-- Tooltip -->
+         <div 
+            v-if="showTooltip" 
+            class="absolute bg-gray-800 text-white text-xs rounded py-2 px-4 mt-1 left-1/2 transform -translate-x-1/2"
+            @click="showTooltip = false"
+          >
+            {{ vehicle.description }} <!-- Muestra la descripción completa -->
+          </div>
       </div>
     </div>
-
-    <!-- Columna derecha: Precio -->
-    <div class="text-right">
-      <p class="text-[#333333] text-base font-bold mt-4">
-        US${{ vehicle.price }}<span class="text-[#828282] text-base">/day</span>
-      </p>
-    </div>
   </div>
-
-  <!-- Imagen del vehículo -->
-  <img
-    class="rounded-lg w-[220px] h-[160px] object-cover"
-    :src="imageSrc"
-    :alt="vehicle.name"
-    width="330"
-    height="172"
-    
-    
-  />
 </template>
 
 <script>
@@ -52,18 +54,42 @@ export default {
       type: Object,
       required: true,
     },
+    primaryColor: {
+      type: String,
+      required: true,
+    },
+    secondaryColor: {
+      type: String,
+      required: true,
+    },
+  },
+  data() {
+    return {
+      hover: false, // Estado para controlar el hover
+      showTooltip: false, // Estado para mostrar el tooltip
+    };
   },
   computed: {
     imageSrc() {
-      return this.vehicle.images.length > 0
-        ? `http://localhost:8000/storage/${this.vehicle.images[0].path_images}`
-        : "path/to/default/image.jpg"; // Imagen por defecto si no hay imágenes
+      const baseUrl = import.meta.env.VUE_APP_API_URL 
+        ? "https://generator.nellyrac.do/storage"
+        : "http://localhost:8000/storage";
+
+      const imagePath =
+        this.vehicle.images.length > 0
+          ? this.vehicle.images[0].path_images
+          : "path/to/default/image.jpg";
+
+      const fullUrl = `${baseUrl}/${imagePath}`;
+
+      console.log("Imagen URL: ", fullUrl); // Imprimir la URL de la imagen
+
+      return fullUrl;
     },
   },
 };
 </script>
 
 <style scoped>
-/* Estilos para mejorar el aspecto visual */
 
 </style>
