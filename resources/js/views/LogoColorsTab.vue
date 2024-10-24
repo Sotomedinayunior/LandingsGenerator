@@ -11,7 +11,11 @@
           <h2 class="text-xl text-slate-950 font-semibold mb-2">
             1- Nombre de tu landing
           </h2>
-          <InputText v-keyfilter.alpha v-model="name" size="large" />
+          <input
+            v-model="name"
+            type="text"
+            placeholder="Nombre de tu landing"
+            class="w-full border border-gray-300 rounded px-3 py-2"/>
 
           <p class="text-gray-600 text-xs mt-1 font-bold">
             * Este nombre debe ser único.
@@ -62,7 +66,7 @@
               <label for="primaryColor" class="text-slate-950 mb-2">
                 Color Principal
               </label>
-              <ColorPicker v-model="primaryColor" inline />
+              <input type="color" name="primaryColor" v-model="primaryColor" id="">
             </div>
 
             <!-- Selector de color secundario -->
@@ -70,8 +74,8 @@
               <label for="secondaryColor" class="text-slate-950 mb-2">
                 Color secundario
               </label>
-              <ColorPicker v-model="secondaryColor" inline />
-              {{ formattedPrimaryColor }} {{ formattedSecondaryColor }}
+              <input type="color" name="secondaryColor" v-model="secondaryColor" >
+           
             </div>
           </div>
         </div>
@@ -303,14 +307,7 @@
 <script>
 import Axios from "../axios";
 
-// import KeyFilter from "primevue/keyfilter";
-// import ColorPicker from "primevue/colorpicker";
 
-// import InputText from "primevue/InputText";
-// import Button from "primevue/button";
-
-// import RadioButton from "primevue/radiobutton";
-// import Dialog from "primevue/dialog";
 export default {
 
 
@@ -333,16 +330,7 @@ export default {
     };
   },
   computed: {
-    formattedPrimaryColor() {
-      return this.primaryColor.startsWith("#")
-        ? this.primaryColor
-        : `#${this.primaryColor}`;
-    },
-    formattedSecondaryColor() {
-      return this.secondaryColor.startsWith("#")
-        ? this.secondaryColor
-        : `#${this.secondaryColor}`;
-    },
+
     isFormComplete() {
       // Verifica si todos los campos necesarios están llenos
       return (
@@ -386,9 +374,9 @@ export default {
       formData.append("id_users_landing", userId);
       formData.append("name", this.name);
       formData.append("logo", this.$refs.logoInput.files[0]);
-      formData.append("color_primary", this.formattedPrimaryColor);
+      formData.append("color_primary", this.primaryColor);
       formData.append("default_language", this.defaultLanguage);
-      formData.append("color_secondary", this.formattedSecondaryColor);
+      formData.append("color_secondary", this.secondaryColor);
 
       Axios.post("/api/landing", formData, {
         headers: {
