@@ -111,6 +111,9 @@ export default {
         .then(() => {
           
           this.showModal = false;
+         
+          this.vehicle = this.vehicle.filter(vehicle => vehicle.id !== vehicleId);
+          this.showModal = false;
           
         })
         .catch(() => {
@@ -173,7 +176,7 @@ export default {
 
 /* Ocultar íconos por defecto */
 .actions-cell {
-  opacity: 0;
+  opacity: 1;
   cursor: pointer;
   transition: opacity 0.3s ease;
 }

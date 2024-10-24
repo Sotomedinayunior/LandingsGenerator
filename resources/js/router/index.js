@@ -17,7 +17,7 @@ import Login from '../views/Login.vue';
 import LogoColorsTab from '../views/LogoColorsTab.vue';
 import MainLayout from '../views/MainLayout.vue';
 import NotFoundDashboard from '../views/NotFoundDashorad.vue'; // 404 para usuarios autenticados
-import Published from '../views/Published.vue';
+import Published from '../views/published.vue';
 import PublishedTab from '../views/PublishedTab.vue';
 import Reservation from '../views/Reservation.vue';
 import ReviewLanding from '../views/Landing/ReviewLanding.vue';

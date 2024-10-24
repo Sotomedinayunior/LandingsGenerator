@@ -1,28 +1,36 @@
 <template>
   <div class="container my-3">
     <div v-if="!error">
-
-      <CountVehicles :vehicles="vehicle"/>
+      <CountVehicles :vehicles="vehicle" />
 
       <div v-if="vehicle.length" class="flex items-center justify-center flex-col mt-6">
-        <TableVehicle
-          :vehicles="vehicle"
-          
-         
-          
-        />
+        <TableVehicle :vehicles="vehicle" @delete="deleteVehicle" />
         <button
           @click="review"
           class="px-4 py-2 text-sm text-[#F57200] border border-[#F57200] rounded hover:bg-[#F57200] hover:text-white transition-colors"
         >
           Continuar
         </button>
-        <Toast ref="toast" position="bottom-right" group="br" />
 
+        <!-- Toast Notification for Success -->
+        <div
+          v-if="showToast"
+          class="fixed bottom-4 right-4 p-4 bg-orange-500 text-white rounded-md shadow-md transition-opacity duration-300"
+          @click="showToast = false"
+        >
+          Vehículo eliminado con éxito
+        </div>
 
+        <!-- Toast Notification for Error -->
+        <div
+          v-if="showErrorToast"
+          class="fixed bottom-16 right-4 p-4 bg-red-500 text-white rounded-md shadow-md transition-opacity duration-300"
+          @click="showErrorToast = false"
+        >
+          Hubo un error al eliminar el vehículo.
+        </div>
       </div>
     </div>
-
 
     <div v-else class="text-center text-red-600 font-bold">
       Error: Debes crear una landing primero para luego agregarles los vehículos. Serás redirigido
@@ -32,109 +40,74 @@
 </template>
 
 <script>
-// Importación correcta del componente CountVehicles
 import CountVehicles from "../components/CountVehicles.vue";
 import TableVehicle from "../components/TableVehicle.vue";
+import Axios from "../axios";
 
-
-
-
-import  Axios  from "../axios";
 export default {
   components: {
-    CountVehicles, TableVehicle
+    CountVehicles,
+    TableVehicle,
   },
   data() {
     return {
       error: false,
-      vehicle:[], // Asegúrate de que vehicle es un array
-      countdown: 7, // Inicializa la cuenta regresiva a 7 segundos
+      vehicle: [],
+      countdown: 7,
+      showToast: false, // Para mostrar el toast de éxito
+      showErrorToast: false, // Para mostrar el toast de error
     };
   },
   mounted() {
- 
     const nellyUserId = localStorage.getItem("NellyLandingCreate");
 
     if (!nellyUserId) {
       this.error = true;
-
-      // Iniciar el temporizador para actualizar la cuenta regresiva
       const interval = setInterval(() => {
         if (this.countdown > 0) {
-          this.countdown--; // Reduce el valor del contador
+          this.countdown--;
         } else {
-          clearInterval(interval); // Detener el temporizador cuando llegue a 0
-          this.$router.push("/layout-designer/"); // Redirigir cuando la cuenta regresiva termine
+          clearInterval(interval);
+          this.$router.push("/layout-designer/");
         }
-      }, 1000); // Cada segundo (1000 ms)
+      }, 1000);
     } else {
-      this.getVehicles(); // Llama a getVehicles si el usuario está autenticado
+      this.getVehicles();
     }
   },
-
   methods: {
-    
     async getVehicles() {
       const storedId = localStorage.getItem("NellyLandingCreate");
-      console.log(storedId);
-      this.loading = true; // Indicar que está cargando
+      this.loading = true;
       try {
         const response = await Axios.get(`/api/vehicles/${storedId}`);
-
-        this.vehicle = response.data.vehicles; // Asigna los datos recibidos
-        this.$refs.toast.add({
-            severity: "success",
-            summary: "Éxito",
-            detail: "Vehiculo creado con exito",
-            life: 3000,
-          });
-
+        this.vehicle = response.data.vehicles;
       } catch (err) {
         console.error(`Error al obtener los datos: ${err}`);
-        this.$refs.toast.add({
-            severity: "danger",
-            summary: "No se pudo obtener los datos",
-            detail: "No se pudo obtener los datos del vehiculo",
-            life: 3000,
-          });
-
       } finally {
-        this.loading = false; // Finaliza el estado de carga
+        this.loading = false;
       }
     },
     review() {
       this.$router.push("/layout-designer/review");
     },
-
-    async addVehicle() {
-      const formData = new FormData();
-
-      for (const key in this.newVehicle) {
-        const value = this.newVehicle[key];
-        formData.append(
-          key,
-          typeof value === "boolean" ? (value ? 1 : 0) : value
-        );
-      }
-
-      const imageInput = document.getElementById("vehicle-images").files;
-      Array.from(imageInput).forEach((file, index) => {
-        formData.append(`images[${index}]`, file);
-      });
-
+    async deleteVehicle(vehicleId, index) {
       try {
-        await Axios.post("/api/vehicle", formData, {
-          headers: {
-            "Content-Type": "multipart/form-data",
-          },
-        });
-
-        alert("Vehículo agregado con éxito");
-        this.getLanding(); // Actualizar la lista de vehículos
-        this.previousStep(); // Volver al contador de vehículos
+        await Axios.delete(`/api/vehicle/${vehicleId}`);
+        
+        // Eliminar del array local usando splice para asegurar la reactividad
+        this.vehicle.splice(index, 1);
+        
+        this.showToast = true; // Mostrar el toast de éxito
+        setTimeout(() => {
+          this.showToast = false; // Ocultar el toast de éxito después de 3 segundos
+        }, 3000);
       } catch (error) {
-        console.error("Error al agregar el vehículo:", error);
-        alert("Hubo un error al enviar los datos del vehículo.");
+        console.error("Error al eliminar el vehículo:", error);
+        this.showErrorToast = true; // Mostrar el toast de error
+        setTimeout(() => {
+          this.showErrorToast = false; // Ocultar el toast de error después de 3 segundos
+        }, 3000);
       }
     },
   },
@@ -142,7 +115,6 @@ export default {
 </script>
 
 <style scoped lang="scss">
-
 .btn-new {
   background-color: $color-background-secondary;
   font-size: clamp(12px, 1vw, 1.5rem);

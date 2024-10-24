@@ -110,16 +110,15 @@ export default {
 
       Axios.delete(`/api/vehicle/${landingId}/${vehicleId}`)
         .then(() => {
-          
-          this.showModal = false;
-          this.$emit('refresh-vehicles');  // Emitimos un evento para actualizar los vehículos
-          
+          this.showModal = false; // Ocultar el modal
+          this.$emit("refresh-vehicles");  // Emitimos un evento para actualizar los vehículos
         })
         .catch(() => {
-          this.error = true;
+          this.error = true; // Mostrar error si ocurre
           this.showModal = false;
         });
     },
+  
   },
 };
 </script>

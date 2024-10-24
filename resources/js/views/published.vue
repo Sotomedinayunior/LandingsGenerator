@@ -7,7 +7,9 @@
     <section class="h-screen flex justify-center items-center flex-col mx-0">
       <img :src="landing.logo" :alt="landing.name" class="h-9 w-9" loading="lazy" />
       <h1 class="font-bold text-2xl mt-4">¡Publicado exitosamente!</h1>
-      <p class="text-gray-500 mt-2">Se ha creado un endpoint para {{ landing.name }}</p>
+      <p class="text-gray-500 mt-2">Se ha creado un endpoint para   <a :href="`https://generator.nellyrac.do/${landing.name}`">
+      {{ landing.name }}
+    </a> </p>
 
       <div class="mt-4 flex items-center">
         <input
@@ -38,8 +40,7 @@
 </template>
 
 <script>
-// import Button from 'primevue/button';
-// import Toast from 'primevue/toast'; // Importar el componente Toast
+
 import Axios from "../axios";
 
 export default {

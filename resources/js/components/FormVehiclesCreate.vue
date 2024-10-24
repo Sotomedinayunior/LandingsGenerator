@@ -79,81 +79,132 @@
           </h2>
 
           <div class="mb-4">
-            <AutoComplete
+            <input
+              type="text"
+              name="name"
+              placeholder="Nombre del vehículo"
+              id=""
               v-model="newVehicle.name"
-              :suggestions="filteredItems"
-              @complete="searchItems"
-              :virtualScrollerOptions="{ itemSize: 38 }"
-              optionLabel="name"
-              dropdown
-              id="name"
-              placeholder="Nombre del Vehículo"
-              class="mt-1 block text-xs w-[450px] outline-none rounded-md"
-              required
+              class="mt-1 block w-[300px] border border-gray-300 outline-none rounded-md p-2 text-xs"
             />
           </div>
-          <div class="mb-4" style="max-width: 510px;">
+          <div class="mb-4">
             <textarea
               v-model="newVehicle.description"
               id="description"
               maxlength="255"
               placeholder="Describe brevemente el vehículo"
-              class="mt-1 block w-[450px] border border-gray-300 outline-none rounded-md p-2"
+              class="mt-1 block w-[300px] border border-gray-300 outline-none rounded-md p-2 text-xs"
               required
             ></textarea>
           </div>
           <div class="mb-4">
             <div class="flex items-center justify-start">
-              <InputNumber
+              <input
+                type="number"
+                name="price"
+                id=""
                 v-model="newVehicle.price"
-                inputId="currency-us"
-                mode="currency"
-                currency="USD"
-                locale="en-US"
+                class="mt-1 block w-[300px] border border-gray-300 outline-none rounded-md p-2 text-xs"
               />
               <span class="text-xs text-gray-400 mx-2">Precio por dia</span>
             </div>
           </div>
           <div class="mb-4">
-            <h2 class="text-lg font-bold mb-4">Seleccionar característica</h2>
-            <div class="flex space-x-4">
-              <!-- Select Equipaje -->
-              <Select
-                v-model="newVehicle.luggage"
-                :options="Equipaje"
-                name="luggage"
-                optionLabel="name"
-                placeholder="Equipajes"
-                class="text-xs w-25"
-              />
+            <h2 class="text-lg font-bold mb-4">
+              Seleccionar características del vehiculo
+            </h2>
+            <div class="flex flex-col space-x-4">
+              <div class="flex space-x-2">
+                <div>
+                  <label for="equipaje" class="text-xs font-bold"
+                    >Seleccione un equipaje</label
+                  >
+                  <select
+                    id="equipaje"
+                    v-model="newVehicle.luggage"
+                    class="mt-1 block w-[200px] border border-gray-300 rounded-md p-2 outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    required
+                  >
+                    <option value="" disabled selected>Equipaje</option>
+                    <option
+                      v-for="item in Equipaje"
+                      :key="item.name"
+                      :value="item.name"
+                    >
+                      {{ item.name }}
+                    </option>
+                  </select>
+                </div>
+                <div>
+                  <label for="equipaje" class="text-xs font-bold"
+                    >Seleccione la capacidad</label
+                  >
+                  <select
+                    id="Capacidad"
+                    v-model="newVehicle.people"
+                    name="people"
+                    class="mt-1 block w-[200px] border border-gray-300 rounded-md p-2 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 text-xs"
+                    required
+                  >
+                    <option value="" disabled>Capacidad</option>
+                    <option
+                      v-for="item in Capacidad"
+                      :key="item.name"
+                      :value="item.name"
+                    >
+                      {{ item.name }}
+                    </option>
+                  </select>
+                </div>
+                <!-- Select Capacidad -->
+              </div>
+              <div class="flex space-x-2">
+                <div>
+                  <label for="type of car" class="text-xs font-bold"
+                    >Selecciona el tipo de vehiculo</label
+                  >
+                  <select
+                    id="type_of_car"
+                    v-model="newVehicle.type_of_car"
+                    name="type_of_car"
+                    class="mt-1 block w-[200px] border border-gray-300 rounded-md p-2 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 text-xs"
+                    required
+                  >
+                    <option value="" disabled>Tipo de vehiculo</option>
+                    <option
+                      v-for="item in Tipo"
+                      :key="item.name"
+                      :value="item.name"
+                    >
+                      {{ item.name }}
+                    </option>
+                  </select>
+                </div>
 
-              <!-- Select Capacidad -->
-              <Select
-                v-model="newVehicle.people"
-                :options="Capacidad"
-                name="people"
-                optionLabel="name"
-                placeholder="capacidad"
-                class="text-xs w-25"
-              />
-
-              <!-- Select Tipo de vehicle -->
-              <Select
-                v-model="newVehicle.type_of_car"
-                :options="Tipo"
-                optionLabel="name"
-                placeholder="Tipo"
-                class="text-xs w-25"
-              />
-
-              <!-- Select Tipo de transmision -->
-              <Select
-                v-model="newVehicle.transmision"
-                :options="Transmision"
-                optionLabel="name"
-                placeholder="Transmision"
-                class="text-xs w-25"
-              />
+                <!-- Select Tipo de transmision -->
+                <div>
+                  <label for="transmision" class="text-xs font-bold"
+                    >Tipo de transmisión</label
+                  >
+                  <select
+                    id="transmision"
+                    v-model="newVehicle.transmision"
+                    name="transmision"
+                    class="mt-1 block w-[200px] border border-gray-300 rounded-md p-2 outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 text-xs"
+                    required
+                  >
+                    <option value="" disabled>Transmision</option>
+                    <option
+                      v-for="item in Transmision"
+                      :key="item.name"
+                      :value="item.name"
+                    >
+                      {{ item.name }}
+                    </option>
+                  </select>
+                </div>
+              </div>
             </div>
           </div>
           <div class="mb-4">
@@ -162,14 +213,17 @@
             </h3>
             <div class="flex space-x-3">
               <template v-if="features && features.length > 0">
-                <Tag
-                  v-for="(feature, index) in features"
-                  :key="index"
-                  class="text-xs"
-                >
-                  {{ feature.name }}
-                </Tag>
+                <div class="flex flex-wrap space-x-2">
+                  <span
+                    v-for="(feature, index) in features"
+                    :key="index"
+                    class="inline-block bg-blue-500 text-white text-xs font-medium px-2 py-1 rounded-md"
+                  >
+                    {{ feature.name }}
+                  </span>
+                </div>
               </template>
+
               <template v-else>
                 <p class="text-xs text-gray-500">
                   No se han creado características para este vehículo.
@@ -177,20 +231,92 @@
               </template>
             </div>
           </div>
-
-          <button
-            type="submit"
-            class="px-4 py-2 ml-80 mt-5 text-white bg-[#F57200] font-bold border border-[#F57200] rounded hover:bg-[#F57200] hover:text-white transition-colors"
-          >
-            Agregar Vehículo
-          </button>
+          <div>
+            <button
+              type="submit"
+              class="px-4 py-2 ml-30 mt-5 text-white bg-[#F57200] font-bold border border-[#F57200] rounded hover:bg-[#F57200] hover:text-white transition-colors"
+            >
+              Agregar Vehículo
+            </button>
+          </div>
         </div>
       </form>
-      <Toast ref="toast" position="bottom-right" group="br" />
+      <!-- Diálogo de confirmación -->
+      <div
+        v-if="showToast"
+        id="toast-container"
+        class="fixed top-0 right-0 p-4 z-50"
+      >
+        <div
+          id="toast-success"
+          class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+          role="alert"
+        >
+          <div
+            class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200"
+          >
+            <svg
+              class="w-5 h-5"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="currentColor"
+              viewBox="0 0 20 20"
+            >
+              <path
+                d="M10 .5a9.5 9.5 0 1 0 9.5 9.5A9.51 9.51 0 0 0 10 .5Zm3.707 8.207-4 4a1 1 0 0 1-1.414 0l-2-2a1 1 0 0 1 1.414-1.414L9 10.586l3.293-3.293a1 1 0 0 1 1.414 1.414Z"
+              />
+            </svg>
+            <span class="sr-only">Check icon</span>
+          </div>
+          <div class="ms-3 text-sm font-normal">
+            Vehículo agregado con éxito.
+          </div>
+          <button
+            type="button"
+            class="ms-auto -mx-1.5 -my-1.5 bg-white text-gray-400 hover:text-gray-900 rounded-lg focus:ring-2 focus:ring-gray-300 p-1.5 hover:bg-gray-100 inline-flex items-center justify-center h-8 w-8 dark:text-gray-500 dark:hover:text-white dark:bg-gray-800 dark:hover:bg-gray-700"
+            @click="closeToast"
+            aria-label="Close"
+          >
+            <span class="sr-only">Close</span>
+            <svg
+              class="w-3 h-3"
+              aria-hidden="true"
+              xmlns="http://www.w3.org/2000/svg"
+              fill="none"
+              viewBox="0 0 14 14"
+            >
+              <path
+                stroke="currentColor"
+                stroke-linecap="round"
+                stroke-linejoin="round"
+                stroke-width="2"
+                d="m1 1 6 6m0 0 6 6M7 7l6-6M7 7l-6 6"
+              />
+            </svg>
+          </button>
+        </div>
+      </div>
+      <div
+        v-if="showErrorModal"
+        class="fixed inset-0 z-50 flex items-center justify-center bg-black bg-opacity-50"
+      >
+        <div class="bg-white rounded-lg shadow-lg p-4 max-w-sm w-full">
+          <h2 class="text-lg font-semibold text-red-600">Error</h2>
+          <p class="mt-2 text-gray-700">{{ errorMessage }}</p>
+          <div class="mt-4 flex justify-end">
+            <button
+              @click="closeErrorModal"
+              class="px-4 py-2 bg-red-500 text-white rounded hover:bg-red-600"
+            >
+              Cerrar
+            </button>
+          </div>
+        </div>
+      </div>
 
-      <Dialog header="Confirmación" v-model:visible="showError" modal >
+      <Dialog header="Confirmación" v-model:visible="showError" modal>
         <div class="flex justify-around">
-          <p>Error al crear </p>
+          <p>Error al crear</p>
         </div>
         <button @click="closeDialog">Cerrar</button>
       </Dialog>
@@ -200,27 +326,16 @@
 
 <script>
 const url = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
-
-// import AutoComplete from "primevue/autocomplete";
-
-
-// import InputNumber from 'primevue/inputnumber';
-
-// import Select from "primevue/select";
-// import Tooltip from "primevue/tooltip";
-
-// import Tag from "primevue/tag";
-
-// import Dialog from "primevue/dialog";
-
 import Axios from "../axios";
-// import Toast from "primevue/toast";
+
 export default {
- 
   name: "FormVehicles",
   data() {
     return {
+      showErrorModal: false, // Controla la visibilidad del modal
+      errorMessage: "", // Mensaje de error
       showError: false,
+      showToast: false, // Controla la visibilidad del toast
       vehicleImages: [], // Array para almacenar las imágenes cargadas
       currentImage: null, // Imagen seleccionada para previsualización
       newVehicle: {
@@ -239,18 +354,7 @@ export default {
       selectedItem: null, // Almacena el vehículo seleccionado
       items: [], // Lista completa de vehículos
       filteredItems: [], // Lista filtrada para sugerencias
-      editorOptions: {
-        theme: "bubble",
-        modules: {
-          toolbar: [
-            // Aquí puedes incluir la configuración de la barra de herramientas si es necesario
-            ["bold", "italic", "underline"],
-            [{ list: "ordered" }, { list: "bullet" }],
-            ["clean"], // Botón para limpiar el formato
-          ],
-        },
-        placeholder: "Descripción del vehículo", // Establece el placeholder aquí
-      },
+
       Equipaje: null,
       Capacidad: null,
       Tipo: null,
@@ -390,21 +494,13 @@ export default {
       try {
         const response = await Axios.get("/api/features");
         this.features = response.data; // Almacena las características
-        console.log("features", this.features);
-
       } catch (error) {
         console.error("Error al obtener características:", error);
       } finally {
         this.loading = false; // Cambia el estado de carga a falso
       }
     },
-    // Método para filtrar vehículos según el texto ingresado
-    searchItems(event) {
-      const query = event.query.toLowerCase();
-      this.filteredItems = this.items.filter((item) => {
-        return item.name.toLowerCase().includes(query);
-      });
-    },
+
     handleImageUpload(event) {
       const files = event.target.files;
       if (files.length + this.vehicleImages.length > 12) {
@@ -457,13 +553,13 @@ export default {
             "Content-Type": "multipart/form-data",
           },
         });
-        this.showDialog = true;
-        this.$refs.toast.add({
-            severity: "success",
-            summary: "Éxito",
-            detail: "Vehiculo creado con exito",
-            life: 3000,
-          });
+        // Mostrar el toast
+        this.showToast = true;
+
+        // Ocultar el toast después de unos segundos
+        setTimeout(() => {
+          this.showToast = false; // Esto oculta el toast
+        }, 3000); // 3000 ms = 3 segundos
 
         this.newVehicle = {
           name: "",
@@ -482,12 +578,9 @@ export default {
       } catch (error) {
         if (error.response && error.response.status === 422) {
           console.log("Errores de validación:", error.response.data.errors);
-          this.$refs.toast.add({
-            severity: "success",
-            summary: "Éxito",
-            detail: "Vehiculo creado con exito",
-            life: 3000,
-          });
+          console.error("Error al agregar el vehículo:", error);
+          this.errorMessage = "Hubo un error al enviar los datos del vehículo."; // Asigna el mensaje de error
+          this.showErrorModal = true; // Muestra el modal de error
           // Aquí puedes manejar los errores y mostrarlos en tu UI
         } else {
           console.error("Error inesperado:", error);
@@ -495,7 +588,7 @@ export default {
       }
     },
     closeDialog() {
-      this.showDialog = false;
+      this.showErrorModal = false;
     },
 
     prev() {
@@ -505,4 +598,44 @@ export default {
 };
 </script>
 
-<style scoped lang="scss"></style>
+<style scoped lang="scss">
+.modal-backdrop {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 50;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.modal-content {
+  background: white;
+  padding: 20px;
+  border-radius: 10px;
+  width: 400px;
+}
+
+.btn-new {
+  background-color: $color-background-secondary;
+  font-size: clamp(12px, 1vw, 1.5rem);
+  border-radius: 8px;
+  padding: 14px 25px;
+  color: $color-font-tertiary;
+}
+#toast-container {
+  position: fixed;
+  top: 1rem; /* Distancia desde la parte superior */
+  right: 1rem; /* Distancia desde la derecha */
+  z-index: 9999; /* Asegúrate de que esté por encima de otros elementos */
+}
+#toast-container {
+  position: fixed;
+  top: 1rem; /* Distancia desde la parte superior */
+  right: 1rem; /* Distancia desde la derecha */
+  z-index: 9999; /* Asegúrate de que esté por encima de otros elementos */
+}
+</style>
