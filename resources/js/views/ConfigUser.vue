@@ -282,5 +282,5 @@ export default {
 </script>
 
 <style scoped>
-/* Agregar estilos personalizados aquí */
+
 </style>

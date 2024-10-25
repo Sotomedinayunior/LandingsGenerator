@@ -154,22 +154,8 @@
             :vehicle="vehicle"
             :primaryColor="landing.color_primary"
             :secondaryColor="landing.color_secondary"
-            @show-modal="openModal(vehicle)" 
-
+            
           />
-
-          <div v-if="showModal" class="fixed inset-0 flex items-center justify-center z-50 bg-black bg-opacity-50">
-        <div class="bg-white rounded-lg p-4 w-11/12 max-w-lg">
-          <h3 class="text-lg font-semibold text-gray-900">{{ selectedVehicle?.name }}</h3>
-          <img :src="selectedVehicle?.imageSrc" :alt="selectedVehicle?.name" class="w-full h-48 object-cover object-center rounded-lg mt-4" />
-          <p class="text-gray-600 mt-2">{{ selectedVehicle?.description }}</p>
-          <div class="mt-4 flex justify-end">
-            <button @click="closeModal" class="px-4 py-2 bg-red-500 text-white rounded-lg">
-              Cerrar
-            </button>
-          </div>
-        </div>
-      </div>
         </div>
 
         <!-- Mensaje si no hay vehículos disponibles -->
