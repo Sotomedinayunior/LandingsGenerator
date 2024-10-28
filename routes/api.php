@@ -16,7 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/register-nelly', [AuthController::class, 'register']);
 Route::post('/login-nelly', [AuthController::class, 'login']);
-
+Route::get('/features-public', [FeatureController::class, 'index']);
 Route::get('/publicLanding/{name}', [PublicLandingController::class, 'index']);
 Route::get('/reviews/{name}/', [PublicLandingController::class, 'getLandingWithoutFilters']);
 Route::get('/publicLanding/{name}/vehicle/{id}', [PublicLandingController::class, 'showVehicle']);

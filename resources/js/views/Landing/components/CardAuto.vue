@@ -9,7 +9,7 @@
       :alt="vehicle.name"
       class="vehicle-image"
     />
-    <div class="card-details">
+    <div class="flex justify-between w-full items-center">
       <div class="py-5">
         <i
           v-for="(star, index) in 5"
@@ -20,15 +20,40 @@
           title="Rating"
         ></i>
       </div>
+      <div class="text-xs">
+        <span class="font-bold mx-1" :style="{ color: colorPrimary }"
+          >Precio por dia</span
+        >
+        $ {{ vehicle.price }}
+      </div>
     </div>
     <div class="py-5">
-      <p class="text-xs text-justify">{{ vehicle.description}}</p>
-
-
+      <p class="text-xs text-justify">{{ vehicle.description }}</p>
     </div>
-    <div class="py-5 flex ">
-      
-
+    <div class="py-8">
+      <h2 class="text-left font-bold" :style="{ color: colorPrimary }">
+        Características especiales
+      </h2>
+      <div class="flex space-x-2 my-3">
+        <span class="px-3 py-1 bg-gray-200 rounded-lg text-xs">{{
+          vehicle.transmision
+        }}</span>
+        <span class="px-3 py-1 bg-gray-200 rounded-lg text-xs">{{
+          vehicle.type_of_car
+        }}</span>
+        <span class="px-3 py-1 bg-gray-200 rounded-lg text-xs"
+          >Personas {{ vehicle.luggage }}</span
+        >
+      </div>
+      <div class="flex space-x-2 my-3">
+        <span
+          v-for="(item, index) in feature"
+          :key="index"
+          class="px-3 py-1 bg-gray-200 rounded-lg text-xs"
+        >
+          {{ item.name }}
+        </span>
+      </div>
     </div>
 
     <!-- Indicación visual de que el filtro está activo -->
@@ -36,19 +61,14 @@
       Este vehículo cumple con el filtro
     </div>
 
-    <button class="btn-select" :style="{ backgroundColor: colorPrimary }">
+    <a :href="`vehicles/${vehicle.id}`" class="btn-select" :style="{ backgroundColor: colorPrimary }">
       Seleccionar
-    </button>
+    </a>
   </div>
 </template>
 
 <script>
-const url =
-  import.meta.env.VUE_APP_API_URL ||
-  (import.meta.env.PROD
-    ? "https://generator.nellyrac.do/storage"
-    : "http://localhost:8000//storage");
-
+import axios from "axios";
 export default {
   props: {
     vehicle: {
@@ -70,19 +90,38 @@ export default {
   },
   data() {
     return {
+      feature: [],
       randomRating: 0,
       url:
         import.meta.env.VUE_APP_API_URL ||
         (import.meta.env.PROD
           ? "https://generator.nellyrac.do/storage"
           : "http://localhost:8000/storage"),
-    }; // Elimina el punto y coma aquí
+      api:
+        import.meta.env.VUE_APP_API_URL ||
+        (import.meta.env.PROD
+          ? "https://generator.nellyrac.do/api"
+          : "http://localhost:8000/api"),
+    }; 
   },
   created() {
     // Generar un valor aleatorio de calificación al crear el componente
     this.randomRating = this.getRandomRating();
+    this.getFeatures();
   },
   methods: {
+    getFeatures() {
+      // Obtiene las características del vehículo
+      axios
+        .get(`${this.api}/features-public`)
+        .then((response) => {
+          this.feature = response.data;
+          console.log(this.feature);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
     getRandomRating() {
       // Genera un valor aleatorio entre 4, 4.5 y 5
       const ratings = [4, 4.5, 5];

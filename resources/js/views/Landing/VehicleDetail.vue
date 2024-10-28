@@ -10,148 +10,55 @@
     />
     <TabsComponents />
     <section class="wrapper">
-      <div class="column1">
-        <!-- Mostrar Galleria si hay más de 3 imágenes -->
-        <Galleria
-          v-if="vehicle.images && vehicle.images.length > 3"
-          :value="galleryImages"
-          :responsiveOptions="responsiveOptions"
-          :numVisible="5"
-          :circular="true"
-          containerStyle="max-width: 640px"
-        >
-          <template #item="slotProps">
-            <img
-              :src="slotProps.item.itemImageSrc"
-              :alt="slotProps.item.alt"
-              style="width: 100%; display: block;"
-            />
-          </template>
-          <template #thumbnail="slotProps">
-            <img
-              :src="slotProps.item.thumbnailImageSrc"
-              :alt="slotProps.item.alt"
-              style="width: 50%; display: block;"
-            />
-          </template>
-        </Galleria>
-
-        <!-- Mostrar Image si hay 3 o menos imágenes -->
-        <Image
-          v-else
-          v-for="(image, index) in vehicle.images"
-          :key="index"
-          :src="url + '/' + image.path_images"
-          :alt="vehicle.name"
-          width="600"
-          preview
-        />
-      </div>
-      <div class="column2">
-        <div class="my-2">
-          <h1 class="text-2xl text-slate-700 font-bold">{{ vehicle.name }}</h1>
-        </div>
-        <div class="my-2 flex">
-          <h2 class="text-base text-slate-700 font-bold">
-            US${{ vehicle.price }}
-            <span class="text-sm text-gray-300"> / per day</span>
-          </h2>
-        </div>
-        <div class="my-2">
-          <p class="text-xs text-gray-400">{{ vehicle.description }}</p>
-        </div>
-        <div class="my-2">
-          <h2 class="text-base text-slate-700 my-5 font-bold">
-            Special Feature
-          </h2>
-        </div>
-        <div class="my-2 flex flex-wrap">
-          <div class="flex justify-between">
-            <div class="flex flex-col">
-              <div
-                class="flex justify-center items-center bg-gray-400 rounded-lg px-3 py-2"
-                v-if="vehicle.luggage"
-              >
-                <img
-                  src="./asset/bag.png"
-                  class="w-5 h-5"
-                  :alt="vehicle.name"
-                />
-                <span class="text-xs">{{ vehicle.luggage }} Maletas</span>
-              </div>
-            </div>
-          </div>
-          <div class="flex justify-between mx-1">
-            <div class="flex flex-col">
-              <div
-                class="flex justify-center items-center bg-gray-400 rounded-lg px-3 py-2"
-                v-if="vehicle.people"
-              >
-                <img
-                  src="./asset/User.png"
-                  class="w-5 h-5"
-                  :alt="vehicle.name"
-                />
-                <span class="text-xs">{{ vehicle.people }} personas</span>
-              </div>
-            </div>
-          </div>
-          <div class="flex justify-between mx-1">
-            <div class="flex flex-col">
-              <div
-                class="flex justify-center items-center bg-gray-400 rounded-lg px-3 py-2"
-                v-if="vehicle.type_of_car"
-              >
-                <img
-                  src="./asset/cart.png"
-                  class="w-5 h-5"
-                  :alt="vehicle.name"
-                />
-                <span class="text-xs ml-1">{{ vehicle.type_of_car }}</span>
-              </div>
-            </div>
-          </div>
-          <div class="flex justify-between mx-1">
-            <div class="flex flex-col">
-              <div
-                class="flex justify-center items-center bg-gray-400 rounded-lg px-3 py-2"
-                v-if="vehicle.transmision"
-              >
-                <img
-                  src="./asset/transmision.png"
-                  class="w-5 h-5"
-                  :alt="vehicle.name"
-                />
-                <span class="text-xs ml-1">{{ vehicle.transmision }}</span>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <h2 class="font-bold text-gray-400" v-if="specialFeatures.length">
-          Especial feature
+      <img
+        v-if="vehicle.images && vehicle.images.length > 0"
+        :src="url + '/' + vehicle.images[0].path_images"
+        :alt="vehicle.name"
+        class="w-85 h-auto"
+        :title="vehicle.name"
+        width="800"
+        height="800"
+      />
+      <div>
+        <h2 class="text-gray-700 text-3xl font-bold py-1">
+          {{ vehicle.name }}
         </h2>
-        <ul v-if="specialFeatures.length" class="flex">
-          <li v-for="(featureSet, index) in specialFeatures" :key="index">
-            <ul v-if="featureSet.features.length" class="flex">
-              <li
-                v-for="(feature, featureIndex) in featureSet.features"
-                :key="featureIndex"
-                class="flex m-2"
-              >
-                <input
-                  type="checkbox"
-                  :checked="!!feature.value"
-                  disabled
-                  class="w-4 h-4 text-blue-600 bg-gray-100 border-gray-300 rounded focus:ring-blue-500"
-                />
-                <label class="ms-2 text-sm font-medium text-gray-900"
-                  ><strong>{{ feature.name }}</strong></label
-                >
-              </li>
-            </ul>
-          </li>
-        </ul>
+        <h2 class="text-gray-700 text-sm py-1">
+          <span class="text-xs mx-2">Precio por dia</span> {{ vehicle.price }}
+        </h2>
+        <p class="text-gray-500 text-lg py-1">{{ vehicle.description }}</p>
+        <div class="py-8">
+          <h2 class="text-left font-bold" :style="{ color: colorPrimary }">
+            Características especiales
+          </h2>
+          <div class="flex space-x-2 my-3">
+            <span class="px-3 py-1 bg-gray-200 rounded-lg text-xs">{{
+              vehicle.transmision
+            }}</span>
+            <span class="px-3 py-1 bg-gray-200 rounded-lg text-xs">{{
+              vehicle.type_of_car
+            }}</span>
+            <span class="px-3 py-1 bg-gray-200 rounded-lg text-xs"
+              >Personas {{ vehicle.luggage }}</span
+            >
+          </div>
+          <div class="flex space-x-2 my-3">
+            <span
+              v-for="(item, index) in feature"
+              :key="index"
+              class="px-3 py-1 bg-gray-200 rounded-lg text-xs"
+            >
+              {{ item.name }}
+            </span>
+          </div>
+          <a href="#" 
+            @click.prevent="RedirectLink" 
+         
+            class="inline-block px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
+          >
+            Reservar
+          </a>
+        </div>
       </div>
     </section>
   </div>
@@ -160,23 +67,21 @@
 <script>
 import TabsComponents from "./components/TabsComponents.vue";
 
-// import Galleria from "primevue/galleria";
-
-// import Carousel from "primevue/carousel";
-
 import NavComponents from "./components/NavComponents.vue";
 const url = import.meta.env.VUE_APP_API_URL || "http://localhost:8000/api"; // Usar variable de entorno
 import axios from "axios";
 
-// import Image from "primevue/image";
-
 export default {
- 
+  components: {
+    NavComponents,
+    TabsComponents,
+  },
+
   data() {
     return {
       currentLanguage: "en",
       galleryImages: [],
-      specialFeatures: [],
+      feature: [],
       activeIndex: 0,
       logoLanding: "",
       LogoTitle: "",
@@ -189,37 +94,47 @@ export default {
         id_user: "",
         id_landing: "",
       },
-      url: "http://localhost:8000/storage",
+      url:
+        import.meta.env.VUE_APP_API_URL ||
+        (import.meta.env.PROD
+          ? "https://generator.nellyrac.do/storage"
+          : "http://localhost:8000/storage"),
+      api:
+        import.meta.env.VUE_APP_API_URL ||
+        (import.meta.env.PROD
+          ? "https://generator.nellyrac.do/api"
+          : "http://localhost:8000/api"),
+      site:
+      import.meta.env.VUE_APP_API_URL ||
+        (import.meta.env.PROD
+          ? "https://generator.nellyrac.do/"
+          : "http://localhost:8000/"),
     };
   },
   mounted() {
     this.getVehicle();
     this.getLanding();
-    this.loadSpecialFeatures();
+    this.getFeatures();
     this.updateMetaTags();
   },
 
   methods: {
-    async loadSpecialFeatures() {
-      try {
-        const vehicleId = this.$route.params.idvehicle;
-        const response = await axios.get(
-          `/api/vehicle/${vehicleId}/special-features-public`
-        );
-
-        if (response.data?.specialFeatures) {
-          this.specialFeatures = response.data.specialFeatures;
-        } else {
-          console.error("No se encontraron specialFeatures");
-          this.specialFeatures = [];
-        }
-      } catch (err) {
-        this.error = "Error al cargar características especiales.";
-        console.error(err);
-      } finally {
-        this.loading = false;
-      }
+    RedirectLink() {
+       this.$router.push({ name: "vehicle-additions" });
     },
+    getFeatures() {
+      // Obtiene las características del vehículo
+      axios
+        .get(`${this.api}/features-public`)
+        .then((response) => {
+          this.feature = response.data;
+          console.log(this.feature);
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    },
+
     prevImage() {
       this.activeIndex =
         this.activeIndex === 0
@@ -235,7 +150,7 @@ export default {
 
     metaInfo() {
       return {
-        title: this.landing?.meta_title || "Default Title",
+        title: this.landing?.meta_title || "vehiculo",
         meta: [
           {
             name: "description",
@@ -328,12 +243,6 @@ export default {
           this.color1 = response.data.landing.color_primary;
           this.color2 = response.data.landing.color_secondary;
           this.vehicles = response.data.landing.vehicles;
-          // Mapear las imágenes del vehículo a galleryImages
-          this.galleryImages = this.vehicle.images.map((image) => ({
-            itemImageSrc: this.url + "/" + image.path_images,
-            thumbnailImageSrc: this.url + "/" + image.path_images,
-            alt: this.vehicle.name,
-          }));
 
           console.log("Info de la landing", this.landing);
           this.updateMetaTags();
@@ -356,11 +265,17 @@ export default {
       axios
         .get(`${url}/publicLanding/${name}/vehicle/${idvehicle}`)
         .then((response) => {
-          this.vehicle = response.data.vehicle;
+          if (response.data.vehicle) {
+            this.vehicle = response.data.vehicle;
+          } else {
+            console.warn("No se encontró información del vehículo.");
+            this.vehicle = { images: [] }; // Asignación segura si no hay datos
+          }
           console.log("Info del vehicle", this.vehicle);
         })
         .catch((error) => {
-          console.log("Error", error);
+          console.error("Error al obtener el vehículo:", error);
+          this.vehicle = { images: [] }; // Inicializa vehicle con un array vacío en caso de error
         });
     },
   },
@@ -391,7 +306,8 @@ export default {
 <style scoped>
 .wrapper {
   display: grid;
-
+  margin-top: 30px;
+  gap: 50px;
   grid-auto-flow: column;
 
   grid-template-columns: auto auto;
