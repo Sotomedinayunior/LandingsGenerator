@@ -87,8 +87,7 @@ export default {
   },
   computed: {
     imageSrc() {
-      const baseUrl = import.meta.env.VUE_APP_API_URL 
-        ? "https://generator.nellyrac.do/storage";
+      const baseUrl ="https://generator.nellyrac.do/storage";
 
       const imagePath =
         this.vehicle.images.length > 0
