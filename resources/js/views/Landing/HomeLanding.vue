@@ -149,19 +149,17 @@
         <!-- Validar si hay vehículos disponibles -->
         <div v-if="vehicles.length > 0" class="grid grid-cols-2 gap-4 mt-5">
           <CardVehicle
-            v-for="vehicle in vehicles"
+            v-for="vehicle in vehicles.slice(0, 4)"
             :key="vehicle.id"
             :vehicle="vehicle"
             :primaryColor="landing.color_primary"
             :secondaryColor="landing.color_secondary"
-            
           />
         </div>
 
         <!-- Mensaje si no hay vehículos disponibles -->
         <div v-else class="text-center text-gray-500 mt-5">
           <p>{{ $t("no_vehicles_available") }}</p>
-          <!-- Mensaje de no disponibilidad -->
         </div>
       </section>
 

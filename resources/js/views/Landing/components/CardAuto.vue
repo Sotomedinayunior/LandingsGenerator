@@ -1,78 +1,55 @@
 <template>
-  <div class="max-w-sm rounded overflow-hidden shadow-lg">
+  <div class="card-auto" :style="{ borderColor: colorPrimary }">
+    <div class="card-header" :style="{ backgroundColor: colorSecondary }">
+      <h3 class="vehicle-name">{{ vehicle.name }}</h3>
+      <p class="vehicle-type">{{ vehicle.type }}</p>
+    </div>
     <img
-      class="rounded-t-lg transform hover:scale-105 transition duration-300 cursor-pointer"
       :src="url + '/' + vehicle.images[0].path_images"
       :alt="vehicle.name"
-      :title="vehicle.title"
-      width="300"
-      height="200"
-      loading="lazy"
-      @click="goToVehicle(vehicle.id)"
+      class="vehicle-image"
     />
-    <div class="p-3">
-      <h2
-        class="text-2xl my-2 text-gray-500 font-semibold text-left truncate max-w-xs"
-      >
-        {{ vehicle.name }}
-      </h2>
-      <div class="flex justify-between items-center my-3">
-        <div class="py-5">
-          <i
-            v-for="(star, index) in 5"
-            :key="index"
-            :class="getStarClass(index)"
-            class="fa"
-            :style="{ color: colorPrimary }"
-            title="Rating"
-          ></i>
-        </div>
-        <h2
-          class="text-base font-semibold text-left"
+    <div class="card-details">
+      <div class="py-5">
+        <i
+          v-for="(star, index) in 5"
+          :key="index"
+          :class="getStarClass(index)"
+          class="fa"
           :style="{ color: colorPrimary }"
-        >
-          {{ vehicle.price }} <span class="text-sm text-gray-300"> / day</span>
-        </h2>
-      </div>
-
-      <!-- Mostrar la descripción truncada -->
-      <p :style="{ color: colorPrimary }">
-        {{ truncateDescription(vehicle.description) }}
-      </p>
-
-      <div>
-        <h2 class="text-base text-gray-400 my-5">Especial Feature</h2>
-      </div>
-      <div class="flex justify-between mt-2">
-        <div class="flex flex-col">
-          <div class="flex" :style="{ color: colorPrimary }">
-            <i class="fas fa-map-marker-alt" v-if="vehicle.gps == 1"></i>
-            <i class="fas fa-cogs mr-2" v-if="vehicle.transmision"></i>
-            <i class="fab fa-bluetooth mr-2" v-if="vehicle.bluetooth == 1"></i>
-          </div>
-        </div>
-        <div class="flex justify-end">
-          <span
-            :style="{ color: colorPrimary, backgroundColor: colorSecondary }"
-            class="flex bg-slate-400 w-10 h-10 justify-center rounded-full items-center mx-2"
-            ><i class="fas fa-suitcase-rolling mx-1"></i>
-            {{ vehicle.luggage }}</span
-          >
-          <span
-            :style="{ color: colorPrimary, backgroundColor: colorSecondary }"
-            class="flex bg-slate-400 w-10 h-10 justify-center rounded-full items-center mx-2"
-          >
-            <i class="fas fa-user mx-1"></i> {{ vehicle.people }}</span
-          >
-        </div>
+          title="Rating"
+        ></i>
       </div>
     </div>
+    <div class="py-5">
+      <p class="text-xs text-justify">{{ vehicle.description}}</p>
+
+
+    </div>
+    <div class="py-5 flex ">
+      
+
+    </div>
+
+    <!-- Indicación visual de que el filtro está activo -->
+    <div v-if="isFiltered" class="filter-active">
+      Este vehículo cumple con el filtro
+    </div>
+
+    <button class="btn-select" :style="{ backgroundColor: colorPrimary }">
+      Seleccionar
+    </button>
   </div>
 </template>
 
 <script>
+const url =
+  import.meta.env.VUE_APP_API_URL ||
+  (import.meta.env.PROD
+    ? "https://generator.nellyrac.do/storage"
+    : "http://localhost:8000//storage");
+
 export default {
-  name: "CardAuto",
   props: {
     vehicle: {
       type: Object,
@@ -80,19 +57,26 @@ export default {
     },
     colorPrimary: {
       type: String,
-      default: "#000",
+      default: "#333",
     },
     colorSecondary: {
       type: String,
-      default: "#000",
+      default: "#eee",
+    },
+    isFiltered: {
+      type: Boolean,
+      default: false,
     },
   },
   data() {
     return {
-      showModal: false, // Estado del modal
-      url: "http://localhost:8000/storage",
-      randomRating: 0, // Para almacenar el rating aleatorio
-    };
+      randomRating: 0,
+      url:
+        import.meta.env.VUE_APP_API_URL ||
+        (import.meta.env.PROD
+          ? "https://generator.nellyrac.do/storage"
+          : "http://localhost:8000/storage"),
+    }; // Elimina el punto y coma aquí
   },
   created() {
     // Generar un valor aleatorio de calificación al crear el componente
@@ -114,27 +98,70 @@ export default {
         return "fa-star text-gray-300"; // Estrella vacía o gris
       }
     },
-    goToVehicle(idvehicle) {
-      this.$router.push({
-        name: "vehicle-pages",
-        params: { idvehicle: idvehicle },
-      });
-    },
-    truncateDescription(text) {
-      // Convertir el texto en un arreglo de palabras
-      const words = text.split(" ");
-
-      // Si el texto tiene más de 15 palabras, lo trunca y agrega "..."
-      if (words.length > 15) {
-        return words.slice(0, 15).join(" ") + "...";
-      } else {
-        return text;
-      }
-    },
   },
 };
 </script>
 
 <style scoped>
-/* Agrega aquí estilos específicos si es necesario */
+.card-auto {
+  border: 2px solid;
+  border-radius: 8px;
+  overflow: hidden;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  padding: 15px;
+}
+
+.card-header {
+  padding: 10px;
+  color: #fff;
+}
+
+.vehicle-name {
+  font-size: 1.2em;
+  font-weight: bold;
+}
+
+.vehicle-type {
+  font-size: 0.9em;
+}
+
+.vehicle-image {
+  width: 100%;
+  height: auto;
+  margin: 10px 0;
+}
+
+.card-details {
+  text-align: left;
+  font-size: 0.9em;
+  color: #555;
+}
+
+.card-details p {
+  margin: 5px 0;
+}
+
+.filter-active {
+  background-color: #d1e7dd;
+  color: #0f5132;
+  padding: 5px;
+  margin-top: 10px;
+  font-size: 0.8em;
+  border-radius: 4px;
+}
+
+.btn-select {
+  margin-top: 10px;
+  color: #fff;
+  padding: 8px 16px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.btn-select:hover {
+  background-color: darken(var(--primary-color), 10%);
+}
 </style>
