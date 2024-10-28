@@ -209,7 +209,7 @@ export default {
 }
 .wrapper-cards {
   display: grid;
-  grid-template-columns: auto auto auto auto;
+  grid-template-columns: auto auto;
   gap: 10px;
   margin: 20px 20px 0px 0px;
 }
