@@ -61,7 +61,11 @@
       Este vehículo cumple con el filtro
     </div>
 
-    <a :href="`vehicles/${vehicle.id}`" class="btn-select" :style="{ backgroundColor: colorPrimary }">
+    <a
+      :href="`vehicles/${vehicle.id}`"
+      class="btn-select"
+      :style="{ backgroundColor: colorPrimary }"
+    >
       Seleccionar
     </a>
   </div>
@@ -102,7 +106,7 @@ export default {
         (import.meta.env.PROD
           ? "https://generator.nellyrac.do/api"
           : "http://localhost:8000/api"),
-    }; 
+    };
   },
   created() {
     // Generar un valor aleatorio de calificación al crear el componente

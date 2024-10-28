@@ -1,7 +1,7 @@
 <template>
-  <div>
+  <div class="flex justify-center items-center flex-col">
     <!-- Mostrar los detalles de la landing si fue encontrada -->
-    <div v-if="landing" :style="{ '--primary-color': landing.color_primary }">
+    <div v-if="landing" :style="{ '--primary-color': landing.color_primary }" >
       <HeaderComponents
         :logo="landing.logo"
         :name="landing.name"
@@ -407,7 +407,7 @@ export default {
 
 .pickup {
   display: flex;
-  font-family: "Cera Round Pro", sans-serif;
+  font-family: "monserrat", sans-serif;
   background-color: white;
   padding: 12px;
   min-width: 100%;
@@ -416,14 +416,16 @@ export default {
 .slider {
   display: flex;
   justify-content: center;
-  font-family: "Cera Round Pro", sans-serif;
+
+  font-family: "monserrat", sans-serif;
   align-items: center;
   background-image: url("./asset/Slider.jpg");
   background-repeat: no-repeat;
   background-size: cover;
   background-position: center;
   margin-top: 40px;
-  min-height: 390px;
+  padding:40px 0px 0px 0px;
+  min-height: 400px;
 }
 .vehicle {
   background-image: url("./asset/vehicle.png");
