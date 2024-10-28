@@ -96,11 +96,8 @@ export default {
     return {
       feature: [],
       randomRating: 0,
-      url:
-        import.meta.env.VUE_APP_API_URL ||
-        (import.meta.env.PROD
-          ? "https://generator.nellyrac.do/storage"
-          : "http://localhost:8000/storage"),
+      url: "https://generator.nellyrac.do/storage",
+        
       api:
         import.meta.env.VUE_APP_API_URL ||
         (import.meta.env.PROD

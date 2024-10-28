@@ -1,5 +1,5 @@
 <template>
-  <div class="flex justify-center items-center flex-col">
+  <div>
     <!-- Mostrar los detalles de la landing si fue encontrada -->
     <div v-if="landing" :style="{ '--primary-color': landing.color_primary }" >
       <HeaderComponents
