@@ -5,6 +5,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Feature;
+use App\Models\VehicleFeature;
 use Illuminate\Http\Request;
 
 class FeatureController extends Controller
@@ -37,6 +38,29 @@ class FeatureController extends Controller
         $feature->update($request->all()); // Actualiza la característica
 
         return response()->json($feature);
+    }
+    // Método para actualizar características de un vehículo específico
+    public function updateVehicleFeatures(Request $request, $vehicleId)
+    {
+        // Validar que `features` es un array de características con `feature_id` y `value`
+        $request->validate([
+            'features' => 'required|array',
+            'features.*.feature_id' => 'required|integer|exists:features,id',
+            'features.*.value' => 'required|boolean',
+        ]);
+
+        // Iterar sobre cada característica y actualizarla o crearla
+        foreach ($request->features as $feature) {
+            VehicleFeature::updateOrCreate(
+                [
+                    'vehicle_id' => $vehicleId,
+                    'feature_id' => $feature['feature_id'],
+                ],
+                ['value' => $feature['value']]
+            );
+        }
+
+        return response()->json(['message' => 'Características del vehículo actualizadas exitosamente.']);
     }
 
     public function destroy($id)

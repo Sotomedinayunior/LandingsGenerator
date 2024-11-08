@@ -15,6 +15,7 @@
             v-model="name"
             type="text"
             placeholder="Nombre de tu landing"
+            maxlength="35"
             class="w-full border border-gray-300 rounded px-3 py-2"/>
 
           <p class="text-gray-600 text-xs mt-1 font-bold">
@@ -259,31 +260,7 @@
       <div class="w-full bg-gray-200 h-24 rounded"></div>
     </div>
 
-    <!--Dialog para mostrar el error -->
-    <Dialog
-      :header="errorHeader"
-      :visible="isErrorDialogVisible"
-      @hide="isErrorDialogVisible = false"
-      :modal="true"
-      :closable="false"
-    >
-      <div class="flex items-center mb-4">
-        <i
-          class="fa-solid fa-exclamation-circle text-red-600 text-2xl mr-2"
-        ></i>
-        
-      </div>
-      <p>{{ errorMessage }}</p>
-      <div class="flex justify-end">
-        <Button
-          label="Cerrar"
-          severity="danger"
-          text
-          raised
-          @click="isErrorDialogVisible = false"
-        />
-      </div>
-    </Dialog>
+   
 
     <!-- Modal -->
     <div
@@ -343,6 +320,14 @@ export default {
     },
   },
   methods: {
+    createSlug(name) {
+    return name
+      .toLowerCase()                    // Convierte a minúsculas
+      .trim()                           // Elimina espacios al inicio y al final
+      .replace(/[^\w\s-]/g, '')         // Elimina caracteres especiales
+      .replace(/\s+/g, '-')             // Reemplaza espacios por guiones
+      .replace(/-+/g, '-');             // Elimina guiones duplicados
+  },
     selectLanguage(lang) {
       this.defaultLanguage = lang; // Asigna el idioma seleccionado a defaultLanguage
     },
@@ -360,19 +345,11 @@ export default {
         console.error("User ID is required");
         return;
       }
-      const formattedName = this.name.trim(); // Eliminar espacios en blanco al principio y final
-
-      // Validar que el nombre solo contenga letras y números
-      if (!/^[A-Za-z0-9]+$/.test(formattedName)) {
-        alert(
-          "El nombre solo puede contener letras y números sin espacios ni caracteres especiales."
-        );
-        return;
-      }
+      
 
       const formData = new FormData();
       formData.append("id_users_landing", userId);
-      formData.append("name", this.name);
+      formData.append("name", this.createSlug(this.name));
       formData.append("logo", this.$refs.logoInput.files[0]);
       formData.append("color_primary", this.primaryColor);
       formData.append("default_language", this.defaultLanguage);

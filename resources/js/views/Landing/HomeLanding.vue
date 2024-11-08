@@ -7,7 +7,7 @@
         :name="landing.name"
         :primaryColor="landing.color_primary"
         :secondaryColor="landing.color_secondary"
-        @language-change="changeLanguage"
+       
       />
 
       <section class="slider fade-in">
@@ -164,13 +164,13 @@
       </section>
 
       <section
-        class="container max-w-screen-lg mx-auto p-5 grid grid-cols-2 gap-6 fade-in"
+        class="container max-w-screen-lg mx-auto py-5 my-7 grid grid-cols-2 gap-6 fade-in"
         id="about"
       >
         <div class="vehicle"></div>
         <div class="flex flex-col justify-center">
           <h2 class="text-2xl font-bold text-slate-950 text-left mb-7">
-            How it works
+           {{ $t("how_it_works") }}
           </h2>
           <ul class="space-y-4">
             <li class="flex items-start mb-7">
@@ -179,9 +179,9 @@
                 >1</span
               >
               <div>
-                <h3 class="font-semibold text-slate-950">Select Your Car</h3>
+                <h3 class="font-semibold text-slate-950">{{ $t("select_vehicle") }}</h3>
                 <p class="text-slate-600">
-                  Browse our fleet and choose the one that fits your needs.
+                 {{ $t("browser") }}
                 </p>
               </div>
             </li>
@@ -191,9 +191,10 @@
                 >2</span
               >
               <div>
-                <h3 class="font-semibold text-slate-950">Book Your Ride</h3>
+                <h3 class="font-semibold text-slate-950">{{ $t("book_you_ride") }}</h3>
                 <p class="text-slate-600">
-                  Fill out the booking form with your details and trip dates.
+                  {{ $t('book_you') }}
+                  
                 </p>
               </div>
             </li>
@@ -203,10 +204,9 @@
                 >3</span
               >
               <div>
-                <h3 class="font-semibold text-slate-950">Enjoy Your Trip</h3>
+                <h3 class="font-semibold text-slate-950">{{ $t('enjoy') }}</h3>
                 <p class="text-slate-600">
-                  Drive safely and enjoy your trip! Return the car at your
-                  convenience.
+                  {{ $t('enjoy_text') }}
                 </p>
               </div>
             </li>

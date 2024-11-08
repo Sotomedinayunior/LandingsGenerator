@@ -163,6 +163,27 @@
               </div>
             </div>
           </div>
+          <div class="mb-4">
+            <h2 class="text-lg font-bold mb-4">Caracteristicas Especiales</h2>
+            <div
+              v-if="specialFeatures && specialFeatures.length"
+              class="flex space-x-2"
+            >
+              <div
+                v-for="feature in specialFeatures"
+                :key="feature.id"
+                class="flex items-center mb-2"
+              >
+                <input
+                  type="checkbox"
+                  :value="feature.id"
+                  v-model="selectedFeatures"
+                  class="mr-2"
+                />
+                <label>{{ feature.name }}</label>
+              </div>
+            </div>
+          </div>
 
           <button
             type="submit"
@@ -255,6 +276,8 @@ export default {
   data() {
     return {
       showModal: false,
+
+      specialFeatures: [],
       showToast: false, // Controla la visibilidad del toast
 
       currentVehicle: {
@@ -270,6 +293,7 @@ export default {
         gps: false,
         automatic: false,
         apple_car: false,
+        selectedFeatures: [],
         images: [],
       },
       error: false,
@@ -280,24 +304,20 @@ export default {
         name: "",
         value: "",
       },
-  
+
       showErrorModal: false, // Controla la visibilidad del modal
-      errorMessage: '', // Mensaje de error
+      errorMessage: "", // Mensaje de error
       vehicleImages: [],
     };
   },
   methods: {
     async loadSpecialFeatures() {
       try {
-        const vehicleId = localStorage.getItem("vehicleToEdit");
-        const response = await Axios.get(
-          `/api/vehicle/${vehicleId}/special-features`
-        );
-
-        if (response.data?.specialFeatures) {
-          this.specialFeatures = response.data.specialFeatures;
+        const response = await Axios.get(`/api/features`);
+        if (response.data) {
+          this.specialFeatures = response.data;
         } else {
-          console.error("No se encontraron specialFeatures");
+          console.error("No se encontraron características especiales");
           this.specialFeatures = [];
         }
       } catch (err) {
@@ -333,27 +353,59 @@ export default {
         this.loading = false;
       }
     },
-
     async updateVehicle() {
       const landingId = this.$route.params.id;
       const vehicleId = localStorage.getItem("vehicleToEdit");
 
+      // Asignar características seleccionadas al vehículo actual
+      this.currentVehicle.selectedFeatures = this.selectedFeatures;
+
       try {
+        console.log(
+          "Datos del vehículo antes de la actualización:",
+          this.currentVehicle
+        );
+
+        // Actualizar el vehículo
         const response = await Axios.put(
           `/api/vehicles/${landingId}/${vehicleId}`,
           this.currentVehicle
         );
-        // Mostrar el toast
-        this.showToast = true;
 
-        // Ocultar el toast después de unos segundos
+        // Imprimir respuesta del servidor
+        console.log("Respuesta del servidor:", response.data);
+
+        // Actualizar características
+        if (this.selectedFeatures && this.selectedFeatures.length > 0) {
+          const features = this.selectedFeatures.map((featureId) => ({
+            feature_id: featureId,
+            value: true, // O establece el valor según tu lógica
+          }));
+
+          // Aquí se debe tener en cuenta si este endpoint está correctamente configurado en tu backend
+          const featuresResponse = await Axios.post(
+            `/api/vehicles/${vehicleId}/features`,
+            { features }
+          );
+          console.log(
+            "Respuesta al actualizar características:",
+            featuresResponse.data
+          );
+        }
+
+        // Mostrar mensaje de éxito
+        this.showToast = true;
         setTimeout(() => {
-          this.showToast = false; // Esto oculta el toast
-        }, 3000); // 3000 ms = 3 segundos
+          this.showToast = false;
+        }, 3000);
       } catch (error) {
-        console.error("Error actualizando el vehículo:", error);
-        this.errorMessage = "Hubo un error al enviar los datos del vehículo."; // Asigna el mensaje de error
-        this.showErrorModal = true; // Muestra el modal de error
+        // Manejo de errores
+        console.error(
+          "Error actualizando el vehículo:",
+          error.response || error
+        );
+        this.errorMessage = "Hubo un error al enviar los datos del vehículo.";
+        this.showErrorModal = true;
       }
     },
 

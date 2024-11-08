@@ -269,6 +269,14 @@ export default {
     },
   },
   methods: {
+    createSlug(name) {
+    return name
+      .toLowerCase()                    // Convierte a minúsculas
+      .trim()                           // Elimina espacios al inicio y al final
+      .replace(/[^\w\s-]/g, '')         // Elimina caracteres especiales
+      .replace(/\s+/g, '-')             // Reemplaza espacios por guiones
+      .replace(/-+/g, '-');             // Elimina guiones duplicados
+  },
     fetchLandingData() {
       const userId = localStorage.getItem("NellyUserId");
       const landingId = this.$route.params.id;
@@ -308,7 +316,7 @@ export default {
       const landingId = this.$route.params.id;
 
       const formData = new FormData();
-      formData.append("name", this.LandingInfo.name);
+      formData.append("name",  this.createSlug(this.LandingInfo.name));
 
       const logoFile = this.$refs.logoInput.files[0];
       if (logoFile) {

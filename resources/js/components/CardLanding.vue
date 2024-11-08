@@ -2,7 +2,7 @@
   <div>
     <!-- Card Component -->
     <div
-      class="max-w-md p-6 cursor-pointer rounded-2xl bg-[#FAF8F6]"
+      class="max-w-lg p-6 cursor-pointer rounded-2xl bg-[#FAF8F6]"
       @click="handle(landing.id)"
     >
       <div class="flex justify-between">
@@ -15,7 +15,7 @@
           />
           <div class="ml-3">
             <h2 class="text-base font-bold">{{ landing.name }}</h2>
-            <p class="text-xs text-wrap">
+            <p class="text-xs break-all overflow-hidden">
               {{ fullURL }}
             </p>
           </div>

@@ -61,6 +61,12 @@ class VehicleController extends Controller
             'automatic' => 'boolean',
             'vehicle_images' => 'nullable|array',
             'vehicle_images.*' => 'image|mimes:jpeg,png,jpg|max:2048', // Validación de imágenes
+            'features' => 'nullable|array',
+            'features.*.feature_id' => 'required|integer|exists:features,id',
+            'features.*.value' => 'nullable|boolean',
+            'special_features' => 'nullable|array',
+            'special_features.*.feature_id' => 'required|integer|exists:features,id',
+            'special_features.*.value_override' => 'nullable|boolean',
         ]);
 
         // Buscar el vehículo por su ID
@@ -76,25 +82,45 @@ class VehicleController extends Controller
             'type_of_car' => $validatedData['type_of_car'],
             'transmision' => $validatedData['transmision'],
             'automatic' => $validatedData['automatic'] ?? false,
-            
         ]);
 
         // Manejo de las imágenes del vehículo (si se subieron nuevas)
         if ($request->hasFile('vehicle_images')) {
-           
+            // Opcional: Eliminar imágenes existentes o realizar otro manejo si es necesario
+            $vehicle->images()->delete(); // Eliminar imágenes anteriores si así lo decides
 
             foreach ($request->file('vehicle_images') as $image) {
-                $path = $image->store('vehicle_images', 'public');  // Guarda la imagen en el directorio 'storage/app/public/vehicle_images'
-                $vehicle->images()->create(['path' => $path]);  // Relacionar la imagen con el vehículo
+                $path = $image->store('vehicle_images', 'public');
+                $vehicle->images()->create(['path' => $path]);
             }
         }
 
-        // Guardar los cambios en la base de datos
-        $vehicle->save();
+        // Manejo de características del vehículo
+        if (isset($validatedData['features'])) {
+            foreach ($validatedData['features'] as $featureData) {
+                // Actualiza o crea la característica específica para el vehículo
+                $vehicle->features()->updateOrCreate(
+                    ['feature_id' => $featureData['feature_id']],
+                    ['value' => $featureData['value']]
+                );
+            }
+        }
 
-        // Retornar una respuesta de éxito o redirigir a una página
-        return response()->json(['message' => 'Vehículo actualizado exitosamente', 'vehicle' => $vehicle ]); 
+        // Manejo de características especiales
+        if (isset($validatedData['special_features'])) {
+            foreach ($validatedData['special_features'] as $specialFeatureData) {
+                $vehicle->specialFeatures()->updateOrCreate(
+                    ['feature_id' => $specialFeatureData['feature_id']],
+                    ['value_override' => $specialFeatureData['value_override']]
+                );
+            }
+        }
+
+        // Retornar una respuesta de éxito
+        return response()->json(['message' => 'Vehículo actualizado exitosamente', 'vehicle' => $vehicle]);
     }
+
+
 
     public function storeSpecialFeature(Request $request, $vehicleId)
     {
@@ -153,7 +179,7 @@ class VehicleController extends Controller
                 'images' => 'required|array',
                 'images.*' => 'required|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
             ]);
-            
+
 
             // Si la validación falla, retornamos los errores
             if ($validator->fails()) {

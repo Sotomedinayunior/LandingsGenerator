@@ -88,6 +88,9 @@ Route::middleware('auth:sanctum')->group(function () {
      
      // Obtener una característica específica de los vehículos
      Route::get('/features/{featureId}', [FeatureController::class, 'show']);
+     //
+     Route::post('/vehicles/{vehicleId}/features', [FeatureController::class, 'updateVehicleFeatures']);
+
 
 
     //borrar un vehiculo
