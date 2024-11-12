@@ -6,6 +6,8 @@ use App\Http\Controllers\PublicLandingController;
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\ReservationController;
 use App\Http\Controllers\FeatureController;
+use App\Http\Controllers\SpecialFeatureController;
+
 use Illuminate\Support\Facades\Route;
 
 // Route::get('/user', function (Request $request) {
@@ -16,7 +18,6 @@ use Illuminate\Support\Facades\Route;
 
 Route::post('/register-nelly', [AuthController::class, 'register']);
 Route::post('/login-nelly', [AuthController::class, 'login']);
-Route::get('/features-public', [FeatureController::class, 'index']);
 Route::get('/publicLanding/{name}', [PublicLandingController::class, 'index']);
 Route::get('/reviews/{name}/', [PublicLandingController::class, 'getLandingWithoutFilters']);
 Route::get('/publicLanding/{name}/vehicle/{id}', [PublicLandingController::class, 'showVehicle']);
@@ -71,27 +72,16 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/reservations/user/{user_id}', [ReservationController::class, 'indexUser']);
     //actualizar un vehiculo
     Route::put('/vehicles/{landingId}/{vehicleId}', [VehicleController::class, 'update']);
-    //agregar feature todos los vehiculos
-    Route::apiResource('features', FeatureController::class);
-     // Crear características de los vehículos
-     Route::post('/features', [FeatureController::class, 'store']);
-    
-     // Actualizar características de los vehículos
-     Route::put('/features/{featureId}', [FeatureController::class, 'update']);
-     
-     // Borrar características 
-     Route::delete('/features/{featureId}', [FeatureController::class, 'destroy']);
-     
-
-     // Obtener todas las características de los vehículos
-     Route::get('/features', [FeatureController::class, 'index']);
-     
-     // Obtener una característica específica de los vehículos
-     Route::get('/features/{featureId}', [FeatureController::class, 'show']);
-     //
-     Route::post('/vehicles/{vehicleId}/features', [FeatureController::class, 'updateVehicleFeatures']);
 
 
+    // Obtener todas las características de los vehículos
+
+    // Obtener una característica específica de los vehículos
+    Route::post('/special-features', [SpecialFeatureController::class, 'store']);
+    Route::post('/vehicles/{vehicleId}/special-features', [SpecialFeatureController::class, 'assignToVehicle']);
+
+    Route::get('/special-features', [SpecialFeatureController::class, 'index']);
+    Route::delete('/special-features/{id}', [SpecialFeatureController::class, 'delete']);
 
     //borrar un vehiculo
     Route::delete('/vehicle/{landing_id}/{vehicle_id}', [VehicleController::class, 'destroy']);

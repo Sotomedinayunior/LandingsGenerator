@@ -2,21 +2,18 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
 class SpecialFeature extends Model
 {
-    protected $fillable = ['vehicle_id', 'feature_id', 'value_override'];
+    use HasFactory;
+    protected $fillable = ['name', 'description'];
 
-    // Relación con el vehículo
-    public function vehicle()
+    public function vehicles()
     {
-        return $this->belongsTo(Vehicle::class);
-    }
-
-    // Relación con el feature
-    public function feature()
-    {
-        return $this->belongsTo(Feature::class);
+        return $this->belongsToMany(Vehicle::class, 'vehicle_special_features')
+                    ->withPivot('name')
+                    ->withTimestamps();
     }
 }

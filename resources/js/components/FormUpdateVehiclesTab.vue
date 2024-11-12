@@ -167,12 +167,12 @@
             <h2 class="text-lg font-bold mb-4">Caracteristicas Especiales</h2>
             <div
               v-if="specialFeatures && specialFeatures.length"
-              class="flex space-x-2"
+              class="flex flex-col"
             >
               <div
                 v-for="feature in specialFeatures"
                 :key="feature.id"
-                class="flex items-center mb-2"
+                class="flex items-center"
               >
                 <input
                   type="checkbox"
@@ -278,6 +278,7 @@ export default {
       showModal: false,
 
       specialFeatures: [],
+      selectedFeatures: [], // Características seleccionadas
       showToast: false, // Controla la visibilidad del toast
 
       currentVehicle: {
@@ -293,7 +294,6 @@ export default {
         gps: false,
         automatic: false,
         apple_car: false,
-        selectedFeatures: [],
         images: [],
       },
       error: false,
@@ -313,9 +313,13 @@ export default {
   methods: {
     async loadSpecialFeatures() {
       try {
-        const response = await Axios.get(`/api/features`);
+        const response = await Axios.get(`/api/special-features`);
         if (response.data) {
           this.specialFeatures = response.data;
+          console.log(
+            "Características especiales cargadas:",
+            this.specialFeatures
+          );
         } else {
           console.error("No se encontraron características especiales");
           this.specialFeatures = [];
@@ -354,60 +358,73 @@ export default {
       }
     },
     async updateVehicle() {
-      const landingId = this.$route.params.id;
-      const vehicleId = localStorage.getItem("vehicleToEdit");
+  const landingId = this.$route.params.id;
+  const vehicleId = localStorage.getItem("vehicleToEdit");
 
-      // Asignar características seleccionadas al vehículo actual
-      this.currentVehicle.selectedFeatures = this.selectedFeatures;
+  try {
+    console.log(
+      "Datos del vehículo antes de la actualización:",
+      this.currentVehicle
+    );
 
-      try {
-        console.log(
-          "Datos del vehículo antes de la actualización:",
-          this.currentVehicle
-        );
+    // Actualizar datos generales del vehículo
+    const response = await Axios.put(
+      `/api/vehicles/${landingId}/${vehicleId}`,
+      this.currentVehicle
+    );
+    console.log(
+      "Respuesta del servidor al actualizar el vehículo:",
+      response.data
+    );
 
-        // Actualizar el vehículo
-        const response = await Axios.put(
-          `/api/vehicles/${landingId}/${vehicleId}`,
-          this.currentVehicle
-        );
+    // Actualizar características especiales
+    if (this.selectedFeatures && this.selectedFeatures.length > 0) {
+      // Iterar sobre cada característica seleccionada
+      for (const featureId of this.selectedFeatures) {
+        // Buscar el nombre de la característica
+        const feature = this.specialFeatures.find((f) => f.id === featureId);
 
-        // Imprimir respuesta del servidor
-        console.log("Respuesta del servidor:", response.data);
-
-        // Actualizar características
-        if (this.selectedFeatures && this.selectedFeatures.length > 0) {
-          const features = this.selectedFeatures.map((featureId) => ({
-            feature_id: featureId,
-            value: true, // O establece el valor según tu lógica
-          }));
-
-          // Aquí se debe tener en cuenta si este endpoint está correctamente configurado en tu backend
-          const featuresResponse = await Axios.post(
-            `/api/vehicles/${vehicleId}/features`,
-            { features }
-          );
-          console.log(
-            "Respuesta al actualizar características:",
-            featuresResponse.data
-          );
+        if (feature) {
+          try {
+            const featureResponse = await Axios.post(
+              `/api/vehicles/${vehicleId}/special-features`,
+              {
+                special_feature_id: feature.id,
+                name: feature.name, // Backend lo requiere
+              }
+            );
+            console.log(
+              `Característica especial asignada: ${feature.name}`,
+              featureResponse.data
+            );
+          } catch (featureError) {
+            console.error(
+              `Error al asignar la característica especial (${feature.name}):`,
+              featureError.response || featureError
+            );
+          }
         }
-
-        // Mostrar mensaje de éxito
-        this.showToast = true;
-        setTimeout(() => {
-          this.showToast = false;
-        }, 3000);
-      } catch (error) {
-        // Manejo de errores
-        console.error(
-          "Error actualizando el vehículo:",
-          error.response || error
-        );
-        this.errorMessage = "Hubo un error al enviar los datos del vehículo.";
-        this.showErrorModal = true;
       }
-    },
+    } else {
+      console.log("No se seleccionaron características para actualizar.");
+    }
+
+    // Mostrar mensaje de éxito
+    this.showToast = true;
+    setTimeout(() => {
+      this.showToast = false;
+    }, 3000);
+  } catch (error) {
+    // Manejo de errores
+    console.error(
+      "Error actualizando el vehículo:",
+      error.response || error
+    );
+    this.errorMessage = "Hubo un error al enviar los datos del vehículo.";
+    this.showErrorModal = true;
+  }
+},
+
 
     handleImageUpload(event) {
       const files = event.target.files;
@@ -447,7 +464,6 @@ export default {
         features: [
           {
             name: this.newFeature.name,
-            value: this.newFeature.value,
           },
         ],
       };

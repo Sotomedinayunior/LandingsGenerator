@@ -11,14 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('features', function (Blueprint $table) {
+        Schema::create('vehicle_special_features', function (Blueprint $table) {
             $table->id();
-            $table->string('name'); // Nombre del feature, por ejemplo 'Bluetooth'
-            $table->string('description')->nullable(); // Descripción del feature
+            $table->foreignId('vehicle_id')->constrained()->onDelete('cascade');
+            $table->foreignId('special_feature_id')->constrained()->onDelete('cascade');
+            $table->string('name');   // Valor específico de la característica
             $table->timestamps();
-
-            // Índice en el nombre para mejorar el rendimiento en búsquedas
-            $table->index('name');
         });
     }
 
@@ -27,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('features');
+        Schema::dropIfExists('vehicle_special_features');
     }
 };

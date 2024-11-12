@@ -25,11 +25,13 @@ class Vehicle extends Model
     protected $casts = [
         'dynamic_fields' => 'array', // Convierte el campo JSON a un array
     ];
-    // Definir la relación uno a muchos con SpecialFeature
-    public function specialFeatures()
-    {
-        return $this->hasMany(SpecialFeature::class);
-    }
+     // Relación muchos a muchos con SpecialFeature
+     public function specialFeatures()
+     {
+         return $this->belongsToMany(SpecialFeature::class, 'vehicle_special_features')
+                     ->withPivot('name')  // Esto incluye el valor específico de la característica
+                     ->withTimestamps();   // Incluye los timestamps en la tabla pivote
+     }
 
     // Definir la relación inversa uno a muchos con Landing
     public function landing()

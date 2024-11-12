@@ -126,7 +126,8 @@
         <span
           v-for="(feature, index) in filteredFeatures"
           :key="feature.id"
-          class="bg-gray-200 text-gray-700 px-2 py-1 rounded inline-flex items-center justify-between"
+          class="bg-gray-200 text-gray-700 px-2 py-1 text-xs rounded inline-flex items-center justify-between"
+          style="max-width: 100%;"
         >
           {{ feature.name }}
           <button
@@ -280,9 +281,12 @@ export default {
     async fetchFeatures() {
       this.loading = true;
       try {
-        const response = await Axios.get("/api/features");
+        const response = await Axios.get("/api/special-features");
         this.features = response.data;
+        console.log("Características recibidas:", response.data); // Agregar este log
+
         this.filteredFeatures = response.data;
+
       } catch (error) {
         console.error("Error al obtener características:", error);
       } finally {
@@ -292,7 +296,7 @@ export default {
 
     async saveFeature() {
       try {
-        const response = await Axios.post("/api/features", this.newFeature);
+        const response = await Axios.post("/api/special-features", this.newFeature);
         console.log("Característica guardada:", response.data);
         this.visible = false;
         this.newFeature.name = "";
@@ -323,7 +327,7 @@ export default {
 
     async removeFeature(index, featureId) {
       try {
-        await Axios.delete(`/api/features/${featureId}`);
+        await Axios.delete(`/api/special-features/${featureId}`);
         this.features.splice(index, 1);
         this.filteredFeatures = this.features;
         // Mostrar el toast
@@ -351,5 +355,5 @@ export default {
 </script>
 
 <style>
-/* Estilos adicionales si es necesario */
+
 </style>

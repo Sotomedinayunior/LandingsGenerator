@@ -492,8 +492,9 @@ export default {
     async fetchFeatures() {
       this.loading = true; // Muestra el indicador de carga
       try {
-        const response = await Axios.get("/api/features");
+        const response = await Axios.get("/api/special-features");
         this.features = response.data; // Almacena las características
+        console.log("Características:", this.features);
       } catch (error) {
         console.error("Error al obtener características:", error);
       } finally {

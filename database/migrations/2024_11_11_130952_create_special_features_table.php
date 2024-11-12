@@ -13,14 +13,9 @@ return new class extends Migration
     {
         Schema::create('special_features', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('vehicle_id')->constrained('vehicles')->onDelete('cascade'); // Relación con vehículos
-            $table->foreignId('feature_id')->constrained('features')->onDelete('cascade'); // Relación con features
-            $table->boolean('value_override')->nullable(); // Valor personalizado para este vehículo
+            $table->string('name');
+            $table->string('description')->nullable();   // Descripción opcional
             $table->timestamps();
-
-            // Opcional: Índices para mejorar el rendimiento
-            $table->index('vehicle_id');
-            $table->index('feature_id');
         });
     }
 
