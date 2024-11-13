@@ -99,10 +99,7 @@ export default {
       url: "https://generator.nellyrac.do/storage",
         
       api:
-        import.meta.env.VUE_APP_API_URL ||
-        (import.meta.env.PROD
-          ? "https://generator.nellyrac.do/api"
-          : "http://localhost:8000/api"),
+        import.meta.env.VUE_APP_API_URL || "https://generator.nellyrac.do/storage",
     };
   },
   created() {
