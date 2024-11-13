@@ -68,8 +68,8 @@
 import TabsComponents from "./components/TabsComponents.vue";
 
 import NavComponents from "./components/NavComponents.vue";
-const url = import.meta.env.VUE_APP_API_URL || "https://generator.nellyrac.do/storage"; // Usar variable de entorno
-const api = import.meta.env.VUE_APP_API_URL || "https://generator.nellyrac.do/api"; // Usar variable de entorno
+const url = import.meta.env.VUE_APP_API_URL || "http://localhost:8000/api"; // Usar variable de entorno
+const api = import.meta.env.VUE_APP_API_URL || "http://localhost:8000/api"; // Usar variable de entorno
 import axios from "axios";
 
 export default {
@@ -95,7 +95,13 @@ export default {
         id_user: "",
         id_landing: "",
       },
-     
+      url:
+        import.meta.env.VUE_APP_API_URL || "https://generator.nellyrac.do/storage",
+       
+      api:
+        import.meta.env.VUE_APP_API_URL || "https://generator.nellyrac.do/api",
+      site:
+      import.meta.env.VUE_APP_API_URL || "https://generator.nellyrac.do/",
     };
   },
   mounted() {
@@ -222,7 +228,7 @@ export default {
       const NameLandingId = this.$route.params.name;
 
       axios
-        .get(`${this.api}/publicLanding/${NameLandingId}`)
+        .get(`${api}/publicLanding/${NameLandingId}`)
         .then((response) => {
           this.logoLanding = response.data.landing.logo;
           this.landing = response.data.landing;
@@ -250,7 +256,7 @@ export default {
       const name = this.$route.params.name;
 
       axios
-        .get(`${this.api}/publicLanding/${name}/vehicle/${idvehicle}`)
+        .get(`${api}/publicLanding/${name}/vehicle/${idvehicle}`)
         .then((response) => {
           if (response.data.vehicle) {
             this.vehicle = response.data.vehicle;
