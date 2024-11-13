@@ -5,7 +5,6 @@ use App\Http\Controllers\LandingController;
 use App\Http\Controllers\PublicLandingController;
 use App\Http\Controllers\VehicleController;
 use App\Http\Controllers\ReservationController;
-use App\Http\Controllers\FeatureController;
 use App\Http\Controllers\SpecialFeatureController;
 
 use Illuminate\Support\Facades\Route;
@@ -24,6 +23,7 @@ Route::get('/publicLanding/{name}/vehicle/{id}', [PublicLandingController::class
 Route::post('/reservations', [ReservationController::class, 'store']);
 //obtener las caracteristicas especiales de un vehiculo
 Route::get('vehicle/{vehicleId}/special-features-public', [VehicleController::class, 'getSpecialFeatures']);
+Route::get('/special-features-public', [SpecialFeatureController::class, 'index']);
 
 Route::middleware('auth:sanctum')->get('/protected', function () {
     return response()->json(['message' => 'You are authenticated!']);
@@ -82,6 +82,8 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/special-features', [SpecialFeatureController::class, 'index']);
     Route::delete('/special-features/{id}', [SpecialFeatureController::class, 'delete']);
+    //borrar una reservacion
+    Route::delete('/reservations/{id}', [ReservationController::class, 'destroy']);
 
     //borrar un vehiculo
     Route::delete('/vehicle/{landing_id}/{vehicle_id}', [VehicleController::class, 'destroy']);

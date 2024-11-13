@@ -269,6 +269,8 @@ export default {
         date_of_arrival: "",
         time_of_arrival: "",
         id_landing: "",
+        name_landing: "",
+
       },
 
       vehicles: [],
@@ -321,6 +323,8 @@ export default {
         .get(`${url}/publicLanding/${NameLandingId}`)
         .then((response) => {
           this.landing = response.data.landing;
+          this.formValidate.name_landing = this.landing.name;
+          
           this.locations = response.data.landing.locations;
           this.vehicles = response.data.landing.vehicles;
           console.log(response.data.landing.vehicles);

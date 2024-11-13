@@ -268,15 +268,31 @@ export default {
   const storedFormData = localStorage.getItem("formValidate");
 
   if (storedVehicle && storedFormData) {
+    // Convertir los datos del localStorage a objetos
     const vehicleData = JSON.parse(storedVehicle);
     const formData = JSON.parse(storedFormData);
 
-    const timeOfDeparture24 = this.convertTo24Hour(formData.time_of_departure);
-    const timeOfArrival24 = this.convertTo24Hour(formData.time_of_arrival);
+    // Verificar que los datos necesarios estén presentes
+    if (!vehicleData || !formData) {
+      console.error("Faltan datos necesarios en localStorage.");
+      return;
+    }
 
+    // Verificar que 'time_of_departure' y 'time_of_arrival' existan en formData
+    const timeOfDeparture24 = formData.time_of_departure ? this.convertTo24Hour(formData.time_of_departure) : null;
+    const timeOfArrival24 = formData.time_of_arrival ? this.convertTo24Hour(formData.time_of_arrival) : null;
+
+    // Asegúrate de que 'name_landing' esté en formData
+    const nameLanding = formData.name_landing || "Unknown Landing"; // Valor por defecto si no existe
+
+    // Aquí se agrega la URL del logo de la landing
+    const urlLanding = this.logoLanding || "";  // Si no hay logo, se envía una cadena vacía
+
+    // Crear los datos para la reserva
     const reservationData = {
       id_vehicle: vehicleData.id_vehicle,
       id_landing: formData.id_landing,
+      name_landing: nameLanding, // Asigna name_landing desde el formData
       name: this.name,
       last_name: this.lastName,
       email: this.email,
@@ -288,18 +304,21 @@ export default {
       time_of_departure: timeOfDeparture24,
       date_of_arrival: this.formatDate(formData.date_of_arrival), // Convertir aquí también
       time_of_arrival: timeOfArrival24,
+      url_landing: urlLanding,  // Se agrega la URL del logo de la landing
     };
 
+    // Hacer la solicitud para crear la reserva
     axios.post(`${url}/reservations`, reservationData)
       .then(response => {
         console.log("Reservación creada:", response.data);
+
+        // Limpiar los datos del localStorage
         localStorage.removeItem("formValidate");
         localStorage.removeItem("formVehicles");
         localStorage.removeItem("selectedProduct");
         localStorage.setItem("NameUser", this.name);
 
-        
-
+        // Redirigir a la página de agradecimiento
         this.$router.push({ name: "thanks-you" });
       })
       .catch(error => {
@@ -309,6 +328,7 @@ export default {
     console.error("No se encontraron datos en localStorage.");
   }
 },
+
 
 
     getVehicles() {

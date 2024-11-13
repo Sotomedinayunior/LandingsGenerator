@@ -114,7 +114,7 @@ export default {
     getFeatures() {
       // Obtiene las características del vehículo
       axios
-        .get(`${this.api}/features-public`)
+        .get(`${this.api}/special-features-public`)
         .then((response) => {
           this.feature = response.data;
           console.log(this.feature);

@@ -39,23 +39,31 @@ class ReservationController extends Controller
     // Guardar una nueva reservación en la base de datos
     public function store(Request $request, $id = null)
     {
-        // Validar los datos recibidos, haciendo que algunos campos sean opcionales
+        // Validar los datos recibidos
         $validatedData = $request->validate([
             'name' => 'nullable|string|max:255', // Opcional
             'last_name' => 'nullable|string|max:255', // Opcional
             'phone' => 'nullable|string|max:255', // Opcional
             'email' => 'nullable|string|email|max:255|unique:reservations,email,' . $id, // Opcional
             'description' => 'nullable|string', // Opcional
+            'name_landing' => 'required|string|max:255', // Obligatorio
             'id_vehicle' => 'required|exists:vehicles,id', // Obligatorio
+            'url_landing' => 'required|string|max:500', // Obligatorio
             'place_of_departure' => 'nullable|string|max:255', // Opcional
             'arrival_place' => 'nullable|string|max:255', // Opcional
             'number_of_persons' => 'nullable|integer', // Opcional
             'date_of_departure' => 'nullable|date', // Opcional
-            'time_of_departure' => 'nullable|date_format:H:i', // Opcional, especificando el formato
+            'time_of_departure' => 'nullable|date_format:H:i', // Opcional
             'date_of_arrival' => 'nullable|date', // Opcional
-            'time_of_arrival' => 'nullable|date_format:H:i', // Opcional, especificando el formato
+            'time_of_arrival' => 'nullable|date_format:H:i', // Opcional
             'id_landing' => 'required|exists:landings,id', // Obligatorio
         ]);
+
+        // Generar un ID único basado en el correo electrónico
+        $uniqueId = md5($validatedData['email']); // Usamos el email como base
+
+        // Generar la URL del avatar con la API de MultiAvatar
+        $avatarUrl = "https://api.multiavatar.com/{$uniqueId}.png";
 
         // Aquí puedes proceder a crear la reservación
         // Encontrar el Vehicle y Landing asociados
@@ -66,6 +74,11 @@ class ReservationController extends Controller
         $reservation = new Reservation($validatedData);
         $reservation->vehicle()->associate($vehicle);
         $reservation->landing()->associate($landing);
+
+        // Asignar la URL del avatar a la reservación
+        $reservation->avatar_url = $avatarUrl;
+
+        // Guardar la reserva en la base de datos
         $reservation->save();
 
         return response()->json(['message' => 'Reservación creada exitosamente', 'reservation' => $reservation], 201);
@@ -92,7 +105,7 @@ class ReservationController extends Controller
             'time_of_departure' => 'date_format',
             'date_of_arrival' => 'date',
             'time_of_arrival' => 'date_format',
-         
+
             'id_landing' => 'exists:landings,id',
         ]);
 
@@ -119,12 +132,18 @@ class ReservationController extends Controller
     // Eliminar una reservación de la base de datos
     public function destroy($id)
     {
-        // Obtener la reservación
-        $reservation = Reservation::findOrFail($id);
+        try {
+            // Obtener la reservación
+            $reservation = Reservation::findOrFail($id);
 
-        // Eliminar la reservación
-        $reservation->delete();
+            // Eliminar la reservación
+            $reservation->delete();
 
-        return response()->json(['message' => 'Reservación eliminada exitosamente'], 200);
+            // Responder si la eliminación fue exitosa
+            return response()->json(['message' => 'Reservación eliminada exitosamente'], 200);
+        } catch (\Exception $e) {
+            // Si algo falla, responder con un error
+            return response()->json(['message' => 'Error al eliminar la reservación', 'error' => $e->getMessage()], 500);
+        }
     }
 }

@@ -1,8 +1,12 @@
 <template>
   <section class="lg:ml-64 p-4">
-    <div class="flex flex-col sm:flex-row items-center justify-between mb-6 px-4">
+    <div
+      class="flex flex-col sm:flex-row items-center justify-between mb-6 px-4"
+    >
       <h1 class="font-bold text-3xl">Reservas</h1>
-      <div class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-4 sm:mt-0">
+      <div
+        class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-4 sm:mt-0"
+      >
         <!-- Campo de búsqueda -->
         <div class="relative">
           <input
@@ -31,7 +35,7 @@
 
     <!-- Mostrar indicador de carga nativo mientras se obtienen las reservas -->
     <div v-if="loading" class="flex justify-center items-center">
-      <progress class="w-full" value="0" max="100"></progress>
+      <progress></progress>
     </div>
 
     <!-- Mostrar mensaje si no hay reservas -->
@@ -39,121 +43,143 @@
       <p class="text-lg">No hay datos disponibles.</p>
     </div>
 
-    <div v-else class="overflow-x-auto">
-      <DataTable :value="filteredReservations" responsiveLayout="scroll" :paginator="true" :rows="10">
-        <ColumnGroup>
-          <Row>
-            <Column header="Logo landing" />
-            <Column header="Nombre de Carro" />
-            <Column header="$ Monto Total" />
-            <Column header="Nombre" />
-            <Column header="Apellido" />
-            <Column header="Correo Electrónico" />
-            <Column header="Teléfono" />
-            <Column header="Descripción" />
-            <Column header="Acciones" />
-          </Row>
-        </ColumnGroup>
-        <template v-for="landing in filteredReservations" :key="landing.id">
-          <template v-for="reservation in landing.reservations" :key="reservation.id">
-            <Column :body="renderLogo(landing, reservation)" />
-            <Column :body="renderVehicle(landing, reservation)" />
-            <Column :body="renderTotalPrice(landing)" />
-            <Column :body="reservation.name" />
-            <Column :body="reservation.last_name" />
-            <Column :body="reservation.email" />
-            <Column :body="reservation.phone" />
-            <Column :body="reservation.description" />
-            <Column :body="renderActions(reservation)" />
-          </template>
-        </template>
-      </DataTable>
+    <!-- Mostrar reservas si las hay -->
+    <div
+  v-else
+  
+>
+  <div v-for="(landing, index) in filteredReservations" :key="index"class="grid grid-cols-3 sm:grid-cols-2 lg:grid-cols-3 gap-3 px-3">
+    <!-- Iteramos sobre las reservas dentro de cada landing -->
+    <CardRervation
+      v-for="(reservation, resIndex) in landing.reservations"
+      :key="`res-${index}-${resIndex}`"
+      :reservation="reservation"
+      @viewReservation="openModal(reservation)"
+    />
+  </div>
+</div>
+
+
+    <!-- Modal con la información de la reserva -->
+    <div v-if="isModalOpen" class="modal-overlay" @click.self="closeModal">
+      <div class="modal-content">
+        <h2>
+          {{ selectedReservation.name }} {{ selectedReservation.last_name }}
+        </h2>
+        <img
+          :src="selectedReservation.avatar_url"
+          alt="Avatar"
+          class="avatar"
+        />
+        <p>Email: {{ selectedReservation.email }}</p>
+        <p>Descripción: {{ selectedReservation.description }}</p>
+        <p>Lugar de salida: {{ selectedReservation.place_of_departure }}</p>
+        <p>Lugar de llegada: {{ selectedReservation.arrival_place }}</p>
+        <p>Fecha de salida: {{ selectedReservation.date_of_departure }}</p>
+        <p>Fecha de llegada: {{ selectedReservation.date_of_arrival }}</p>
+        <p>Vehículo: {{ selectedReservation.vehicle.name }}</p>
+        <p>Tipo de vehículo: {{ selectedReservation.vehicle.type_of_car }}</p>
+        <p>Precio: {{ selectedReservation.vehicle.price }}</p>
+        <button @click="closeModal">Cerrar</button>
+      </div>
     </div>
   </section>
 </template>
 
 <script>
-// import DataTable from 'primevue/datatable';
-// import Column from 'primevue/column';
-// import ColumnGroup from 'primevue/columngroup'; // optional
-// import Row from 'primevue/row';  
-import Axios from '../axios';
+import Axios from "../axios";
+import CardRervation from "../components/CardRervation.vue";
 
 export default {
+  components: {
+    CardRervation,
+  },
 
   data() {
     return {
-      reservations: [],
-      loading: true,
-      searchTerm: '',
+      reservations: [], // Reservas que vienen desde el backend
+      loading: true, // Indicador de carga
+      searchTerm: "", // Término de búsqueda
+      isModalOpen: false, // Estado del modal
+      selectedReservation: null, // Datos de la reserva seleccionada
     };
   },
+
   computed: {
+    // Filtro de las reservas basado en el término de búsqueda
     filteredReservations() {
-      return this.reservations.filter(landing => {
-        return landing.reservations.some(reservation => {
+      const searchLower = this.searchTerm.toLowerCase();
+      return this.reservations.filter((landing) => {
+        return landing.reservations.some((reservation) => {
           const fullName = `${reservation.name} ${reservation.last_name}`.toLowerCase();
           return (
-            fullName.includes(this.searchTerm.toLowerCase()) ||
-            reservation.email.toLowerCase().includes(this.searchTerm.toLowerCase()) ||
-            reservation.arrival_place.toLowerCase().includes(this.searchTerm.toLowerCase())
+            fullName.includes(searchLower) ||
+            reservation.email.toLowerCase().includes(searchLower) ||
+            reservation.arrival_place.toLowerCase().includes(searchLower)
           );
         });
       });
     },
   },
+
   methods: {
+    // Función para obtener las reservas
     async fetchReservations() {
       try {
         const UserId = localStorage.getItem("NellyUserId");
         const response = await Axios.get(`/api/reservations/user/${UserId}`);
-        this.reservations = response.data;
+        this.reservations = response.data; // Guardar las reservas en el estado
+        console.log("Reservas cargadas:", this.reservations);
       } catch (error) {
         console.error("Error al cargar las reservas:", error);
       } finally {
-        this.loading = false;
+        this.loading = false; // Terminar la carga
       }
     },
-    renderLogo(landing, reservation) {
-      return reservation === landing.reservations[0] ? `<img src="${landing.logo}" alt="Carro" class="foto" />` : '';
+    openModal(reservation) {
+      // Abrir el modal y cargar la información de la reserva seleccionada
+      this.selectedReservation = reservation;
+      this.isModalOpen = true;
     },
-    renderVehicle(landing, reservation) {
-      return reservation === landing.reservations[0] ? reservation.vehicle.name : '';
-    },
-    renderTotalPrice(landing) {
-      return landing.total_price || "N/A";
-    },
-    renderActions(reservation) {
-      return `
-        <i class="fa-solid fa-eye" @click="viewReservation(reservation)"></i>
-        <i class="fa-solid fa-pencil" @click="editReservation(reservation)"></i>
-      `;
+    closeModal() {
+      this.isModalOpen = false;
+      this.selectedReservation = null; // Limpiar los datos cuando se cierra el modal
     },
   },
+
   mounted() {
-    this.fetchReservations();
+    this.fetchReservations(); // Cargar las reservas al montar el componente
   },
 };
 </script>
 
 <style scoped>
-/* Estilos para el indicador de carga nativo */
-progress {
-  appearance: none;
-  width: 100%; /* Ancho completo */
-  height: 10px; /* Ajusta la altura según lo necesites */
-  border-radius: 5px; /* Bordes redondeados */
+.modal-overlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1000;
 }
 
-progress::-webkit-progress-bar {
-  background-color: #f3f4f6; /* Color de fondo */
+.modal-content {
+  background-color: white;
+  padding: 20px;
+  border-radius: 8px;
+  width: 80%;
+  max-width: 600px;
 }
 
-progress::-webkit-progress-value {
-  background-color: #3b82f6; /* Color del progreso */
+.avatar {
+  width: 100px;
+  height: 100px;
+  border-radius: 50%;
+  object-fit: cover;
 }
 
-progress::-moz-progress-bar {
-  background-color: #3b82f6; /* Color del progreso para Firefox */
-}
 </style>

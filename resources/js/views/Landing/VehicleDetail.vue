@@ -52,7 +52,7 @@
             </span>
           </div>
           <a href="#" 
-            @click.prevent="RedirectLink" 
+            @click.prevent="Guardar" 
          
             class="inline-block px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
           >
@@ -125,7 +125,7 @@ export default {
     getFeatures() {
       // Obtiene las características del vehículo
       axios
-        .get(`${this.api}/features-public`)
+        .get(`${this.api}/special-features-public`)
         .then((response) => {
           this.feature = response.data;
           console.log(this.feature);

@@ -13,8 +13,11 @@ return new class extends Migration
     {  
         Schema::create('reservations', function (Blueprint $table) {
             $table->id();
+            $table->string('avatar_url')->nullable(); // Campo para almacenar el enlace del avatar
+
             $table->string('name');
             $table->string('last_name');
+            $table->string('phone');
             $table->string('email')->unique();
 
             $table->text('description')->nullable();
@@ -29,6 +32,7 @@ return new class extends Migration
             $table->integer('total_price')->nullable();
             $table->string('name_landing');
             $table->string('url_landing');
+
             $table->unsignedBigInteger('id_landing');
             $table->timestamps();
             $table->softDeletes();
