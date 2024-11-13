@@ -95,20 +95,12 @@ export default {
         id_landing: "",
       },
       url:
-        import.meta.env.VUE_APP_API_URL ||
-        (import.meta.env.PROD
-          ? "https://generator.nellyrac.do/storage"
-          : "http://localhost:8000/storage"),
+        import.meta.env.VUE_APP_API_URL || "https://generator.nellyrac.do/storage",
+       
       api:
-        import.meta.env.VUE_APP_API_URL ||
-        (import.meta.env.PROD
-          ? "https://generator.nellyrac.do/api"
-          : "http://localhost:8000/api"),
+        import.meta.env.VUE_APP_API_URL || "https://generator.nellyrac.do/api",
       site:
-      import.meta.env.VUE_APP_API_URL ||
-        (import.meta.env.PROD
-          ? "https://generator.nellyrac.do/"
-          : "http://localhost:8000/"),
+      import.meta.env.VUE_APP_API_URL || "https://generator.nellyrac.do/",
     };
   },
   mounted() {
