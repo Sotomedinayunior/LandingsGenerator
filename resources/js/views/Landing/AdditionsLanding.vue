@@ -167,7 +167,7 @@ import TabsComponents from "./components/TabsComponents.vue";
 import NavComponents from "./components/NavComponents.vue";
 
 // Cambiado para seguir la convención de Vite
-const url = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
+const url = import.meta.env.VITE_API_URL || "https://generator.nellyrac.do/api";
 
 export default {
   components: { TabsComponents, NavComponents },

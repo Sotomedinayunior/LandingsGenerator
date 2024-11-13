@@ -213,7 +213,7 @@
 
 <script>
 import axios from "axios";
-const url = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
+const url = import.meta.env.VITE_API_URL || "https://generator.nellyrac.do/api";
 import NavComponents from "./components/NavComponents.vue";
 export default {
   components: {

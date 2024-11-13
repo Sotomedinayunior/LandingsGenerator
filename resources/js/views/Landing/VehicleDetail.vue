@@ -200,7 +200,7 @@ export default {
       localStorage.setItem("formVehicles", JSON.stringify(this.formVehicles));
 
       // Redirigir a otra ruta
-      this.$router.push({ name: "vehicle-additions" });
+      this.$router.push({ name:"vehicle-additions" });
     },
     updateMetaTags() {
       const metaData = this.metaInfo();
