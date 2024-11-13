@@ -91,7 +91,7 @@ import axios from "axios";
 import TabsComponents from "./components/TabsComponents.vue";
 import CardAuto from "./components/CardAuto.vue";
 import NavComponents from "./components/NavComponents.vue";
-const url = import.meta.env.VUE_APP_API_URL || "http://localhost:8000/api"; // Usar variable de entorno
+const url = import.meta.env.VUE_APP_API_URL || "https://generator.nellyrac.do/api"; // Usar variable de entorno
 
 export default {
   components: { TabsComponents, CardAuto, NavComponents },
