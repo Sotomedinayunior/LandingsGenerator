@@ -185,7 +185,7 @@ export default {
         }
 
         const response = await Axios.get(
-          `/api/landings/${userId}/${landingId}`
+          `/landings/${userId}/${landingId}`
         );
         this.landing = response.data;
       } catch (error) {

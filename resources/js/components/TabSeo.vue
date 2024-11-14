@@ -219,7 +219,7 @@ export default {
       const userId = localStorage.getItem("NellyUserId");
       const landingId = this.$route.params.id;
 
-      Axios.get(`/api/landings/${userId}/${landingId}`)
+      Axios.get(`/landings/${userId}/${landingId}`)
         .then((response) => {
           this.metaData = response.data;
           console.log("Metadatos obtenidos:", this.metaData);
@@ -242,7 +242,7 @@ export default {
         console.log(`${key}: ${value}`);
       }
 
-      Axios.post(`/api/landings/${userId}/${landingId}/meta`, formData, {
+      Axios.post(`/landings/${userId}/${landingId}/meta`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

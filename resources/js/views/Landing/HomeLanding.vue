@@ -233,7 +233,7 @@
 
 <script>
 import { defineAsyncComponent } from "vue";
-const url = import.meta.env.VITE_API_URL ;
+const url = import.meta.env.VITE_API_URL;
 console.log(url);
 import axios from "axios";
 const HeaderComponents = defineAsyncComponent(() =>

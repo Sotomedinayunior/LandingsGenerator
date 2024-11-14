@@ -281,7 +281,7 @@ export default {
     async fetchFeatures() {
       this.loading = true;
       try {
-        const response = await Axios.get("/api/special-features");
+        const response = await Axios.get("/special-features");
         this.features = response.data;
         console.log("Características recibidas:", response.data); // Agregar este log
 
@@ -296,7 +296,7 @@ export default {
 
     async saveFeature() {
       try {
-        const response = await Axios.post("/api/special-features", this.newFeature);
+        const response = await Axios.post("/special-features", this.newFeature);
         console.log("Característica guardada:", response.data);
         this.visible = false;
         this.newFeature.name = "";
@@ -327,7 +327,7 @@ export default {
 
     async removeFeature(index, featureId) {
       try {
-        await Axios.delete(`/api/special-features/${featureId}`);
+        await Axios.delete(`/special-features/${featureId}`);
         this.features.splice(index, 1);
         this.filteredFeatures = this.features;
         // Mostrar el toast

@@ -254,7 +254,7 @@ export default {
       const landingId = localStorage.getItem("NellyLandingCreate");
       const vehicleId = this.$route.params.id;
 
-      Axios.get(`/api/vehicles/${landingId}/${vehicleId}`)
+      Axios.get(`/vehicles/${landingId}/${vehicleId}`)
         .then((response) => {
           console.log(response.data);
           this.vehicleImages = response.data.vehicle.images.map(
@@ -273,7 +273,7 @@ export default {
     updateVehicle() {
       const landingId = localStorage.getItem("NellyLandingCreate");
       const vehicleId = this.$route.params.id;
-      Axios.put(`/api/vehicles/${landingId}/${vehicleId}`, this.currentVehicle)
+      Axios.put(`/vehicles/${landingId}/${vehicleId}`, this.currentVehicle)
         .then((response) => {
           console.log("Vehículo actualizado:", response.data);
         

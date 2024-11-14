@@ -261,7 +261,7 @@
 </template>
 
 <script>
-const url = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
+const url = import.meta.env.VITE_API_URL;
 import Axios from "../axios";
 export default {
   name: "FormVehicles",
@@ -333,7 +333,7 @@ export default {
       });
 
       try {
-        await Axios.post("/api/vehicle", formData, {
+        await Axios.post("/vehicle", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },

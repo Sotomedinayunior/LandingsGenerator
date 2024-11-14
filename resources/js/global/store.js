@@ -43,7 +43,7 @@ const store = createStore({
         await axios.get('/sanctum/csrf-cookie');
         
         // Solicitar autenticación
-        const response = await axios.post('/api/login-nelly', credentials);
+        const response = await axios.post('/login-nelly', credentials);
         const { token, user } = response.data;
 
         // Establecer token, iduser y tiempo de expiración en el estado global
@@ -63,7 +63,7 @@ const store = createStore({
       }
     },
     logout({ commit }) {
-      axios.post('/api/nelly-logout', {}, {
+      axios.post('/nelly-logout', {}, {
         headers: {
           Authorization: `Bearer ${store.state.token}`
         }

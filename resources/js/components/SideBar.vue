@@ -143,7 +143,7 @@ export default {
     },
     GetAvatar(){
       const IdUser = localStorage.getItem('NellyUserId');
-      Axios.get(`/api/users/${IdUser}`).then((response) => {
+      Axios.get(`/users/${IdUser}`).then((response) => {
         this.avatar = response.data.user.avatar;
       });
     },

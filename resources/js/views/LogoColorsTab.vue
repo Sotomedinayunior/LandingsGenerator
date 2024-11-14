@@ -355,7 +355,7 @@ export default {
       formData.append("default_language", this.defaultLanguage);
       formData.append("color_secondary", this.secondaryColor);
 
-      Axios.post("/api/landing", formData, {
+      Axios.post("/landing", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

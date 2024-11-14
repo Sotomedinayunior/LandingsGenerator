@@ -68,8 +68,8 @@
 import TabsComponents from "./components/TabsComponents.vue";
 
 import NavComponents from "./components/NavComponents.vue";
-const url = import.meta.env.VUE_APP_API_URL || "https://generator.nellyrac.do/storage"; // Usar variable de entorno
-const api = import.meta.env.VUE_APP_API_URL || "https://generator.nellyrac.do/api"; // Usar variable de entorno
+const url = import.meta.env.VITE_API_DATA// Usar variable de entorno
+const api = import.meta.env.VITE_API_URL // Usar variable de entorno
 import axios from "axios";
 
 export default {

@@ -15,7 +15,7 @@ axios.interceptors.request.use(config => {
 });
 
 axios.interceptors.response.use(response => {
-  if (response.config.url === '/api/login-nelly' && response.status === 200) {
+  if (response.config.url === '/login-nelly' && response.status === 200) {
     store.dispatch('checkSession'); // Verificar la sesión después de iniciar sesión
   }
   return response;

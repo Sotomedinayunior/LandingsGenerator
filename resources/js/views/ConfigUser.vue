@@ -205,7 +205,7 @@ export default {
   methods: {
     GetUser() {
       const UserId = localStorage.getItem("NellyUserId");
-      Axios.get(`/api/users/${UserId}`)
+      Axios.get(`/users/${UserId}`)
         .then((response) => {
           this.user = {
             name: response.data.user.name || "",
@@ -253,7 +253,7 @@ export default {
         }
       }
 
-      Axios.post(`/api/users-update/${UserId}`, formData, {
+      Axios.post(`/users-update/${UserId}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

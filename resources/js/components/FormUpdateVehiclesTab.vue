@@ -313,7 +313,7 @@ export default {
   methods: {
     async loadSpecialFeatures() {
       try {
-        const response = await Axios.get(`/api/special-features`);
+        const response = await Axios.get(`/special-features`);
         if (response.data) {
           this.specialFeatures = response.data;
           console.log(
@@ -343,7 +343,7 @@ export default {
 
       try {
         const response = await Axios.get(
-          `/api/vehicles/${landingId}/${vehicleId}`
+          `/vehicles/${landingId}/${vehicleId}`
         );
         console.log(response.data);
         this.vehicleImages = response.data.vehicle.images.map(
@@ -369,7 +369,7 @@ export default {
 
     // Actualizar datos generales del vehículo
     const response = await Axios.put(
-      `/api/vehicles/${landingId}/${vehicleId}`,
+      `/vehicles/${landingId}/${vehicleId}`,
       this.currentVehicle
     );
     console.log(
@@ -387,7 +387,7 @@ export default {
         if (feature) {
           try {
             const featureResponse = await Axios.post(
-              `/api/vehicles/${vehicleId}/special-features`,
+              `/vehicles/${vehicleId}/special-features`,
               {
                 special_feature_id: feature.id,
                 name: feature.name, // Backend lo requiere
@@ -470,7 +470,7 @@ export default {
 
       try {
         const vehicleId = localStorage.getItem("vehicleToEdit");
-        await Axios.post(`/api/special-feature/${vehicleId}`, featureData);
+        await Axios.post(`/special-feature/${vehicleId}`, featureData);
         alert("Característica agregada con éxito");
         this.closeModal();
       } catch (error) {

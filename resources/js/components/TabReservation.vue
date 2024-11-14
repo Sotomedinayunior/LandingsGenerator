@@ -77,7 +77,7 @@ export default {
     async fetchReservations() {
       try {
         const landingId = this.$route.params.id;
-        const response = await Axios.get(`/api/reservations/${landingId}`);
+        const response = await Axios.get(`/reservations/${landingId}`);
         this.reservations = response.data;
         console.log("Reservas cargadas:", this.reservations);
       } catch (error) {
@@ -95,7 +95,7 @@ export default {
     // Elimina el vehículo
     async deleteVehicle() {
       try {
-        const response = await Axios.delete(`/api/reservations/${this.vehicleToDelete}`);
+        const response = await Axios.delete(`/reservations/${this.vehicleToDelete}`);
         // Actualizar la lista de reservas después de eliminar
         this.reservations = this.reservations.filter(item => item.id !== this.vehicleToDelete);
         this.closeDeleteModal(); // Cierra el modal después de eliminar

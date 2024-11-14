@@ -141,9 +141,7 @@ export default {
   },
   computed: {
     fullURL() {
-    const baseURL = import.meta.env.MODE === 'production'
-      ? `https://generator.nellyrac.do/`
-      : `http://localhost:8000/`;
+    const baseURL = import.meta.env.VITE_API_URL;
     return `${baseURL}${this.landing.name}`;
   }
   },
@@ -156,7 +154,7 @@ export default {
     },
 
     deleteLanding(id) {
-      Axios.delete(`api/landing/${id}`)
+      Axios.delete(`/landing/${id}`)
         .then((response) => {
           this.$emit("deleted", id); // Emite un evento cuando se elimina el landing
           this.showModal = false;

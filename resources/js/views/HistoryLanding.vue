@@ -48,7 +48,7 @@
           @delete="openDeleteModal"
         />
       </div>
-      <p v-else class="mt-6 text-red-500">
+      <p v-else class="mt-6 text-red-500 text-center">
         No se encontraron landings eliminadas.
       </p>
     </div>
@@ -126,7 +126,7 @@ export default {
     fetchDeletedLandings() {
       let userId = localStorage.getItem("NellyUserId");
       if (userId) {
-        Axios.get(`/api/landing/deleted/${userId}`)
+        Axios.get(`/landing/deleted/${userId}`)
           .then((response) => {
             this.landings = response.data;
             this.isLoading = false; 
@@ -147,7 +147,7 @@ export default {
     },
 
     restoreLanding(id) {
-      Axios.post(`/api/landing/restore/${id}`)
+      Axios.post(`/landing/restore/${id}`)
         .then(() => {
           // Eliminar manualmente la landing restaurada del array local
           this.landings = this.landings.filter(landing => landing.id !== id);
@@ -172,7 +172,7 @@ export default {
     },
 
     deleteLanding(id) {
-      Axios.delete(`/api/landing/deletedFinal/${id}`)
+      Axios.delete(`/landing/deletedFinal/${id}`)
         .then(() => {
           this.showDeleteModal = false;
           this.landings = this.landings.filter(landing => landing.id !== id);

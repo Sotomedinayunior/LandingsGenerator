@@ -283,7 +283,7 @@ export default {
   methods: {
     getLandingsData() {
       let userId = localStorage.getItem("NellyUserId");
-      Axios.get(`/api/landing/${userId}`)
+      Axios.get(`/landing/${userId}`)
         .then((response) => {
           // Verifica y corrige el formato de los datos
           this.landings = response.data.map((landing) => {
@@ -318,7 +318,7 @@ export default {
       console.log("Datos enviados:", data);
       console.log("ID de la landing seleccionada:", this.selectedLanding.id);
 
-      Axios.post(`/api/landings/${this.selectedLanding.id}/addLocation`, data)
+      Axios.post(`/landings/${this.selectedLanding.id}/addLocation`, data)
         .then((response) => {
           console.log("Respuesta de la API:", response);
           this.modalMessage = "Places added successfully";

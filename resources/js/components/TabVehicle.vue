@@ -98,7 +98,7 @@ export default {
       const landingId = this.$route.params.id;
       this.loading = true; // Indicar que está cargando
       try {
-        const response = await Axios.get(`/api/vehicles/${landingId}`);
+        const response = await Axios.get(`/vehicles/${landingId}`);
         this.vehicle = response.data.vehicles; // Asigna los datos recibidos
       } catch (err) {
         console.error(`Error al obtener los datos: ${err}`);
@@ -120,7 +120,7 @@ export default {
 
     async addVehicle(newVehicle) {
       try {
-        await Axios.post("/api/vehicles", newVehicle);
+        await Axios.post("/vehicles", newVehicle);
         alert("Vehículo agregado con éxito");
         this.getVehicles(); // Actualiza la lista de vehículos
         this.currentForm = "table"; // Regresa a la tabla
@@ -132,7 +132,7 @@ export default {
 
     async updateVehicle(updatedVehicle) {
       try {
-        await Axios.put(`/api/vehicle/${updatedVehicle.id}`, updatedVehicle);
+        await Axios.put(`/vehicle/${updatedVehicle.id}`, updatedVehicle);
         alert("Vehículo actualizado con éxito");
         this.getVehicles(); // Actualiza la lista de vehículos
         this.currentForm = "table"; // Regresa a la tabla

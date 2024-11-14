@@ -286,7 +286,7 @@ export default {
         return;
       }
 
-      Axios.get(`/api/landings/${userId}/${landingId}`)
+      Axios.get(`/landings/${userId}/${landingId}`)
         .then((response) => {
           this.LandingInfo = response.data;
           this.LandingInfo.logoUrl = response.data.logo; // Asegura que logoUrl esté configurado
@@ -327,7 +327,7 @@ export default {
       formData.append("color_primary", this.LandingInfo.color_primary);
       formData.append("color_secondary", this.LandingInfo.color_secondary);
 
-      Axios.post(`/api/landing-update/${userId}/${landingId}`, formData, {
+      Axios.post(`/landing-update/${userId}/${landingId}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

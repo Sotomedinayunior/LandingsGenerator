@@ -192,7 +192,7 @@ export default {
       if (userId && landingId) {
         try {
           await Axios.patch(
-            "/api/landing/status",
+            "/landing/status",
             {
               landing_id: landingId,
               user_id: userId,
@@ -213,7 +213,7 @@ export default {
     },
     getLayoutLanding() {
       let IdLanding = localStorage.getItem("NellyLandingName");
-      Axios.get(`/api/reviews/${IdLanding}`).then((response) => {
+      Axios.get(`/reviews/${IdLanding}`).then((response) => {
         this.LayoutLanding = response.data.landing;
         this.vehicles = response.data.vehicles;
         console.log("Vehicles", this.vehicles);

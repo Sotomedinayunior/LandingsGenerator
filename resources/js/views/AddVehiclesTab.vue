@@ -80,7 +80,7 @@ export default {
       const storedId = localStorage.getItem("NellyLandingCreate");
       this.loading = true;
       try {
-        const response = await Axios.get(`/api/vehicles/${storedId}`);
+        const response = await Axios.get(`/vehicles/${storedId}`);
         this.vehicle = response.data.vehicles;
       } catch (err) {
         console.error(`Error al obtener los datos: ${err}`);
@@ -93,7 +93,7 @@ export default {
     },
     async deleteVehicle(vehicleId, index) {
       try {
-        await Axios.delete(`/api/vehicle/${vehicleId}`);
+        await Axios.delete(`/vehicle/${vehicleId}`);
         
         // Eliminar del array local usando splice para asegurar la reactividad
         this.vehicle.splice(index, 1);

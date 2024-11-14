@@ -127,9 +127,8 @@ export default {
     async fetchReservations() {
       try {
         const UserId = localStorage.getItem("NellyUserId");
-        const response = await Axios.get(`/api/reservations/user/${UserId}`);
+        const response = await Axios.get(`/reservations/user/${UserId}`);
         this.reservations = response.data; // Guardar las reservas en el estado
-        console.log("Reservas cargadas:", this.reservations);
       } catch (error) {
         console.error("Error al cargar las reservas:", error);
       } finally {

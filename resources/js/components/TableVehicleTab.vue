@@ -108,7 +108,7 @@ export default {
     deleteVehicle(vehicleId) {
       const landingId = this.$route.params.id;
 
-      Axios.delete(`/api/vehicle/${landingId}/${vehicleId}`)
+      Axios.delete(`/vehicle/${landingId}/${vehicleId}`)
         .then(() => {
           this.showModal = false; // Ocultar el modal
           this.$emit("refresh-vehicles");  // Emitimos un evento para actualizar los vehículos

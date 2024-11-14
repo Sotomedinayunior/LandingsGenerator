@@ -167,12 +167,10 @@ export default {
     getLayoutLanding() {
       let IdLanding = this.$route.params.name;
       
-      Axios.get(`/api/reviews/${IdLanding}`).then((response) => {
+      Axios.get(`/reviews/${IdLanding}`).then((response) => {
         this.LayoutLanding = response.data.landing;
         this.vehicles = response.data.vehicles;
-        console.log("LayoutLanding", this.LayoutLanding.id);
         localStorage.setItem("NellyLandingP", this.LayoutLanding.id);
-        console.log("Vehicles", this.vehicles);
        
       });
     },
@@ -183,7 +181,7 @@ export default {
       if (userId && landingId) {
         try {
           await Axios.patch(
-            "/api/landing/status",
+            "/landing/status",
             {
               landing_id: landingId,
               user_id: userId,
@@ -212,7 +210,7 @@ export default {
 
       if (userId && landingId) {
         try {
-          const response = await Axios.get(`/api/landings/${userId}/${landingId}`);
+          const response = await Axios.get(`/landings/${userId}/${landingId}`);
           console.log("Datos obtenidos:", response.data);
           this.landing = response.data;
         } catch (err) {

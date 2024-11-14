@@ -107,7 +107,7 @@ export default {
     deleteVehicle(vehicleId) {
       const landingId = localStorage.getItem("NellyLandingCreate");
 
-      Axios.delete(`/api/vehicle/${landingId}/${vehicleId}`)
+      Axios.delete(`/vehicle/${landingId}/${vehicleId}`)
         .then(() => {
           
           this.showModal = false;

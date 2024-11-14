@@ -58,7 +58,7 @@ export default {
     CargaData() {
       let userId = localStorage.getItem('NellyUserId');
       let landingId = localStorage.getItem('NellyLandingP');
-      Axios.get(`/api/landings/${userId}/${landingId}`)
+      Axios.get(`/landings/${userId}/${landingId}`)
         .then((response) => {
           this.landing = response.data;
         })

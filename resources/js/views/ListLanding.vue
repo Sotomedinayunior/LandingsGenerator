@@ -113,7 +113,7 @@ export default {
   methods: {
     getLandingsData() {
       let userId = localStorage.getItem("NellyUserId");
-      Axios.get(`/api/landing/${userId}`)
+      Axios.get(`/landing/${userId}`)
         .then((response) => {
           // Asegurarse de que la respuesta es un array
           this.landings = Array.isArray(response.data) ? response.data : [];

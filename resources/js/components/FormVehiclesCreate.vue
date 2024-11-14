@@ -325,7 +325,7 @@
 </template>
 
 <script>
-const url = import.meta.env.VITE_API_URL || "http://localhost:8000/api";
+const url = import.meta.env.VITE_API_URL;
 import Axios from "../axios";
 
 export default {
@@ -492,7 +492,7 @@ export default {
     async fetchFeatures() {
       this.loading = true; // Muestra el indicador de carga
       try {
-        const response = await Axios.get("/api/special-features");
+        const response = await Axios.get("/special-features");
         this.features = response.data; // Almacena las características
         console.log("Características:", this.features);
       } catch (error) {
@@ -549,7 +549,7 @@ export default {
 
       // Envío de datos al backend
       try {
-        await Axios.post("/api/vehicle", formData, {
+        await Axios.post("/vehicle", formData, {
           headers: {
             "Content-Type": "multipart/form-data",
           },
