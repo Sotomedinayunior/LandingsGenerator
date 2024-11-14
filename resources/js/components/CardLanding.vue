@@ -141,7 +141,7 @@ export default {
   },
   computed: {
     fullURL() {
-    const baseURL = import.meta.env.VITE_API_URL;
+    const baseURL = import.meta.env.VITE_API_BASE_URL;
     return `${baseURL}${this.landing.name}`;
   }
   },
