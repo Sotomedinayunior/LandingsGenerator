@@ -96,12 +96,12 @@ export default {
         id_landing: "",
       },
       url:
-        import.meta.env.VUE_APP_API_URL || "https://generator.nellyrac.do/storage",
+        import.meta.env.VITE_API_DATA,
        
       api:
-        import.meta.env.VUE_APP_API_URL || "https://generator.nellyrac.do/api",
+      import.meta.env.VITE_API_URL,
       site:
-      import.meta.env.VUE_APP_API_URL || "https://generator.nellyrac.do/",
+      import.meta.env.VITE_API_URL,
     };
   },
   mounted() {

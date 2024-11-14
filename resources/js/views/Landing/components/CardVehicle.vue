@@ -87,7 +87,7 @@ export default {
   },
   computed: {
     imageSrc() {
-      const baseUrl ="https://generator.nellyrac.do/storage";
+      const baseUrl= import.meta.env.VITE_API_DATA;
 
       const imagePath =
         this.vehicle.images.length > 0

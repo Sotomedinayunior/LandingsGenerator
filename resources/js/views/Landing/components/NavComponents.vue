@@ -13,7 +13,7 @@
       />
       
       <!-- Selector de idioma -->
-      <div class="relative inline-block text-left">
+      <!-- <div class="relative inline-block text-left">
         <select
           v-model="currentLanguage"
           @change="$emit('language-change', $event.target.value)"
@@ -26,7 +26,7 @@
           <option value="en">EN</option>
           <option value="es">ES</option>
         </select>
-      </div>
+      </div> -->
     </header>
   </template>
   

@@ -96,10 +96,10 @@ export default {
     return {
       feature: [],
       randomRating: 0,
-      url: "https://generator.nellyrac.do/storage",
+      url: import.meta.env.VITE_API_DATA,
         
       api:
-        import.meta.env.VUE_APP_API_URL || "https://generator.nellyrac.do/api",
+      import.meta.env.VITE_API_URL,
     };
   },
   created() {
