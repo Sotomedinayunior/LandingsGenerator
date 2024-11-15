@@ -1,12 +1,13 @@
 <template>
   <div class="card-auto" :style="{ borderColor: colorPrimary }">
-    <div class="card-header" :style="{ backgroundColor: colorSecondary }">
+    <div class="card-header" :style="{ backgroundColor: colorPrimary }">
       <h3 class="vehicle-name">{{ vehicle.name }}</h3>
       <p class="vehicle-type">{{ vehicle.type }}</p>
     </div>
     <img
       :src="url + '/' + vehicle.images[0].path_images"
       :alt="vehicle.name"
+      loading="lazy"
       :title="vehicle.name"
       class="vehicle-image"
     />
@@ -21,7 +22,7 @@
           title="Rating"
         ></i>
       </div>
-      <div class="text-xs">
+      <div class="text-xs py-3 px-2">
         <span class="font-bold mx-1" :style="{ color: colorPrimary }"
           >Precio por dia</span
         >
@@ -35,6 +36,7 @@
       <h2 class="text-left font-bold" :style="{ color: colorPrimary }">
         Características especiales
       </h2>
+
       <div class="flex space-x-5 my-3">
         <span class="px-3 py-1 bg-gray-200 rounded-lg text-xs">{{
           vehicle.transmision
@@ -43,7 +45,10 @@
           vehicle.type_of_car
         }}</span>
         <span class="px-3 py-1 bg-gray-200 rounded-lg text-xs"
-          >Personas {{ vehicle.luggage }}</span
+          >Personas {{ vehicle.people }}</span
+        >
+        <span class="px-3 py-1 bg-gray-200 rounded-lg text-xs"
+          >Maletas {{ vehicle.people }}</span
         >
       </div>
       <div class="flex space-x-2 my-3">
@@ -66,6 +71,7 @@
       :href="`vehicles/${vehicle.id}`"
       class="btn-select"
       :style="{ backgroundColor: colorPrimary }"
+      :class="{ 'hover-effect': true }"
     >
       Seleccionar
     </a>
@@ -88,19 +94,14 @@ export default {
       type: String,
       default: "#eee",
     },
-    isFiltered: {
-      type: Boolean,
-      default: false,
-    },
   },
   data() {
     return {
       feature: [],
       randomRating: 0,
       url: import.meta.env.VITE_API_DATA,
-        
-      api:
-      import.meta.env.VITE_API_URL,
+
+      api: import.meta.env.VITE_API_URL,
     };
   },
   created() {
@@ -108,6 +109,12 @@ export default {
     this.randomRating = this.getRandomRating();
     this.getFeatures();
   },
+  mounted() {
+    // console.log(this.vehicle);
+    document.documentElement.style.setProperty('--secondary-color', this.colorSecondary);
+
+  },
+
   methods: {
     getFeatures() {
       // Obtiene las características del vehículo
@@ -152,11 +159,10 @@ export default {
   height: 600px;
   text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
- 
 }
 
 .card-header {
-  padding: 10px;
+  padding: 5px ;
   color: #fff;
 }
 
@@ -173,7 +179,6 @@ export default {
   width: 100%;
   height: 300px;
   aspect-ratio: 16/9;
-  
 }
 
 .card-details {
@@ -201,7 +206,7 @@ export default {
   padding: 8px 16px;
   border: none;
   cursor: pointer;
-  font-weight:700 ;
+  font-weight: 700;
   transition: background-color 0.3s;
 }
 

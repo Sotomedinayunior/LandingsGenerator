@@ -14,6 +14,16 @@
       </section>
       <section class="wrapper-content">
         <aside class="p-10 flex flex-col space-y-6 bg-gray-50 shadow-lg">
+          <!-- busqueda rapida  -->
+          <div class="flex flex-col space-y-2">
+            <h2 class="text-lg font-semibold text-gray-700">Busqueda Rapida</h2>
+            <input
+              type="text"
+              placeholder="Buscar por nombre"
+              v-model="quickSearch"
+              class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors ease-in-out"
+            />
+          </div>
           <!-- Capacidad -->
           <div class="flex flex-col space-y-2">
             <h2 class="text-lg font-semibold text-gray-700">Capacidad</h2>
@@ -37,7 +47,7 @@
             </h2>
             <select
               class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              @change="filters.vehicleType = $event.target.value"
+              @change="filters.type_of_car = $event.target.value"
             >
               <option value="">Todos</option>
               <option value="SUV">SUV</option>
@@ -79,10 +89,11 @@
             <h2 class="text-lg font-semibold text-gray-700">Transmisión</h2>
             <select
               class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
-              @change="filters.transmission = $event.target.value"
+              @change="filters.transmision = $event.target.value"
             >
               <option value="">Cualquier transmisión</option>
               <option value="Manual">Manual</option>
+              <option value="Semi-Automática">Semi-Automática</option>
               <option value="Automática">Automática</option>
             </select>
           </div>
@@ -123,8 +134,9 @@
 
           <!-- Botón de Restablecer Filtros -->
           <button
-            class="mt-4 w-full py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
+            class="mt-4 w-full py-2 text-white rounded-md transition-colors font-semibold"
             @click="resetFilters"
+            :style="{ backgroundColor: color1 }"
           >
             Restablecer Filtros
           </button>
@@ -137,7 +149,6 @@
             :vehicle="vehicle"
             :colorPrimary="color1"
             :colorSecondary="color2"
-
           />
         </main>
       </section>
@@ -167,80 +178,80 @@ export default {
       color1: "",
       color2: "",
       message: "",
+      quickSearch: "", // Búsqueda rápida
       filters: {
         capacity: null,
-        vehicleType: null,
+        type_of_car: null,
+
         luggage: null,
         brand: null,
-        transmission: null,
+        transmision: null,
         features: [], // Array para características especiales
+        
       },
     };
   },
   computed: {
-    filteredVehicles() {
-      return this.vehicles.filter((vehicle) => {
-        const {
-          capacity,
-          vehicleType,
-          luggage,
-          brand,
-          transmission,
-          features,
-        } = this.filters;
+  filteredVehicles() {
+    return this.vehicles.filter((vehicle) => {
+      const { capacity, type_of_car, luggage, brand, transmision, features } =
+        this.filters;
 
-        // Filtrar por capacidad (si se seleccionó)
-        if (capacity && vehicle.capacity !== capacity) return false;
+      // Verificar búsqueda rápida
+      if (
+        this.quickSearch &&
+        !vehicle.name.toLowerCase().includes(this.quickSearch.toLowerCase())
+      ) {
+        return false;
+      }
 
-        // Filtrar por tipo de vehículo
-        if (vehicleType && vehicle.type !== vehicleType) return false;
+      // Verificar capacidad
+      if (capacity && parseInt(vehicle.people) !== parseInt(capacity))
+        return false;
 
-        // Filtrar por equipaje
-        if (luggage && vehicle.luggage !== luggage) return false;
+      // Verificar tipo de carro
+      if (type_of_car && vehicle.type_of_car !== type_of_car) return false;
 
-        // Filtrar por marca
-        if (brand && vehicle.brand !== brand) return false;
+      // Verificar capacidad de equipaje
+      if (luggage && parseInt(vehicle.luggage) !== parseInt(luggage))
+        return false;
 
-        // Filtrar por transmisión
-        if (transmission && vehicle.transmission !== transmission) return false;
+      // Verificar marca
+      if (brand && vehicle.brand !== brand) return false;
 
-        // Filtrar por características especiales
-        if (
-          features.length &&
-          !features.every((feature) => vehicle.features.includes(feature))
-        ) {
-          return false;
-        }
+      // Verificar transmisión
+      if (transmision && vehicle.transmision !== transmision) return false;
 
-        return true; // Mostrar el vehículo si pasa todos los filtros
-      });
-    },
+      // Verificar características
+      if (
+        features.length &&
+        !features.every((feature) =>
+          vehicle.features.includes(feature.toLowerCase())
+        )
+      )
+        return false;
+
+      return true; // Cumple todos los filtros
+    });
   },
+},
 
   mounted() {
     this.getVehicles();
     this.updateMetaTags();
   },
   methods: {
-    toggleFeature(feature) {
-      const index = this.filters.features.indexOf(feature);
-      if (index > -1) {
-        // Quitar si ya está seleccionado
-        this.filters.features.splice(index, 1);
-      } else {
-        // Agregar si no está seleccionado
-        this.filters.features.push(feature);
-      }
-    },
     resetFilters() {
+      // Reinicia todos los filtros
       this.filters = {
         capacity: null,
-        vehicleType: null,
+        type_of_car: null,
         luggage: null,
         brand: null,
-        transmission: null,
+        transmision: null,
         features: [],
       };
+      this.quickSearch = "";
     },
     metaInfo() {
       return {
