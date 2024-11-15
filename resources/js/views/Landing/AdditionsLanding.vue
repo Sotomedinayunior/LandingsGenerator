@@ -1,5 +1,5 @@
 <template>
-  <div class="container mt-[95px]">
+  <div class="container">
     <div v-if="landing">
       <NavComponents
         :logo="logoLanding"
@@ -7,18 +7,19 @@
         :colorPrimary="color1"
         :colorSecondary="color2"
         :defaultLanguage="currentLanguage"
-        @language-change="changeLanguage"
       />
       <section>
         <TabsComponents />
       </section>
       <section class="max-w-3xl mx-auto p-6">
-        <h1 class="text-2xl font-bold mb-6">Agregar extras</h1>
+        <h1 class="text-2xl font-bold mb-6">{{ $t("add_extras") }}</h1>
 
         <!-- Productos de Protección -->
         <div class="mb-8">
-          <h2 class="text-xl font-semibold mb-2">Productos de Protección</h2>
-          <p class="text-gray-500 mb-4">Viaje más seguro y protegido</p>
+          <h2 class="text-xl font-semibold mb-2">
+            {{ $t("protection_products") }}
+          </h2>
+          <p class="text-gray-500 mb-4">{{ $t("safer_trip") }}</p>
 
           <!-- Producto 1 -->
           <div
@@ -26,7 +27,9 @@
           >
             <div>
               <h3 class="font-medium">Exención de responsabilidad por daños</h3>
-              <a href="#" class="text-sm text-gray-500 underline">Más info</a>
+              <a href="#" class="text-sm text-gray-500 underline">{{
+                $t("more_info")
+              }}</a>
             </div>
             <div class="flex items-center space-x-4">
               <span class="font-bold">+US$12.00</span>
@@ -36,7 +39,7 @@
                 @click="selectProduct(0)"
                 class="px-4 py-2 border border-gray-200 rounded-lg"
               >
-                + Agregar
+              {{ $t('add_product') }}
               </button>
               <div v-else class="flex items-center space-x-2">
                 <button
@@ -62,18 +65,20 @@
             :class="{ 'border-blue-400 bg-blue-50': selected[1] }"
           >
             <div>
-              <h3 class="font-medium">Cobertura de efectos personales</h3>
-              <a href="#" class="text-sm text-gray-500 underline">Más info</a>
+              <h3 class="font-medium">{{ $t('personal_effects_coverage') }}</h3>
+              <a href="#" class="text-sm text-gray-500 underline">{{
+                $t("more_info")
+              }}</a>
             </div>
             <div class="flex items-center space-x-4">
               <span class="font-bold">+US$12.00</span>
-              <span class="text-gray-500">/per day</span>
+              <span class="text-gray-500">{{ $t('per_day') }}</span>
               <button
                 v-if="!selected[1]"
                 @click="selectProduct(1)"
                 class="px-4 py-2 border border-gray-200 rounded-lg"
               >
-                + Agregar
+              {{ $t('add_product') }}
               </button>
               <div v-else class="flex items-center space-x-2">
                 <button
@@ -96,8 +101,8 @@
 
         <!-- Equipamiento -->
         <div class="mb-8">
-          <h2 class="text-xl font-semibold mb-2">Equipamiento</h2>
-          <p class="text-gray-500 mb-4">Asegure algún equipamiento extra</p>
+          <h2 class="text-xl font-semibold mb-2">{{ $t('equipment') }}</h2>
+          <p class="text-gray-500 mb-4">{{ $t('secure_extra_equipment') }}</p>
 
           <!-- Equipamiento 1 -->
           <div
@@ -105,7 +110,9 @@
           >
             <div>
               <h3 class="font-medium">Baby Seat</h3>
-              <a href="#" class="text-sm text-gray-500 underline">Más info</a>
+              <a href="#" class="text-sm text-gray-500 underline">{{
+                $t("more_info")
+              }}</a>
             </div>
             <div class="flex items-center space-x-4">
               <span class="font-bold">+US$12.00</span>
@@ -115,8 +122,9 @@
                 @click="selectProduct(2)"
                 class="px-4 py-2 border border-gray-200 rounded-lg"
               >
-                + Agregar
+                {{ $t("add_product") }}
               </button>
+
               <div v-else class="flex items-center space-x-2">
                 <button
                   @click="decreaseQuantity(2)"
@@ -142,13 +150,13 @@
             class="px-6 py-3 border border-black text-black rounded-lg"
             @click="retorn"
           >
-            Atrás
+            {{ $t("back") }}
           </button>
           <button
             class="px-6 py-3 bg-black text-white rounded-lg"
             @click="Review()"
           >
-            Continuar
+            {{ $t("continue") }}
           </button>
         </div>
       </section>
@@ -156,7 +164,6 @@
 
     <div v-else>
       <h1>{{ message }}</h1>
-      
     </div>
   </div>
 </template>
@@ -167,13 +174,12 @@ import TabsComponents from "./components/TabsComponents.vue";
 import NavComponents from "./components/NavComponents.vue";
 
 // Cambiado para seguir la convención de Vite
-const url = import.meta.env.VITE_API_URL ;
+const url = import.meta.env.VITE_API_URL;
 
 export default {
   components: { TabsComponents, NavComponents },
   data() {
     return {
-      currentLanguage: "en",
       logoLanding: "",
       LogoTitle: "",
       color1: "",
@@ -206,6 +212,7 @@ export default {
           this.color1 = this.landing.color_primary;
           this.color2 = this.landing.color_secondary;
           this.vehicles = this.landing.vehicles;
+          const landingLanguage = this.landing.default_language; // Aquí puedes cambiar 'es' por el idioma que quieras como predeterminado
 
           console.log(
             `Info de los vehicles`,
@@ -227,49 +234,51 @@ export default {
       this.$router.push({ name: "vehicle" });
     },
     selectProduct(index) {
-  // Activa el contador al hacer clic en "Agregar"
-  this.selected[index] = true;
+      // Activa el contador al hacer clic en "Agregar"
+      this.selected[index] = true;
 
-  // Datos de los productos
-  const products = [
-    { name: "Exención de responsabilidad por daños", price: 12.0 },
-    { name: "Cobertura de efectos personales", price: 12.0 },
-    { name: "Baby Seat", price: 12.0 },
-  ];
+      // Datos de los productos
+      const products = [
+        { name: "Exención de responsabilidad por daños", price: 12.0 },
+        { name: "Cobertura de efectos personales", price: 12.0 },
+        { name: "Baby Seat", price: 12.0 },
+      ];
 
-  // Obtener el producto seleccionado
-  const selectedProduct = products[index];
+      // Obtener el producto seleccionado
+      const selectedProduct = products[index];
 
-  // Obtener el producto almacenado en localStorage
-  const storedProduct = localStorage.getItem("selectedProduct");
+      // Obtener el producto almacenado en localStorage
+      const storedProduct = localStorage.getItem("selectedProduct");
 
-  if (storedProduct) {
-    // Si ya existe, convertir a objeto
-    const existingProduct = JSON.parse(storedProduct);
+      if (storedProduct) {
+        // Si ya existe, convertir a objeto
+        const existingProduct = JSON.parse(storedProduct);
 
-    if (existingProduct.name === selectedProduct.name) {
-      // Si el producto ya existe, incrementar la cantidad
-      existingProduct.quantity += 1; // Asegúrate de que tienes una propiedad `quantity`
-    } else {
-      // Si no es el mismo producto, puedes agregar lógica adicional si es necesario
-      console.log("Producto diferente, no se incrementa la cantidad.");
-    }
+        if (existingProduct.name === selectedProduct.name) {
+          // Si el producto ya existe, incrementar la cantidad
+          existingProduct.quantity += 1; // Asegúrate de que tienes una propiedad `quantity`
+        } else {
+          // Si no es el mismo producto, puedes agregar lógica adicional si es necesario
+          console.log("Producto diferente, no se incrementa la cantidad.");
+        }
 
-    // Guardar de nuevo en localStorage como objeto
-    localStorage.setItem("selectedProduct", JSON.stringify(existingProduct));
-  } else {
-    // Si no existe, agregarlo como un nuevo objeto con cantidad inicial de 1
-    const productToStore = {
-      name: selectedProduct.name,
-      price: selectedProduct.price,
-      quantity: 1, // Inicializa la cantidad
-    };
-    localStorage.setItem("selectedProduct", JSON.stringify(productToStore));
-  }
+        // Guardar de nuevo en localStorage como objeto
+        localStorage.setItem(
+          "selectedProduct",
+          JSON.stringify(existingProduct)
+        );
+      } else {
+        // Si no existe, agregarlo como un nuevo objeto con cantidad inicial de 1
+        const productToStore = {
+          name: selectedProduct.name,
+          price: selectedProduct.price,
+          quantity: 1, // Inicializa la cantidad
+        };
+        localStorage.setItem("selectedProduct", JSON.stringify(productToStore));
+      }
 
-  console.log("Producto agregado al localStorage:", selectedProduct);
-},
-
+      console.log("Producto agregado al localStorage:", selectedProduct);
+    },
 
     increaseQuantity(index) {
       this.quantities[index] += 1; // Incrementa la cantidad

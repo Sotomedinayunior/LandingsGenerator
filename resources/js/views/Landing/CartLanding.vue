@@ -16,40 +16,44 @@
         <aside class="p-10 flex flex-col space-y-6 bg-gray-50 shadow-lg">
           <!-- busqueda rapida  -->
           <div class="flex flex-col space-y-2">
-            <h2 class="text-lg font-semibold text-gray-700">Busqueda Rapida</h2>
+            <h2 class="text-lg font-semibold text-gray-700">
+              {{ $t("quick_search") }}
+            </h2>
             <input
               type="text"
-              placeholder="Buscar por nombre"
+              :placeholder="$t('search_placeholder')"
               v-model="quickSearch"
               class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors ease-in-out"
             />
           </div>
           <!-- Capacidad -->
           <div class="flex flex-col space-y-2">
-            <h2 class="text-lg font-semibold text-gray-700">Capacidad</h2>
+            <h2 class="text-lg font-semibold text-gray-700">
+              {{ $t("capacity") }}
+            </h2>
             <select
               class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               @change="filters.capacity = $event.target.value"
             >
-              <option value="">Todas</option>
-              <option value="2">2 Personas</option>
-              <option value="4">4 Personas</option>
-              <option value="5">5 Personas</option>
-              <option value="7">7 Personas</option>
-              <option value="9">9 Personas</option>
+              <option value="">{{ $t("all") }}</option>
+              <option value="2">{{ $t("people_2") }}</option>
+              <option value="4">{{ $t("people_4") }}</option>
+              <option value="5">{{ $t("people_5") }}</option>
+              <option value="7">{{ $t("people_7") }}</option>
+              <option value="9">{{ $t("people_9") }}</option>
             </select>
           </div>
 
           <!-- Tipo de Vehículo -->
           <div class="flex flex-col space-y-2">
             <h2 class="text-lg font-semibold text-gray-700">
-              Tipo de Vehículo
+              {{ $t("vehicle_type") }}
             </h2>
             <select
               class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               @change="filters.type_of_car = $event.target.value"
             >
-              <option value="">Todos</option>
+              <option value="">{{ $t("all") }}</option>
               <option value="SUV">SUV</option>
               <option value="Sedán">Sedán</option>
               <option value="Camioneta">Camioneta</option>
@@ -58,26 +62,29 @@
 
           <!-- Equipaje -->
           <div class="flex flex-col space-y-2">
-            <h2 class="text-lg font-semibold text-gray-700">Equipaje</h2>
+            <h2 class="text-lg font-semibold text-gray-700">
+              {{ $t("luggage") }}
+            </h2>
             <select
               class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               @change="filters.luggage = $event.target.value"
             >
-              <option value="">Cualquier capacidad</option>
-              <option value="2">2 Maletas</option>
-              <option value="4">4 Maletas</option>
-              <option value="6">6 Maletas</option>
+              <option value="">{{ $t("any_capacity") }}</option>
+              <option value="2">{{ $t("luggage_2") }}</option>
+              <option value="4">{{ $t("luggage_4") }}</option>
+              <option value="6">{{ $t("luggage_6") }}</option>
             </select>
           </div>
 
           <!-- Marca -->
           <div class="flex flex-col space-y-2">
-            <h2 class="text-lg font-semibold text-gray-700">Marca</h2>
+            <h2 class="text-lg font-semibold text-gray-700">{{ $t('brand') }}</h2>
+
             <select
               class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               @change="filters.brand = $event.target.value"
             >
-              <option value="">Todas</option>
+              <option value="">{{ $t("all") }}</option>
               <option value="Toyota">Toyota</option>
               <option value="Honda">Honda</option>
               <option value="Ford">Ford</option>
@@ -91,16 +98,22 @@
               class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               @change="filters.transmision = $event.target.value"
             >
-              <option value="">Cualquier transmisión</option>
-              <option value="Manual">Manual</option>
-              <option value="Semi-Automática">Semi-Automática</option>
-              <option value="Automática">Automática</option>
+              <option value="">{{ $t("transmission_any") }}</option>
+              <option value="Manual">{{ $t("transmission_manual") }}</option>
+              <option value="Semi-Automática">{{
+                $t("transmission_semi_automatic")
+              }}</option>
+              <option value="Automática">{{
+                $t("transmission_automatic")
+              }}</option>
             </select>
           </div>
 
           <!-- Características -->
           <div class="flex flex-col space-y-2">
-            <h2 class="text-lg font-semibold text-gray-700">Características</h2>
+            <h2 class="text-lg font-semibold text-gray-700">
+              {{ $t("features") }}
+            </h2>
             <div class="flex flex-col space-y-1">
               <label class="flex items-center space-x-2">
                 <input
@@ -127,7 +140,7 @@
                   class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
                   @change="toggleFeature('asientos-calefaccionados')"
                 />
-                <span class="text-gray-600">Asientos calefaccionados</span>
+                <span class="text-gray-600">{{ $t('heated_seats') }}</span>
               </label>
             </div>
           </div>
@@ -138,7 +151,7 @@
             @click="resetFilters"
             :style="{ backgroundColor: color1 }"
           >
-            Restablecer Filtros
+            {{ $t("reset_filters") }}
           </button>
         </aside>
 
@@ -150,6 +163,12 @@
             :colorPrimary="color1"
             :colorSecondary="color2"
           />
+          <div
+            v-if="filteredVehicles.length === 0"
+            class="text-center text-gray-600 p-4 text-2xl"
+          >
+          <h2>{{ $t('no_vehicles_found') }}</h2>
+        </div>
         </main>
       </section>
     </div>
@@ -160,6 +179,8 @@
 </template>
 
 <script>
+import { defineAsyncComponent } from "vue";
+
 import axios from "axios";
 import TabsComponents from "./components/TabsComponents.vue";
 import CardAuto from "./components/CardAuto.vue";
@@ -171,9 +192,9 @@ export default {
   data() {
     return {
       vehicles: [],
-      currentLanguage: "en",
+      currentLanguage: null,
       logoLanding: "",
-      landing: [],
+      landing: null,
       LogoTitle: "",
       color1: "",
       color2: "",
@@ -187,54 +208,53 @@ export default {
         brand: null,
         transmision: null,
         features: [], // Array para características especiales
-        
       },
     };
   },
   computed: {
-  filteredVehicles() {
-    return this.vehicles.filter((vehicle) => {
-      const { capacity, type_of_car, luggage, brand, transmision, features } =
-        this.filters;
+    noFiltersApplied() {
+      return Object.values(this.filters).every(
+        (value) => !value || (Array.isArray(value) && value.length === 0)
+      );
+    },
+    filteredVehicles() {
+      return this.vehicles.filter((vehicle) => {
+        const {
+          capacity,
+          type_of_car,
+          luggage,
+          brand,
+          transmision,
+          features,
+        } = this.filters;
 
-      // Verificar búsqueda rápida
-      if (
-        this.quickSearch &&
-        !vehicle.name.toLowerCase().includes(this.quickSearch.toLowerCase())
-      ) {
-        return false;
-      }
+        if (
+          this.quickSearch &&
+          !vehicle.name.toLowerCase().includes(this.quickSearch.toLowerCase())
+        ) {
+          return false;
+        }
 
-      // Verificar capacidad
-      if (capacity && parseInt(vehicle.people) !== parseInt(capacity))
-        return false;
+        if (capacity && parseInt(vehicle.people) !== parseInt(capacity))
+          return false;
+        if (type_of_car && vehicle.type_of_car !== type_of_car) return false;
+        if (luggage && parseInt(vehicle.luggage) !== parseInt(luggage))
+          return false;
+        if (brand && vehicle.brand !== brand) return false;
+        if (transmision && vehicle.transmision !== transmision) return false;
 
-      // Verificar tipo de carro
-      if (type_of_car && vehicle.type_of_car !== type_of_car) return false;
-
-      // Verificar capacidad de equipaje
-      if (luggage && parseInt(vehicle.luggage) !== parseInt(luggage))
-        return false;
-
-      // Verificar marca
-      if (brand && vehicle.brand !== brand) return false;
-
-      // Verificar transmisión
-      if (transmision && vehicle.transmision !== transmision) return false;
-
-      // Verificar características
-      if (
-        features.length &&
-        !features.every((feature) =>
-          vehicle.features.includes(feature.toLowerCase())
+        if (
+          features.length &&
+          !features.every((feature) =>
+            vehicle.features.includes(feature.toLowerCase())
+          )
         )
-      )
-        return false;
+          return false;
 
-      return true; // Cumple todos los filtros
-    });
+        return true;
+      });
+    },
   },
-},
 
   mounted() {
     this.getVehicles();
@@ -255,7 +275,7 @@ export default {
     },
     metaInfo() {
       return {
-        title: this.landing?.meta_title || "Default Title",
+        title: this.landing?.meta_title || "Vehicles",
         meta: [
           {
             name: "description",
@@ -298,6 +318,11 @@ export default {
           this.color1 = response.data.landing.color_primary;
           this.color2 = response.data.landing.color_secondary;
           this.vehicles = response.data.landing.vehicles;
+          const landingLanguage = this.landing.default_language; // Aquí puedes cambiar 'es' por el idioma que quieras como predeterminado
+
+          console.log("aqui esta la landing", this.landing);
+          this.changeLanguage(landingLanguage);
+
 
           // Asignar el color a la variable CSS
           document.documentElement.style.setProperty(
@@ -340,6 +365,7 @@ export default {
     changeLanguage(language) {
       this.$i18n.locale = language;
       this.currentLanguage = language;
+
     },
   },
   created() {

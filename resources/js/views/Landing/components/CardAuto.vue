@@ -23,9 +23,10 @@
         ></i>
       </div>
       <div class="text-xs py-3 px-2">
-        <span class="font-bold mx-1" :style="{ color: colorPrimary }"
-          >Precio por dia</span
-        >
+        <span class="font-bold mx-1" :style="{ color: colorPrimary }">
+          {{ $t("price_per_day") }}
+        </span>
+
         $ {{ vehicle.price }}
       </div>
     </div>
@@ -34,7 +35,7 @@
     </div>
     <div class="py-3 px-2">
       <h2 class="text-left font-bold" :style="{ color: colorPrimary }">
-        Características especiales
+        {{ $t("special_features") }}
       </h2>
 
       <div class="flex space-x-5 my-3">
@@ -45,10 +46,10 @@
           vehicle.type_of_car
         }}</span>
         <span class="px-3 py-1 bg-gray-200 rounded-lg text-xs"
-          >Personas {{ vehicle.people }}</span
+          >{{ $t('people')}} {{ vehicle.people }}</span
         >
         <span class="px-3 py-1 bg-gray-200 rounded-lg text-xs"
-          >Maletas {{ vehicle.people }}</span
+          >{{ $t('suitcase') }} {{ vehicle.people }}</span
         >
       </div>
       <div class="flex space-x-2 my-3">
@@ -68,13 +69,14 @@
     </div>
 
     <a
-      :href="`vehicles/${vehicle.id}`"
-      class="btn-select"
-      :style="{ backgroundColor: colorPrimary }"
-      :class="{ 'hover-effect': true }"
-    >
-      Seleccionar
-    </a>
+  :href="`vehicles/${vehicle.id}`"
+  class="btn-select"
+  :style="{ backgroundColor: colorPrimary }"
+  :class="{ 'hover-effect': true }"
+>
+  {{ $t('select') }}
+</a>
+
   </div>
 </template>
 
@@ -111,8 +113,10 @@ export default {
   },
   mounted() {
     // console.log(this.vehicle);
-    document.documentElement.style.setProperty('--secondary-color', this.colorSecondary);
-
+    document.documentElement.style.setProperty(
+      "--secondary-color",
+      this.colorSecondary
+    );
   },
 
   methods: {
@@ -162,7 +166,7 @@ export default {
 }
 
 .card-header {
-  padding: 5px ;
+  padding: 5px;
   color: #fff;
 }
 

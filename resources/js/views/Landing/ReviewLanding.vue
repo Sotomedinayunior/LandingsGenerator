@@ -8,16 +8,16 @@
       :defaultLanguage="currentLanguage"
       @language-change="changeLanguage"
     />
-    <main class="grid grid-cols-2 gap-5 py-[70px]">
+    <main class="grid grid-cols-2 gap-5 py-[45px]">
       <section class="py-11 px-5">
-        <h2 class="text-2xl font-semibold mb-4">Overview</h2>
+        <h2 class="text-2xl font-bold mb-4">{{ $t('overview') }}</h2>
 
         <div class="border rounded-lg p-4 bg-gray-100">
-          <h2 class="text-lg font-semibold">Order Details</h2>
+          <h2 class="text-lg font-semibold">{{ $t('order_details') }}</h2>
           <div class="flex flex-col">
-            <h2 class="text-sm text-gray-700 my-5">Date & Location</h2>
+            <h2 class="text-sm text-gray-700 my-5">{{ $t('date_location') }}</h2>
             <div class="flex items-center whitespace-nowrap">
-              <h2 class="text-xs font-bold">Pickup -</h2>
+              <h2 class="text-xs font-bold">{{ $t('pickup') }}</h2>
               <span class="text-xs ml-2">{{ Tabs1.place_of_departure }}</span>
               <img
                 src="./asset/line.png"
@@ -221,7 +221,7 @@ export default {
   },
   data() {
     return {
-      message: "Hola Mundo",
+      message: "Calculando información...",
       currentLanguage: "en",
       name: "",
       lastName: "", // Asegúrate de definir lastName

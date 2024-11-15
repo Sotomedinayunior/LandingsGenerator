@@ -390,7 +390,6 @@ export default {
     changeLanguage(language) {
       this.$i18n.locale = language;
       this.currentLanguage = language;
-      localStorage.setItem("Idioma", language); 
 
     },
   },

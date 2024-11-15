@@ -44,27 +44,31 @@
     </div>
 
     <!-- Mostrar reservas si las hay -->
-    <div
-  v-else
-  
->
-  <div v-for="(landing, index) in filteredReservations" :key="index"class="grid grid-cols-3 sm:grid-cols-2 lg:grid-cols-3 gap-3 px-3">
-    <!-- Iteramos sobre las reservas dentro de cada landing -->
-    <CardRervation
-      v-for="(reservation, resIndex) in landing.reservations"
-      :key="`res-${index}-${resIndex}`"
-      :reservation="reservation"
-      @viewReservation="openModal(reservation)"
-    />
-  </div>
-</div>
-
+    <div v-else>
+      <div
+        v-for="(landing, index) in filteredReservations"
+        :key="index"
+        class="grid grid-cols-3 sm:grid-cols-2 lg:grid-cols-3 gap-3 px-3"
+      >
+        <!-- Iteramos sobre las reservas dentro de cada landing -->
+        <CardRervation
+          v-for="(reservation, resIndex) in landing.reservations"
+          :key="`res-${index}-${resIndex}`"
+          :reservation="reservation"
+          @viewReservation="openModal(reservation)"
+        />
+      </div>
+    </div>
 
     <!-- Modal con la información de la reserva -->
     <div v-if="isModalOpen" class="modal-overlay" @click.self="closeModal">
       <div class="head-modal">
-        <h2>Detalles de la reserva</h2>
-        
+        <h2 class="text-white font-bold">Detalles de la reserva</h2>
+        <img
+          :src="selectedReservation.avatar_url"
+          alt="Avatar"
+          class="avatar"
+        />
       </div>
     </div>
   </section>
@@ -137,8 +141,12 @@ export default {
 </script>
 
 <style scoped>
-.head-modal{
-  background-color: #F168220D;
+.head-modal {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  background-color: #f168220d;
   padding: 10px;
 }
 .modal-overlay {
@@ -152,6 +160,7 @@ export default {
   justify-content: center;
   align-items: center;
   z-index: 1000;
+  padding: 30px;
 }
 
 .modal-content {
@@ -168,5 +177,4 @@ export default {
   border-radius: 50%;
   object-fit: cover;
 }
-
 </style>

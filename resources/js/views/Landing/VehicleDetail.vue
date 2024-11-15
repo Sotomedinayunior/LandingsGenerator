@@ -10,26 +10,41 @@
     />
     <TabsComponents />
     <section class="wrapper">
-      <img
+      <!-- Carrusel de imágenes -->
+      <div v-if="vehicle.images && vehicle.images.length > 1" class="carousel-container">
+        <button @click="prevImage" class="carousel-btn prev-btn"><</button>
+        <img
+          :src="url + '/' + vehicle.images[activeIndex].path_images"
+          :alt="vehicle.name"
+          class="carousel-image"
+          :title="vehicle.name"
+          width="400"
+          height="400"
+        />
+        <button @click="nextImage" class="carousel-btn next-btn">></button>
+      </div>
+      <!-- Si solo hay una imagen, mostrarla normalmente -->
+      <img v-else
         v-if="vehicle.images && vehicle.images.length > 0"
         :src="url + '/' + vehicle.images[0].path_images"
         :alt="vehicle.name"
-        class="w-85 h-auto"
+        class="w-full h-85"
         :title="vehicle.name"
-        width="800"
-        height="800"
+        width="400"
+        height="400"
       />
+
       <div>
         <h2 class="text-gray-700 text-3xl font-bold py-1">
           {{ vehicle.name }}
         </h2>
         <h2 class="text-gray-700 text-sm py-1">
-          <span class="text-xs mx-2">Precio por dia</span> {{ vehicle.price }}
+          <span class="text-xs mx-2">{{ $t('price_per_day') }}</span> ${{ vehicle.price }} 
         </h2>
         <p class="text-gray-500 text-lg py-1">{{ vehicle.description }}</p>
         <div class="py-8">
           <h2 class="text-left font-bold" :style="{ color: colorPrimary }">
-            Características especiales
+            {{ $t('special_features') }}
           </h2>
           <div class="flex space-x-2 my-3">
             <span class="px-3 py-1 bg-gray-200 rounded-lg text-xs">{{
@@ -39,7 +54,7 @@
               vehicle.type_of_car
             }}</span>
             <span class="px-3 py-1 bg-gray-200 rounded-lg text-xs"
-              >Personas {{ vehicle.luggage }}</span
+              >{{$t('people')}} {{ vehicle.luggage }}</span
             >
           </div>
           <div class="flex space-x-2 my-3">
@@ -53,10 +68,9 @@
           </div>
           <a href="#" 
             @click.prevent="Guardar" 
-         
             class="inline-block px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
           >
-            Reservar
+            {{ $t('select') }}
           </a>
         </div>
       </div>
@@ -66,10 +80,9 @@
 
 <script>
 import TabsComponents from "./components/TabsComponents.vue";
-
 import NavComponents from "./components/NavComponents.vue";
-const url = import.meta.env.VITE_API_DATA// Usar variable de entorno
-const api = import.meta.env.VITE_API_URL // Usar variable de entorno
+const url = import.meta.env.VITE_API_DATA; // Usar variable de entorno
+const api = import.meta.env.VITE_API_URL; // Usar variable de entorno
 import axios from "axios";
 
 export default {
@@ -83,7 +96,7 @@ export default {
       currentLanguage: "en",
       galleryImages: [],
       feature: [],
-      activeIndex: 0,
+      activeIndex: 0, // Índice para el carrusel
       logoLanding: "",
       LogoTitle: "",
       color1: "",
@@ -95,13 +108,9 @@ export default {
         id_user: "",
         id_landing: "",
       },
-      url:
-        import.meta.env.VITE_API_DATA,
-       
-      api:
-      import.meta.env.VITE_API_URL,
-      site:
-      import.meta.env.VITE_API_URL,
+      url: import.meta.env.VITE_API_DATA,
+      api: import.meta.env.VITE_API_URL,
+      site: import.meta.env.VITE_API_URL,
     };
   },
   mounted() {
@@ -112,8 +121,13 @@ export default {
   },
 
   methods: {
-    RedirectLink() {
-       this.$router.push({ name: "vehicle-additions" });
+    prevImage() {
+      // Lógica para mostrar la imagen anterior
+      this.activeIndex = this.activeIndex === 0 ? this.vehicle.images.length - 1 : this.activeIndex - 1;
+    },
+    nextImage() {
+      // Lógica para mostrar la siguiente imagen
+      this.activeIndex = this.activeIndex === this.vehicle.images.length - 1 ? 0 : this.activeIndex + 1;
     },
     getFeatures() {
       // Obtiene las características del vehículo
@@ -121,29 +135,15 @@ export default {
         .get(`${this.api}/special-features-public`)
         .then((response) => {
           this.feature = response.data;
-          console.log(this.feature);
         })
         .catch((error) => {
           console.error(error);
         });
     },
 
-    prevImage() {
-      this.activeIndex =
-        this.activeIndex === 0
-          ? this.vehicle.images.length - 1
-          : this.activeIndex - 1;
-    },
-    nextImage() {
-      this.activeIndex =
-        this.activeIndex === this.vehicle.images.length - 1
-          ? 0
-          : this.activeIndex + 1;
-    },
-
     metaInfo() {
       return {
-        title: this.landing?.meta_title || "vehiculo",
+        title: this.landing?.meta_title || "Detail Vehicle",
         meta: [
           {
             name: "description",
@@ -174,47 +174,28 @@ export default {
         ],
       };
     },
+
     changeLanguage(language) {
       this.currentLanguage = language;
     },
-    retorn() {
-      this.$router.push({ name: "vehicle" });
-    },
     Guardar() {
       // Asignar los valores al objeto formVehicles
-
       this.formVehicles.id_vehicle = this.$route.params.idvehicle; // ID del vehículo
       this.formVehicles.title = this.vehicle.name; // Título del vehículo
-
-      // Comprobar si hay imágenes disponibles y almacenar la ruta de la primera imagen
       if (this.vehicle.images && this.vehicle.images.length > 0) {
-        this.formVehicles.image_path =
-          this.url + "/" + this.vehicle.images[0].path_images;
+        this.formVehicles.image_path = this.url + "/" + this.vehicle.images[0].path_images;
       } else {
         this.formVehicles.image_path = null; // En caso de que no haya imagen disponible
       }
-
-      console.log("Datos a guardar en localStorage:", this.formVehicles);
-
-      // Guardar los datos en localStorage
       localStorage.setItem("formVehicles", JSON.stringify(this.formVehicles));
-
-      // Redirigir a otra ruta
       this.$router.push({ name:"vehicle-additions" });
     },
+
     updateMetaTags() {
       const metaData = this.metaInfo();
-
-      // Actualiza el título de la página
       document.title = metaData.title;
-
-      // Eliminar meta tags existentes (si es necesario)
-      const existingMetaTags = document.querySelectorAll(
-        "meta[name], meta[property]"
-      );
+      const existingMetaTags = document.querySelectorAll("meta[name], meta[property]");
       existingMetaTags.forEach((tag) => tag.parentNode.removeChild(tag));
-
-      // Añadir nuevos meta tags
       metaData.meta.forEach((metaTag) => {
         const meta = document.createElement("meta");
         Object.keys(metaTag).forEach((key) => {
@@ -226,7 +207,6 @@ export default {
 
     getLanding() {
       const NameLandingId = this.$route.params.name;
-
       axios
         .get(`${this.api}/publicLanding/${NameLandingId}`)
         .then((response) => {
@@ -236,12 +216,8 @@ export default {
           this.color1 = response.data.landing.color_primary;
           this.color2 = response.data.landing.color_secondary;
           this.vehicles = response.data.landing.vehicles;
-
-          console.log("Info de la landing", this.landing);
-          this.updateMetaTags();
         })
         .catch((err) => {
-          // si ocurre un error (como un 404), mostrar el mensaje de error
           if (err.response && err.response.status === 404) {
             this.message = "Landing no encontrada o ha sido eliminada.";
           } else {
@@ -254,57 +230,68 @@ export default {
       const idUser = this.$route.params.userid;
       const idvehicle = this.$route.params.idvehicle;
       const name = this.$route.params.name;
-
       axios
         .get(`${this.api}/publicLanding/${name}/vehicle/${idvehicle}`)
         .then((response) => {
           if (response.data.vehicle) {
             this.vehicle = response.data.vehicle;
           } else {
-            console.warn("No se encontró información del vehículo.");
             this.vehicle = { images: [] }; // Asignación segura si no hay datos
           }
-          console.log("Info del vehicle", this.vehicle);
         })
         .catch((error) => {
-          console.error("Error al obtener el vehículo:", error);
           this.vehicle = { images: [] }; // Inicializa vehicle con un array vacío en caso de error
         });
     },
-  },
-  updateMetaTags() {
-    const metaData = this.metaInfo();
-
-    // Actualiza el título de la página
-    document.title = metaData.title;
-
-    // Eliminar meta tags existentes (si es necesario)
-    const existingMetaTags = document.querySelectorAll(
-      "meta[name], meta[property]"
-    );
-    existingMetaTags.forEach((tag) => tag.parentNode.removeChild(tag));
-
-    // Añadir nuevos meta tags
-    metaData.meta.forEach((metaTag) => {
-      const meta = document.createElement("meta");
-      Object.keys(metaTag).forEach((key) => {
-        meta.setAttribute(key, metaTag[key]);
-      });
-      document.head.appendChild(meta);
-    });
   },
 };
 </script>
 
 <style scoped>
 .wrapper {
+  padding: 10px;
   display: grid;
-  margin-top: 30px;
   gap: 50px;
+  justify-content: space-around;
   grid-auto-flow: column;
-
   grid-template-columns: auto auto;
 }
+
+/* Carrusel */
+.carousel-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+}
+
+.carousel-image {
+  aspect-ratio: 16/9;
+  width: 100%;
+  height: auto;
+  object-fit: cover;
+}
+
+.carousel-btn {
+  position: absolute;
+  top: 50%;
+  transform: translateY(-50%);
+  background-color: rgba(0, 0, 0, 0.5);
+  color: white;
+  padding: 10px;
+  font-size: 16px;
+  border: none;
+  cursor: pointer;
+}
+
+.prev-btn {
+  left: 10px;
+}
+
+.next-btn {
+  right: 10px;
+}
+
 /* media query */
 @media (max-width: 578px) {
   .wrapper {
