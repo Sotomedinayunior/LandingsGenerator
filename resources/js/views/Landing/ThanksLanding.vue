@@ -1,95 +1,150 @@
 <template>
-    <div class="container mt-11 min-h-screen flex justify-center items-center">
-      <div v-if="vehicles">
-        <NavComponents
-          :logo="logoLanding"
-          :logoTitle="LogoTitle"
-          :colorPrimary="color1"
-          :colorSecondary="color2"
-          :defaultLanguage="currentLang"
-          @language-change="onLanguageChange"
-        />
-        <section class="flex-col mx-0 justify-center items-center mt-10 ">
-            <img src="./asset/check.png" alt="Existo" class="w-44 h-auto text-center">
-            <h1 class="text-3xl font-bold text-gray-800 text-center">{{ name }}</h1>
-            <p class="text-center text-xs">En breve uno de nuestros representates estarán comunicandote.</p>
-            <button class="bg-gray-600 p-5 text-white">Aceptar</button>
-        </section>
-
-        
-       
-      </div>
-      <div v-else>
-        <h1>{{ message }}</h1>
-      </div>
+  <div class="">
+    <div v-if="vehicles">
+      <NavComponents
+        :logo="logoLanding"
+        :logoTitle="LogoTitle"
+        :colorPrimary="color1"
+        :colorSecondary="color2"
+        :defaultLanguage="currentLang"
+        @language-change="onLanguageChange"
+      />
+      <section
+        class="flex flex-col justify-center items-center min-h-screen mx-auto text-center bg-gray-50"
+      >
+        <!-- Check Animado -->
+        <div class="checkmark-container mb-6">
+          <div class="checkmark"></div>
+        </div>
+        <!-- Título -->
+        <h1 class="text-3xl font-bold text-gray-800 mb-4">{{ name }}</h1>
+        <!-- Mensaje -->
+        <p class="text-xs text-gray-600 mb-6">
+          En breve uno de nuestros representantes estarán comunicándote.
+        </p>
+        <!-- Botón -->
+        <button
+          class="bg-gray-600 hover:bg-gray-700 p-3 px-6 text-white rounded-lg"
+        >
+          Aceptar
+        </button>
+      </section>
     </div>
-  </template>
-  
-  <script>
-  import axios from "axios";
-  import TabsComponents from "./components/TabsComponents.vue";
-  import CardAuto from "./components/CardAuto.vue";
-  import NavComponents from "./components/NavComponents.vue";
-  const url = import.meta.env.VITE_API_URL  // Usar variable de entorno
-  
-  export default {
-    components: { TabsComponents, CardAuto, NavComponents },
-    data() {
-      return {
-        vehicles: [],
-        currentLanguage: "en",
-        logoLanding: "",
-        LogoTitle: "",
-        color1: "",
-        color2: "",
-        name:'',
-        message: "",
-      };
+    <div v-else>
+      <h1>{{ message }}</h1>
+    </div>
+  </div>
+</template>
+
+<script>
+import axios from "axios";
+import TabsComponents from "./components/TabsComponents.vue";
+import CardAuto from "./components/CardAuto.vue";
+import NavComponents from "./components/NavComponents.vue";
+const url = import.meta.env.VITE_API_URL; // Usar variable de entorno
+
+export default {
+  components: { TabsComponents, CardAuto, NavComponents },
+  data() {
+    return {
+      vehicles: [],
+     
+      logoLanding: "",
+      LogoTitle: "",
+      color1: "",
+      color2: "",
+      name: "",
+      message: "",
+    };
+  },
+  mounted() {
+    this.getVehicles();
+    this.name = localStorage.getItem("NameUser");
+  },
+  methods: {
+    getVehicles() {
+      const NameLandingId = this.$route.params.name;
+
+      axios
+        .get(`${url}/publicLanding/${NameLandingId}`)
+        .then((response) => {
+          this.logoLanding = response.data.landing.logo;
+          this.LogoTitle = response.data.landing.name;
+          this.color1 = response.data.landing.color_primary;
+          this.color2 = response.data.landing.color_secondary;
+          this.vehicles = response.data.landing.vehicles;
+          console.log(
+            `aqui estan la info de los vehicles`,
+            this.vehicles,
+            this.logoLanding,
+            this.color1,
+            this.color2
+          );
+        })
+        .catch((err) => {
+          // si ocurre un error (como un 404), mostrar el mensaje de error
+          if (err.response && err.response.status === 404) {
+            this.message = "Landing no encontrada o ha sido eliminada.";
+          } else {
+            this.message = "Ocurrió un error al buscar la landing.";
+          }
+        });
     },
-    mounted() {
-      this.getVehicles();
-      this.name =localStorage.getItem('NameUser');
+    changeLanguage(language) {
+      this.$i18n.locale = language;
+      this.currentLanguage = language;
     },
-    methods: {
-      getVehicles() {
-        const NameLandingId = this.$route.params.name;
-  
-        axios
-          .get(`${url}/publicLanding/${NameLandingId}`)
-          .then((response) => {
-            this.logoLanding = response.data.landing.logo;
-            this.LogoTitle = response.data.landing.name;
-            this.color1 = response.data.landing.color_primary;
-            this.color2 = response.data.landing.color_secondary;
-            this.vehicles = response.data.landing.vehicles;
-            console.log(
-              `aqui estan la info de los vehicles`,
-              this.vehicles,
-              this.logoLanding,
-              this.color1,
-              this.color2
-            );
-          })
-          .catch((err) => {
-            // si ocurre un error (como un 404), mostrar el mensaje de error
-            if (err.response && err.response.status === 404) {
-              this.message = "Landing no encontrada o ha sido eliminada.";
-            } else {
-              this.message = "Ocurrió un error al buscar la landing.";
-            }
-          });
-      },
-      changeLanguage(language) {
-        this.$i18n.locale = language;
-        this.currentLanguage = language;
-      },
-    },
-  };
-  </script>
-  
-  <style scoped>
-  h1 {
-    color: blue;
+  },
+};
+</script>
+
+<style scoped>
+/* Contenedor del check */
+.checkmark-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 80px;
+  height: 80px;
+  border-radius: 50%;
+  background-color: #4caf50; /* Color verde */
+  position: relative;
+  animation: popIn 0.5s ease-out forwards;
+}
+
+/* Check dibujado */
+.checkmark {
+  width: 25px;
+  height: 50px;
+  border: solid white;
+  border-width: 0 6px 6px 0;
+  transform: rotate(45deg);
+  position: absolute;
+  top: 20px;
+  left: 28px;
+  opacity: 0;
+  animation: drawCheck 0.5s ease-out 0.5s forwards;
+}
+
+/* Animación del check */
+@keyframes drawCheck {
+  0% {
+    opacity: 0;
+    transform: rotate(45deg) scale(0);
   }
-  </style>
-  
+  100% {
+    opacity: 1;
+    transform: rotate(45deg) scale(1);
+  }
+}
+
+/* Animación del fondo */
+@keyframes popIn {
+  0% {
+    transform: scale(0);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+</style>

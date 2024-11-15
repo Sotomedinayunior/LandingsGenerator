@@ -7,10 +7,11 @@
     <img
       :src="url + '/' + vehicle.images[0].path_images"
       :alt="vehicle.name"
+      :title="vehicle.name"
       class="vehicle-image"
     />
     <div class="flex justify-between w-full items-center">
-      <div class="py-5">
+      <div class="py-3 px-2">
         <i
           v-for="(star, index) in 5"
           :key="index"
@@ -27,14 +28,14 @@
         $ {{ vehicle.price }}
       </div>
     </div>
-    <div class="py-5">
+    <div class="py-3 px-2">
       <p class="text-xs text-justify">{{ vehicle.description }}</p>
     </div>
-    <div class="py-8">
+    <div class="py-3 px-2">
       <h2 class="text-left font-bold" :style="{ color: colorPrimary }">
         Características especiales
       </h2>
-      <div class="flex space-x-2 my-3">
+      <div class="flex space-x-5 my-3">
         <span class="px-3 py-1 bg-gray-200 rounded-lg text-xs">{{
           vehicle.transmision
         }}</span>
@@ -142,11 +143,16 @@ export default {
 <style scoped>
 .card-auto {
   border: 2px solid;
+  display: flex;
+  flex-direction: column;
   border-radius: 8px;
   overflow: hidden;
+  width: 400px;
+  margin: 0 10px 0 10px;
+  height: 600px;
   text-align: center;
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-  padding: 15px;
+ 
 }
 
 .card-header {
@@ -165,8 +171,9 @@ export default {
 
 .vehicle-image {
   width: 100%;
-  height: auto;
-  margin: 10px 0;
+  height: 300px;
+  aspect-ratio: 16/9;
+  
 }
 
 .card-details {
@@ -193,8 +200,8 @@ export default {
   color: #fff;
   padding: 8px 16px;
   border: none;
-  border-radius: 4px;
   cursor: pointer;
+  font-weight:700 ;
   transition: background-color 0.3s;
 }
 

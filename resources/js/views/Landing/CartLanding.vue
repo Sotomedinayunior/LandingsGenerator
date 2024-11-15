@@ -13,69 +13,131 @@
         <TabsComponents />
       </section>
       <section class="wrapper-content">
-        <aside class="p-10 flex flex-col space-y-11">
-          <div
-            class="flex py-3 justify-between items-center border-b border-gray-300"
-          >
-            <div class="flex">
-              <img src="./asset/User.png" alt="" />
-              <h2>Capacidad</h2>
-            </div>
-            <img src="./asset/vector.png" alt="" />
+        <aside class="p-10 flex flex-col space-y-6 bg-gray-50 shadow-lg">
+          <!-- Capacidad -->
+          <div class="flex flex-col space-y-2">
+            <h2 class="text-lg font-semibold text-gray-700">Capacidad</h2>
+            <select
+              class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              @change="filters.capacity = $event.target.value"
+            >
+              <option value="">Todas</option>
+              <option value="2">2 Personas</option>
+              <option value="4">4 Personas</option>
+              <option value="5">5 Personas</option>
+              <option value="7">7 Personas</option>
+              <option value="9">9 Personas</option>
+            </select>
           </div>
-          <div
-            class="flex py-3 justify-between items-center border-b border-gray-300"
-          >
-            <div class="flex">
-              <img src="./asset/cart.png" alt="" />
-              <h2>Tipo de Vehículo</h2>
-            </div>
-            <img src="./asset/vector.png" alt="" />
+
+          <!-- Tipo de Vehículo -->
+          <div class="flex flex-col space-y-2">
+            <h2 class="text-lg font-semibold text-gray-700">
+              Tipo de Vehículo
+            </h2>
+            <select
+              class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              @change="filters.vehicleType = $event.target.value"
+            >
+              <option value="">Todos</option>
+              <option value="SUV">SUV</option>
+              <option value="Sedán">Sedán</option>
+              <option value="Camioneta">Camioneta</option>
+            </select>
           </div>
-          <div
-            class="flex py-3 justify-between items-center border-b border-gray-300"
-          >
-            <div class="flex">
-              <img src="./asset/bag.png" alt="" />
-              <h2>Equipaje</h2>
-            </div>
-            <img src="./asset/vector.png" alt="" />
+
+          <!-- Equipaje -->
+          <div class="flex flex-col space-y-2">
+            <h2 class="text-lg font-semibold text-gray-700">Equipaje</h2>
+            <select
+              class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              @change="filters.luggage = $event.target.value"
+            >
+              <option value="">Cualquier capacidad</option>
+              <option value="2">2 Maletas</option>
+              <option value="4">4 Maletas</option>
+              <option value="6">6 Maletas</option>
+            </select>
           </div>
-          <div
-            class="flex py-3 justify-between items-center border-b border-gray-300"
-          >
-            <div class="flex">
-              <img src="./asset/cart.png" alt="" />
-              <h2>Marca</h2>
-            </div>
-            <img src="./asset/vector.png" alt="" />
+
+          <!-- Marca -->
+          <div class="flex flex-col space-y-2">
+            <h2 class="text-lg font-semibold text-gray-700">Marca</h2>
+            <select
+              class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              @change="filters.brand = $event.target.value"
+            >
+              <option value="">Todas</option>
+              <option value="Toyota">Toyota</option>
+              <option value="Honda">Honda</option>
+              <option value="Ford">Ford</option>
+            </select>
           </div>
-          <div
-            class="flex py-3 justify-between items-center border-b border-gray-300"
-          >
-            <div class="flex">
-              <img src="./asset/transmision.png" alt="" />
-              <h2>Transmisión</h2>
-            </div>
-            <img src="./asset/vector.png" alt="" />
+
+          <!-- Transmisión -->
+          <div class="flex flex-col space-y-2">
+            <h2 class="text-lg font-semibold text-gray-700">Transmisión</h2>
+            <select
+              class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              @change="filters.transmission = $event.target.value"
+            >
+              <option value="">Cualquier transmisión</option>
+              <option value="Manual">Manual</option>
+              <option value="Automática">Automática</option>
+            </select>
           </div>
-          <div
-            class="flex py-3 justify-between items-center border-b border-gray-300"
-          >
-            <div class="flex">
-              <img src="./asset/bluetooh.png" alt="" />
-              <h2>Características</h2>
+
+          <!-- Características -->
+          <div class="flex flex-col space-y-2">
+            <h2 class="text-lg font-semibold text-gray-700">Características</h2>
+            <div class="flex flex-col space-y-1">
+              <label class="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  value="bluetooth"
+                  class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                  @change="toggleFeature('bluetooth')"
+                />
+                <span class="text-gray-600">Bluetooth</span>
+              </label>
+              <label class="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  value="gps"
+                  class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                  @change="toggleFeature('gps')"
+                />
+                <span class="text-gray-600">GPS</span>
+              </label>
+              <label class="flex items-center space-x-2">
+                <input
+                  type="checkbox"
+                  value="asientos-calefaccionados"
+                  class="h-4 w-4 text-indigo-600 border-gray-300 rounded focus:ring-indigo-500"
+                  @change="toggleFeature('asientos-calefaccionados')"
+                />
+                <span class="text-gray-600">Asientos calefaccionados</span>
+              </label>
             </div>
-            <img src="./asset/vector.png" alt="" />
           </div>
+
+          <!-- Botón de Restablecer Filtros -->
+          <button
+            class="mt-4 w-full py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 transition-colors"
+            @click="resetFilters"
+          >
+            Restablecer Filtros
+          </button>
         </aside>
+
         <main class="wrapper-cards">
           <CardAuto
-            v-for="vehicle in vehicles"
+            v-for="vehicle in filteredVehicles"
             :key="vehicle.id"
             :vehicle="vehicle"
             :colorPrimary="color1"
             :colorSecondary="color2"
+
           />
         </main>
       </section>
@@ -91,7 +153,7 @@ import axios from "axios";
 import TabsComponents from "./components/TabsComponents.vue";
 import CardAuto from "./components/CardAuto.vue";
 import NavComponents from "./components/NavComponents.vue";
-const url = import.meta.env.VITE_API_URL ; // Usar variable de entorno
+const url = import.meta.env.VITE_API_URL; // Usar variable de entorno
 
 export default {
   components: { TabsComponents, CardAuto, NavComponents },
@@ -105,13 +167,81 @@ export default {
       color1: "",
       color2: "",
       message: "",
+      filters: {
+        capacity: null,
+        vehicleType: null,
+        luggage: null,
+        brand: null,
+        transmission: null,
+        features: [], // Array para características especiales
+      },
     };
   },
+  computed: {
+    filteredVehicles() {
+      return this.vehicles.filter((vehicle) => {
+        const {
+          capacity,
+          vehicleType,
+          luggage,
+          brand,
+          transmission,
+          features,
+        } = this.filters;
+
+        // Filtrar por capacidad (si se seleccionó)
+        if (capacity && vehicle.capacity !== capacity) return false;
+
+        // Filtrar por tipo de vehículo
+        if (vehicleType && vehicle.type !== vehicleType) return false;
+
+        // Filtrar por equipaje
+        if (luggage && vehicle.luggage !== luggage) return false;
+
+        // Filtrar por marca
+        if (brand && vehicle.brand !== brand) return false;
+
+        // Filtrar por transmisión
+        if (transmission && vehicle.transmission !== transmission) return false;
+
+        // Filtrar por características especiales
+        if (
+          features.length &&
+          !features.every((feature) => vehicle.features.includes(feature))
+        ) {
+          return false;
+        }
+
+        return true; // Mostrar el vehículo si pasa todos los filtros
+      });
+    },
+  },
+
   mounted() {
     this.getVehicles();
     this.updateMetaTags();
   },
   methods: {
+    toggleFeature(feature) {
+      const index = this.filters.features.indexOf(feature);
+      if (index > -1) {
+        // Quitar si ya está seleccionado
+        this.filters.features.splice(index, 1);
+      } else {
+        // Agregar si no está seleccionado
+        this.filters.features.push(feature);
+      }
+    },
+    resetFilters() {
+      this.filters = {
+        capacity: null,
+        vehicleType: null,
+        luggage: null,
+        brand: null,
+        transmission: null,
+        features: [],
+      };
+    },
     metaInfo() {
       return {
         title: this.landing?.meta_title || "Default Title",
@@ -159,7 +289,10 @@ export default {
           this.vehicles = response.data.landing.vehicles;
 
           // Asignar el color a la variable CSS
-          document.documentElement.style.setProperty('--primary-color', this.color1);
+          document.documentElement.style.setProperty(
+            "--primary-color",
+            this.color1
+          );
 
           this.updateMetaTags();
         })
@@ -198,6 +331,16 @@ export default {
       this.currentLanguage = language;
     },
   },
+  created() {
+    // Verifica si hay un idioma guardado en localStorage
+    const savedLanguage = localStorage.getItem("Idioma");
+
+    // Si existe, úsalo; de lo contrario, utiliza el idioma actual
+    this.currentLanguage = savedLanguage || this.$i18n.locale;
+
+    // Establece el idioma en Vue i18n
+    this.$i18n.locale = this.currentLanguage;
+  },
 };
 </script>
 
@@ -205,13 +348,13 @@ export default {
 .wrapper-content {
   display: grid;
   grid-template-columns: 1fr 3fr;
-  margin: 20px 0px 0px 0px;
+  margin: 0px 0px 0px 0px;
 }
 .wrapper-cards {
   display: grid;
   grid-template-columns: auto auto;
-  gap: 10px;
-  margin: 20px 20px 0px 0px;
+  margin: 20px 0px 0px 0px;
+  padding-bottom: 20px;
 }
 @media screen and (max-width: 576px) {
   .wrapper-cards {

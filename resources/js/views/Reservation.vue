@@ -62,25 +62,9 @@
 
     <!-- Modal con la información de la reserva -->
     <div v-if="isModalOpen" class="modal-overlay" @click.self="closeModal">
-      <div class="modal-content">
-        <h2>
-          {{ selectedReservation.name }} {{ selectedReservation.last_name }}
-        </h2>
-        <img
-          :src="selectedReservation.avatar_url"
-          alt="Avatar"
-          class="avatar"
-        />
-        <p>Email: {{ selectedReservation.email }}</p>
-        <p>Descripción: {{ selectedReservation.description }}</p>
-        <p>Lugar de salida: {{ selectedReservation.place_of_departure }}</p>
-        <p>Lugar de llegada: {{ selectedReservation.arrival_place }}</p>
-        <p>Fecha de salida: {{ selectedReservation.date_of_departure }}</p>
-        <p>Fecha de llegada: {{ selectedReservation.date_of_arrival }}</p>
-        <p>Vehículo: {{ selectedReservation.vehicle.name }}</p>
-        <p>Tipo de vehículo: {{ selectedReservation.vehicle.type_of_car }}</p>
-        <p>Precio: {{ selectedReservation.vehicle.price }}</p>
-        <button @click="closeModal">Cerrar</button>
+      <div class="head-modal">
+        <h2>Detalles de la reserva</h2>
+        
       </div>
     </div>
   </section>
@@ -153,6 +137,10 @@ export default {
 </script>
 
 <style scoped>
+.head-modal{
+  background-color: #F168220D;
+  padding: 10px;
+}
 .modal-overlay {
   position: fixed;
   top: 0;

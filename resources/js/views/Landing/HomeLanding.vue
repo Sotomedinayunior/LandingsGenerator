@@ -147,9 +147,9 @@
         </h2>
 
         <!-- Validar si hay vehículos disponibles -->
-        <div v-if="vehicles.length > 0" class="grid grid-cols-2 gap-4 mt-5">
+        <div v-if="vehicles.length > 0" class="grid grid-cols-3 gap-x-20  mt-5">
           <CardVehicle
-            v-for="vehicle in vehicles.slice(0, 4)"
+            v-for="vehicle in vehicles.slice(0, 3)"
             :key="vehicle.id"
             :vehicle="vehicle"
             :primaryColor="landing.color_primary"
@@ -390,6 +390,8 @@ export default {
     changeLanguage(language) {
       this.$i18n.locale = language;
       this.currentLanguage = language;
+      localStorage.setItem("Idioma", language); 
+
     },
   },
 
