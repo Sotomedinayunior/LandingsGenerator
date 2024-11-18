@@ -125,8 +125,8 @@
       </div>
     </transition>
      <!-- Mensaje de notificación -->
-     <div v-if="showNotification" class="fixed bottom-5 right-5 bg-green-500 text-white p-3 rounded">
-      El texto ha sido copiado al portapapeles
+     <div v-if="showNotification" class="fixed bottom-5 right-5 bg-green-500 text-white p-3 text-xs rounded">
+      La url ha sido copiado al portapapeles
     </div>
   </div>
 </template>
