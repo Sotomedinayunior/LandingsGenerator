@@ -61,7 +61,7 @@
     </div>
 
     <!-- Botón para agregar característica -->
-    <section class="flex justify-center mb-4">
+    <section class="flex justify-start mb-4 px-4">
       <button
         type="button"
         class="bg-orange-500 text-white px-4 py-2 rounded"
@@ -90,7 +90,7 @@
             autocomplete="off"
           />
         </div>
-        <div class="flex items-center gap-4 mb-8">
+        <!-- <div class="flex items-center gap-4 mb-8">
           <label for="descripcion" class="font-semibold w-24"
             >Descripción</label
           >
@@ -100,8 +100,8 @@
             class="flex-auto border border-gray-300 rounded-md p-2"
             autocomplete="off"
           />
-        </div>
-        <div class="flex justify-end gap-2">
+        </div> -->
+        <div class="flex justify-center gap-2">
           <button
             type="button"
             class="bg-gray-300 text-black px-4 py-2 rounded"
@@ -111,7 +111,7 @@
           </button>
           <button
             type="button"
-            class="bg-blue-500 text-white px-4 py-2 rounded"
+            class="bg-[#F57200] text-white px-4 py-2 rounded"
             @click="saveFeature"
           >
             Guardar
@@ -121,7 +121,7 @@
     </div>
 
     <!-- Sección de características -->
-    <section>
+    <section class="px-4" >
       <div class="grid grid-cols-8 sm:grid-cols-2 lg:grid-cols-8 gap-4">
         <span
           v-for="(feature, index) in filteredFeatures"
@@ -146,11 +146,11 @@
       >
         <div
           id="toast-success"
-          class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-gray-800"
+          class="flex items-center w-full max-w-xs p-4 mb-4 text-gray-500 bg-white rounded-lg shadow dark:text-gray-400 dark:bg-orange-500"
           role="alert"
         >
           <div
-            class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-green-800 dark:text-green-200"
+            class="inline-flex items-center justify-center flex-shrink-0 w-8 h-8 text-green-500 bg-green-100 rounded-lg dark:bg-orange-800 dark:text-green-200"
           >
             <svg
               class="w-5 h-5"
@@ -166,7 +166,7 @@
             <span class="sr-only">Check icon</span>
           </div>
           <div class="ms-3 text-sm font-normal">
-            Vehículo agregado con éxito.
+            Caracteristica agregada con éxito.
           </div>
           <button
             type="button"

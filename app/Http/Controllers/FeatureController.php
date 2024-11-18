@@ -4,15 +4,15 @@
 
 namespace App\Http\Controllers;
 
-use App\Models\Feature;
-use App\Models\VehicleFeature;
+use App\Models\SpecialFeature;
+use App\Models\VehicleSpecialFeature;
 use Illuminate\Http\Request;
 
 class FeatureController extends Controller
 {
     public function index()
     {
-        return Feature::all(); // Retorna todas las características
+        return SpecialFeature::all(); // Retorna todas las características
     }
 
     public function store(Request $request)
@@ -22,19 +22,19 @@ class FeatureController extends Controller
             'description' => 'nullable|string',
         ]);
 
-        $feature = Feature::create($request->all()); // Crea una nueva característica
+        $feature = SpecialFeature::create($request->all()); // Crea una nueva característica
 
         return response()->json($feature, 201);
     }
 
     public function show($id)
     {
-        return Feature::findOrFail($id); // Retorna una característica específica
+        return SpecialFeature::findOrFail($id); // Retorna una característica específica
     }
 
     public function update(Request $request, $id)
     {
-        $feature = Feature::findOrFail($id);
+        $feature = SpecialFeature::findOrFail($id);
         $feature->update($request->all()); // Actualiza la característica
 
         return response()->json($feature);
@@ -51,7 +51,7 @@ class FeatureController extends Controller
 
         // Iterar sobre cada característica y actualizarla o crearla
         foreach ($request->features as $feature) {
-            VehicleFeature::updateOrCreate(
+            VehicleSpecialFeature::updateOrCreate(
                 [
                     'vehicle_id' => $vehicleId,
                     'feature_id' => $feature['feature_id'],
@@ -65,7 +65,7 @@ class FeatureController extends Controller
 
     public function destroy($id)
     {
-        Feature::destroy($id); // Elimina la característica
+        SpecialFeature::destroy($id); // Elimina la característica
 
         return response()->noContent();
     }

@@ -129,7 +129,7 @@
                   </div>
                 </div>
                 <div class="flex justify-center items-center mt-6">
-                  <button class="bg-gray-600 text-white px-5 py-1 rounded">
+                  <button class=" text-white px-5 py-1 rounded" :style="{'background-color':landing.color_primary}">
                     <i class="fa-solid fa-magnifying-glass"></i>
                   </button>
                 </div>

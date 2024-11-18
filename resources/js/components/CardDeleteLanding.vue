@@ -39,7 +39,7 @@ export default {
   computed: {
     FullName(){
       const NameLanding = this.landing.name;
-      return  NameLanding.replace("-"," ");
+      return  NameLanding.replace("-"," ").replace("-"," ");
     },
   },
 };

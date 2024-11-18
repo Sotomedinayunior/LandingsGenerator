@@ -142,7 +142,7 @@ export default {
   computed: {
     FullName(){
       const NameLanding = this.landing.name;
-      return  NameLanding.replace("-", " ");
+      return  NameLanding.replace("-", " ").replace("-", " ").replace("-", " ").replace("-", " ");
     },
     fullURL() {
     const baseURL = import.meta.env.VITE_API_BASE_URL;
