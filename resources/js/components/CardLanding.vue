@@ -2,22 +2,26 @@
   <div>
     <!-- Card Component -->
     <div
-      class="max-w-lg p-6 cursor-pointer rounded-2xl bg-[#FAF8F6]"
-      @click="handle(landing.id)"
+      class="max-w-lg p-6  rounded-2xl bg-[#FAF8F6]"
+       
     >
       <div class="flex justify-between">
         <div class="flex">
           <img
             :src="landing.logo"
+            width="44"
+            height="44"
+            :title="FullName"
             :alt="FullName"
             loading="lazy"
-            class="w-11 h-11"
+            class="w-11 h-11 cursor-pointer"
+            @click="handle(landing.id)" 
           />
           <div class="ml-3">
-            <h2 class="text-base font-bold">{{ FullName  }}</h2>
-            <p class="text-xs break-all overflow-hidden">
+            <h2 class="text-base font-bold cursor-pointer" @click="handle(landing.id)" >{{ FullName  }}</h2>
+            <!-- <p class="text-xs break-all overflow-hidden">
               {{ fullURL }}
-            </p>
+            </p> -->
           </div>
         </div>
         <!-- Trash Icon iconsss -->
@@ -27,6 +31,7 @@
         <!-- Expand Icon -->
         
         <i class="fa-solid fa-circle-check text-[#f16822]" v-if="landing.published" title="Landing publicada"></i>
+        <button class="bg-orange-500 text-white px-2 py-1 rounded text-xs" @click="Copiar()">Ver</button>
         <div class="flex items-center space-x-2">
           <!-- Truck Icon -->
           <img
@@ -119,12 +124,16 @@
         </div>
       </div>
     </transition>
+     <!-- Mensaje de notificación -->
+     <div v-if="showNotification" class="fixed bottom-5 right-5 bg-green-500 text-white p-3 rounded">
+      El texto ha sido copiado al portapapeles
+    </div>
   </div>
 </template>
 
 <script>
 import Axios from "../axios";
-
+const URL=import.meta.env.VITE_API_BASE_URL;
 export default {
   name: "CardLanding",
   props: {
@@ -135,8 +144,10 @@ export default {
   },
   data() {
     return {
-      URL: `/${this.landing.name}`,
+     
       showModal: false, // Estado del modal
+      showNotification: false, // Controla la visibilidad de la notificación
+
     };
   },
   computed: {
@@ -159,6 +170,17 @@ export default {
     viewlanding() {
       window.open(this.URL, "_blank");
     },
+    Copiar(text){
+      navigator.clipboard.writeText(text).then(() => {
+        this.showNotification = true; // Muestra la notificación
+        setTimeout(() => {
+          this.showNotification = false; // Oculta la notificación después de 3 segundos
+        }, 3000);
+      }).catch((err) => {
+        console.error("Error copiando al portapapeles: ", err);
+      });
+    },
+
 
     deleteLanding(id) {
       Axios.delete(`/landing/${id}`)
