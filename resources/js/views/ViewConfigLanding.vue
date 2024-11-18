@@ -18,7 +18,7 @@
             loading="lazy"
           />
           <h1 v-if="landing.name" class="font-semibold text-2xl ml-2">
-            {{ landing.name }}
+            {{ FullName }}
           </h1>
         </div>
       </div>
@@ -170,6 +170,13 @@ export default {
       activeTab: "reservations",
       isLoading: true, // Estado para manejar la carga
     };
+  },
+  computed:{
+    FullName(){
+      const NameLanding = this.landing.name;
+      return  NameLanding.replace("-", " ");
+    }
+
   },
   created() {
     this.fetchLanding();
