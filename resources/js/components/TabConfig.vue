@@ -85,6 +85,47 @@
             </div>
           </div>
         </div>
+        <div class="mb-8">
+          <h2 class="text-xl text-slate-950 font-semibold mb-2">
+            4- Idioma Predeterminado de tu landing
+          </h2>
+          <div class="flex justify-around">
+            <div
+              class="bg-white w-20 h-auto shadow-xl flex justify-around items-center cursor-pointer"
+              @click="selectLanguage('es')"
+              :class="{
+                'border-4 border-orange-500': defaultLanguage === 'es',
+              }"
+            >
+              <div class="w-full h-full">
+                <img
+                  src="../static/asset/do.svg"
+                  alt="Idioma español"
+                  width="40"
+                  height="40"
+                  class="w-full h-full"
+                />
+              </div>
+            </div>
+            <div
+              class="bg-white w-20 h-auto shadow-xl flex justify-around items-center cursor-pointer"
+              @click="selectLanguage('en')"
+              :class="{
+                'border-4 border-orange-500': defaultLanguage === 'en',
+              }"
+            >
+              <div class="w-full h-full">
+                <img
+                  src="../static/asset/us.svg"
+                  alt="Idioma español"
+                  width="40"
+                  height="40"
+                  class="w-full h-full"
+                />
+              </div>
+            </div>
+          </div>
+        </div>
       </form>
     </div>
 
@@ -252,6 +293,8 @@ export default {
         logo: null,
         color_primary: "#000000",
         logoUrl: null,
+        defaultLanguage: "",
+
         color_secondary: "#FFFFFF",
       },
       isModalVisible: false, // Controla la visibilidad del modal
@@ -270,13 +313,13 @@ export default {
   },
   methods: {
     createSlug(name) {
-    return name
-      .toLowerCase()                    // Convierte a minúsculas
-      .trim()                           // Elimina espacios al inicio y al final
-      .replace(/[^\w\s-]/g, '')         // Elimina caracteres especiales
-      .replace(/\s+/g, '-')             // Reemplaza espacios por guiones
-      .replace(/-+/g, '-');             // Elimina guiones duplicados
-  },
+      return name
+        .toLowerCase() // Convierte a minúsculas
+        .trim() // Elimina espacios al inicio y al final
+        .replace(/[^\w\s-]/g, "") // Elimina caracteres especiales
+        .replace(/\s+/g, "-") // Reemplaza espacios por guiones
+        .replace(/-+/g, "-"); // Elimina guiones duplicados
+    },
     fetchLandingData() {
       const userId = localStorage.getItem("NellyUserId");
       const landingId = this.$route.params.id;
@@ -307,7 +350,7 @@ export default {
         this.LandingInfo.logoUrl = URL.createObjectURL(file);
       }
     },
-    
+
     confirmModal() {
       this.isModalVisible = false;
     },
@@ -316,7 +359,7 @@ export default {
       const landingId = this.$route.params.id;
 
       const formData = new FormData();
-      formData.append("name",  this.createSlug(this.LandingInfo.name));
+      formData.append("name", this.createSlug(this.LandingInfo.name));
 
       const logoFile = this.$refs.logoInput.files[0];
       if (logoFile) {
@@ -349,4 +392,10 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+.flag-icon {
+  width: 1.5rem; /* Ajusta el tamaño de las banderas */
+  height: auto;
+}
+</style>
+

@@ -43,7 +43,7 @@ class ReservationController extends Controller
         $validatedData = $request->validate([
             'name' => 'nullable|string|max:255', // Opcional
             'last_name' => 'nullable|string|max:255', // Opcional
-            'phone' => 'nullable|string|max:255', // Opcional
+            'phone' => 'string|string|max:255', // Opcional
             'email' => 'nullable|string|email|max:255|unique:reservations,email,' . $id, // Opcional
             'description' => 'nullable|string', // Opcional
             'name_landing' => 'required|string|max:255', // Obligatorio
