@@ -1,7 +1,7 @@
 <template>
     <section class="lg:ml-64 p-4">
       
-      <h2 class="font-bold text-3xl mb-2">Preguntas Frecuentes</h2>
+      <h2 class="font-bold text-xl mb-2">Preguntas Frecuentes</h2>
       <p class="text-gray-600 mt-2 mb-7">¿Tienes preguntas sobre el funcionamiento de la aplicación?</p>
       <div class="space-y-4">
         <!-- Pregunta 1 -->

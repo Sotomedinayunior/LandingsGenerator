@@ -4,8 +4,8 @@
       <div class="flex flex-col">
         <h1 class="font-bold text-gray-600">Review</h1>
         <p class="text-gray-300">
-          Here you can take a look of your new website:
-          <span class="font-bold font">http://localhost:8000/{{ LayoutLanding.name }}</span>
+          Observa como se ve tu landing page:
+          <span class="font-bold font">{{url}}{{ LayoutLanding.name }}</span>
         </p>
       </div>
       <button
@@ -157,7 +157,7 @@ export default {
     return {
       LayoutLanding: {},
       vehicles: [],
-      url: "http://localhost:8000/storage",
+      url: import.meta.env.VITE_API_BASE_URL,
     };
   },
   mounted() {

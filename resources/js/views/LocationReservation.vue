@@ -26,7 +26,7 @@
     <div
       class="flex flex-col sm:flex-row items-center justify-between mb-6 px-4" v-else
     >
-      <h1 class="font-bold text-3xl">Localizaciones</h1>
+      <h1 class="font-bold text-xl">Localizaciones</h1>
     </div>
 
     <!-- Selección de landing -->

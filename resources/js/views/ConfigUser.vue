@@ -3,7 +3,7 @@
     class="max-w-sm mt-10 p-6 bg-white shadow-md rounded-md flex justify-center items-center flex-col"
     style="margin-left: 25rem;"
   >
-    <h2 class="text-xl font-semibold mb-6 text-[#f16822]">
+    <h2 class="text-xl font-bold mb-6 text-[#f16822]   ">
       Configuración del Usuario
     </h2>
 

@@ -1,7 +1,7 @@
 <template>
   <section class="lg:ml-64 p-4">
     <div class="flex flex-col sm:flex-row items-center justify-between mb-6 px-4">
-      <h1 class="font-bold text-3xl">
+      <h1 class="font-bold text-xl">
         Landings borradas
       </h1>
       <div class="flex flex-col sm:flex-row items-center space-y-4 sm:space-y-0 sm:space-x-4 mt-4 sm:mt-0">

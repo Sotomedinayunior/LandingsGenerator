@@ -177,7 +177,7 @@ export default {
     return {
       LayoutLanding: {},
       vehicles: [],
-      url: "http://localhost:8000/storage",
+      url: import.meta.env.VITE_API_DATA,
     };
   },
   mounted() {

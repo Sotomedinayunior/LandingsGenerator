@@ -216,8 +216,8 @@
       <footer
         class="bg-slate-100 p-5 flex flex-col justify-center item fade-in"
       >
-        <p class="text-slate-600 text-center">
-          ©{{ landing.name }}{{ $t("footer_text") }}
+        <p class="text-slate-600 text-center text-xs">
+          ©{{ FullName }}{{ $t("footer_text") }}
         </p>
       </footer>
     </div>
@@ -272,6 +272,12 @@ export default {
       vehicles: [],
       currentLanguage: null,
     };
+  },
+  computed:{
+    FullName(){
+    const NameLanding = this.landing.name;
+    return  NameLanding.replace("-", " ");
+    }
   },
 
   mounted() {
