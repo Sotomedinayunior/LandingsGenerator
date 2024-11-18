@@ -81,7 +81,7 @@
               id="name"
               type="text"
               placeholder="Nombre del Vehículo"
-              class="mt-1 block text-sm w-[450px] border outline-none border-gray-300 rounded-md p-3"
+              class="mt-1 block text-xs w-[450px] border outline-none border-gray-300 rounded-md p-3"
             />
           </div>
           <div class="mb-4">
@@ -89,7 +89,7 @@
               v-model="currentVehicle.description"
               id="description"
               placeholder="Describe brevemente el vehículo"
-              class="mt-1 block w-[450px] border border-gray-300 outline-none rounded-md p-2"
+              class="mt-1 block w-[450px] text-xs border border-gray-300 outline-none rounded-md p-2"
             ></textarea>
           </div>
           <div class="mb-4">
@@ -98,7 +98,7 @@
               id="price"
               type="number"
               placeholder="Precio por día"
-              class="mt-1 block w-[200px] border border-gray-300 rounded-md p-2"
+              class="mt-1 block w-[200px] text-xs border border-gray-300 rounded-md p-2"
             />
           </div>
           <div class="mb-4">
