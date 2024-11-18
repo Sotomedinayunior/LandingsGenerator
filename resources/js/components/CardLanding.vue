@@ -31,7 +31,7 @@
         <!-- Expand Icon -->
         
         <i class="fa-solid fa-circle-check text-[#f16822]" v-if="landing.published" title="Landing publicada"></i>
-        <button class="bg-orange-500 text-white px-2 py-1 rounded text-xs" @click="Copiar()">Ver</button>
+        <button class="bg-orange-500 text-white px-2 py-1 rounded text-xs" @click="Copiar(this.URL)">Ver</button>
         <div class="flex items-center space-x-2">
           <!-- Truck Icon -->
           <img
@@ -133,9 +133,9 @@
 
 <script>
 import Axios from "../axios";
-const URL=import.meta.env.VITE_API_BASE_URL;
 export default {
-  name: "CardLanding",
+  name: "CardLanding", 
+
   props: {
     landing: {
       type: Object,
@@ -144,7 +144,8 @@ export default {
   },
   data() {
     return {
-     
+      
+      URL: import.meta.env.VITE_API_BASE_URL + this.landing.name,
       showModal: false, // Estado del modal
       showNotification: false, // Controla la visibilidad de la notificación
 
@@ -171,7 +172,7 @@ export default {
       window.open(this.URL, "_blank");
     },
     Copiar(text){
-      navigator.clipboard.writeText(text).then(() => {
+      navigator.clipboard.writeText(this.URL).then(() => {
         this.showNotification = true; // Muestra la notificación
         setTimeout(() => {
           this.showNotification = false; // Oculta la notificación después de 3 segundos
