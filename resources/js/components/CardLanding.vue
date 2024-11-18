@@ -9,12 +9,12 @@
         <div class="flex">
           <img
             :src="landing.logo"
-            :alt="landing.name"
+            :alt="FullName"
             loading="lazy"
             class="w-11 h-11"
           />
           <div class="ml-3">
-            <h2 class="text-base font-bold">{{ landing.name }}</h2>
+            <h2 class="text-base font-bold">{{ FullName  }}</h2>
             <p class="text-xs break-all overflow-hidden">
               {{ fullURL }}
             </p>
@@ -140,8 +140,13 @@ export default {
     };
   },
   computed: {
+    FullName(){
+      const NameLanding = this.landing.name;
+      return  NameLanding.replace("-", " ");
+    },
     fullURL() {
     const baseURL = import.meta.env.VITE_API_BASE_URL;
+    
     console.log(`${baseURL}`);
 
     return `${baseURL}${this.landing.name}`;

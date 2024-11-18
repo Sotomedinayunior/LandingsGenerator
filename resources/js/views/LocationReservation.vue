@@ -280,6 +280,12 @@ export default {
   created() {
     this.getLandingsData();
   },
+  computed: {
+    FullName(){
+      const NameLanding = this.landing.name;
+      return  NameLanding.replace("-"," ");
+    },
+  },
   methods: {
     getLandingsData() {
       let userId = localStorage.getItem("NellyUserId");

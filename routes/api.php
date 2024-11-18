@@ -70,6 +70,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::get('/reservations/{landing_id}', [ReservationController::class, 'index']);
     //obtener las reservaciones de un usuario
     Route::get('/reservations/user/{user_id}', [ReservationController::class, 'indexUser']);
+    //borrar Rervacion
+    Route::delete('/reservations/{id}', [ReservationController::class, 'destroy']);
+ 
     //actualizar un vehiculo
     Route::put('/vehicles/{landingId}/{vehicleId}', [VehicleController::class, 'update']);
 
@@ -82,9 +85,7 @@ Route::middleware('auth:sanctum')->group(function () {
 
     Route::get('/special-features', [SpecialFeatureController::class, 'index']);
     Route::delete('/special-features/{id}', [SpecialFeatureController::class, 'delete']);
-    //borrar una reservacion
-    Route::delete('/reservations/{id}', [ReservationController::class, 'destroy']);
-
+   
     //borrar un vehiculo
     Route::delete('/vehicle/{landing_id}/{vehicle_id}', [VehicleController::class, 'destroy']);
 });

@@ -1,6 +1,6 @@
 <template>
-  <div class="grid grid-cols-2 gap-8">
-    <div class="p-5 w-full flex flex-col">
+  <div class="grid grid-cols-2 gap-2">
+    <div class="grid grid-cols-1">
       <form
         ref="form"
         @submit.prevent="handleSubmit"
@@ -8,7 +8,7 @@
       >
         <div class="mb-7">
           <h2 class="text-xl text-slate-950 font-medium mb-2">
-            1- Name your website
+            1- Nombre de la landing
           </h2>
           <input
             type="text"
@@ -21,7 +21,7 @@
         </div>
         <div class="mb-4">
           <h2 class="text-xl text-slate-950 font-medium mb-2">
-            2- Upload the logo
+            2- Logo de la landing
           </h2>
           <div
             class="border-2 border-dashed border-[#F2994A] bg-[#F2994A0D] p-4 w-full h-40 flex items-center justify-center relative"
@@ -56,12 +56,12 @@
         </div>
         <div class="mb-8">
           <h2 class="text-xl text-slate-950 font-medium mb-2">
-            3- Choose Primary & Secondary Color
+            3-Color primario y secundario
           </h2>
           <div class="flex space-x-4">
             <div class="flex flex-col items-center">
               <label for="primaryColor" class="text-slate-950 mb-2">
-                Primary Color
+                Color Primario
               </label>
               <input
                 type="color"
@@ -73,7 +73,7 @@
             </div>
             <div class="flex flex-col items-center">
               <label for="secondaryColor" class="text-slate-950 mb-2">
-                Secondary Color
+                Color secundario
               </label>
               <input
                 type="color"
@@ -88,12 +88,12 @@
       </form>
     </div>
 
-    <div class="p-8 w-full flex  flex-col">
-      <div class="p-8 w-full flex flex-col">
+    <div class="grid grid-cols-1 w-full">
+      <div class="px-10 w-full flex flex-col">
         <div class="flex justify-between">
           <h2 class="text-2xl font-bold text-gray-500">Preview</h2>
         </div>
-        <div class="flex justify-around">
+        <div class="flex justify-around w-full">
           <div class="flex justify-between gap-10">
             <button
               class="px-4 py-2 m-6 border-orange-500 border text-orange-500 rounded transition-colors"

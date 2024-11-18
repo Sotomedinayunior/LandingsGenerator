@@ -4,7 +4,7 @@
   >
     <div class="flex items-center gap-2	">
       <img :src="landing.logo" :alt="landing.name" class="w-12 h-12">
-      <h2 class="text-base font-bold text-orange-600">{{landing.name}}</h2>
+      <h2 class="text-base font-bold text-orange-600">{{FullName}}</h2>
     </div>
 
     <!-- Botones para restaurar o eliminar -->
@@ -34,6 +34,12 @@ export default {
     landing: {
       type: Object,
       required: true,
+    },
+  },
+  computed: {
+    FullName(){
+      const NameLanding = this.landing.name;
+      return  NameLanding.replace("-"," ");
     },
   },
 };
