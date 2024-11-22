@@ -77,7 +77,7 @@
           </div>
 
           <!-- Marca -->
-          <div class="flex flex-col space-y-2">
+          <!-- <div class="flex flex-col space-y-2">
             <h2 class="text-lg font-semibold text-gray-700">{{ $t('brand') }}</h2>
 
             <select
@@ -89,7 +89,7 @@
               <option value="Honda">Honda</option>
               <option value="Ford">Ford</option>
             </select>
-          </div>
+          </div> -->
 
           <!-- Transmisión -->
           <div class="flex flex-col space-y-2">
@@ -110,7 +110,7 @@
           </div>
 
           <!-- Características -->
-          <div class="flex flex-col space-y-2">
+          <!-- <div class="flex flex-col space-y-2">
             <h2 class="text-lg font-semibold text-gray-700">
               {{ $t("features") }}
             </h2>
@@ -143,7 +143,7 @@
                 <span class="text-gray-600">{{ $t('heated_seats') }}</span>
               </label>
             </div>
-          </div>
+          </div> -->
 
           <!-- Botón de Restablecer Filtros -->
           <button

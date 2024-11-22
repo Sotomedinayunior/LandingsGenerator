@@ -30,9 +30,9 @@
           class="px-3 py-2 text-white text-xs font-bold uppercase rounded transition-colors duration-200"
           @mouseover="hover = true"
           @mouseleave="hover = false"
-          @click="showFullImage = true" 
+          @click="Redirect" 
         >
-          Ver Imagen
+          Reservar
         </button>
          <!-- Tooltip -->
          <div 
@@ -85,6 +85,11 @@ export default {
       showTooltip: false, // Estado para mostrar el tooltip
       
     };
+  },
+  methods: {
+    Redirect() {
+      this.$router.push({ name: "vehicle-pages", params: { idvehicle: this.vehicle.id } });
+    },
   },
   computed: {
     imageSrc() {

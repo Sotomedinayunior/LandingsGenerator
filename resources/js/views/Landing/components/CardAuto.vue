@@ -1,9 +1,5 @@
 <template>
   <div class="card-auto" :style="{ borderColor: colorPrimary }">
-    <div class="card-header" :style="{ backgroundColor: colorPrimary }">
-      <h3 class="vehicle-name">{{ vehicle.name }}</h3>
-      <p class="vehicle-type">{{ vehicle.type }}</p>
-    </div>
     <img
       :src="url + '/' + vehicle.images[0].path_images"
       :alt="vehicle.name"
@@ -11,7 +7,12 @@
       :title="vehicle.name"
       class="vehicle-image"
     />
+    <div class="card-header" :style="{ backgroundColor: colorPrimary }">
+      <h3 class="vehicle-name">{{ vehicle.name }}</h3>
+      <p class="vehicle-type">{{ vehicle.type }}</p>
+    </div>
     <div class="flex justify-between w-full items-center">
+      
       <div class="py-3 px-2">
         <i
           v-for="(star, index) in 5"
@@ -34,7 +35,7 @@
       <p class="text-xs text-justify">{{ vehicle.description }}</p>
     </div>
     <div class="py-3 px-2">
-      <h2 class="text-left font-bold" :style="{ color: colorPrimary }">
+      <h2 class="text-left font-bold text-sm" :style="{ color: colorPrimary }">
         {{ $t("special_features") }}
       </h2>
 

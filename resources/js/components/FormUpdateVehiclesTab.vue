@@ -2,7 +2,7 @@
   <div>
     <button
       @click="prev"
-      class="flex items-center mb-4 px-4 py-2 ml-10 text-[#F57200] font-bold border border-[#F57200] rounded hover:bg-[#F57200] hover:text-white transition-colors"
+      class="flex items-center mb-4 px-4 py-2 text-[#F57200] font-bold border border-[#F57200] rounded hover:bg-[#F57200] hover:text-white transition-colors"
     >
       <i class="fa fa-arrow-left mr-2"></i>Atrás
     </button>
@@ -12,12 +12,12 @@
     <div v-else class="mx-w-md">
       <form
         @submit.prevent="updateVehicle"
-        class="grid grid-cols-2 gap-4 p-4"
+        class="flex justify-between space-x-4"
         enctype="multipart/form-data"
       >
         <div class="">
           <div
-            class="border-2 border-dashed border-gray-300 bg-[#DDDDDD33] p-4 w-full h-40 flex items-center justify-center relative"
+            class="border-2 border-dashed border-gray-300 bg-[#DDDDDD33] p-4 w-full flex items-center justify-center relative"
           >
             <input
               type="file"
@@ -37,7 +37,7 @@
                 <img
                   :src="currentImage"
                   alt="Vehicle Preview"
-                  class="h-full max-h-full object-contain"
+                  class="h-full max-h-full w-full object-cover"
                 />
               </template>
               <template v-else>
@@ -76,6 +76,9 @@
           </h2>
 
           <div class="mb-4">
+            <label for="name" class="text-xs font-semibold text-gray-400"
+              >Nombre del vehículo</label
+            >
             <input
               v-model="currentVehicle.name"
               id="name"
@@ -85,6 +88,9 @@
             />
           </div>
           <div class="mb-4">
+            <label for="description" class="text-xs font-semibold text-gray-400"
+              >Descripción del vehículo</label
+            >
             <textarea
               v-model="currentVehicle.description"
               id="description"
@@ -93,13 +99,19 @@
             ></textarea>
           </div>
           <div class="mb-4">
-            <input
-              v-model="currentVehicle.price"
-              id="price"
-              type="number"
-              placeholder="Precio por día"
-              class="mt-1 block w-[200px] border text-xs border-gray-300 rounded-md p-2"
-            />
+            <label for="precio" class="text-xs font-semibold text-gray-400"
+              >Precio del vehículo</label
+            >
+            <div class="flex items-center">
+              <input
+                v-model="currentVehicle.price"
+                id="price"
+                type="number"
+                placeholder="Precio por día"
+                class="mt-1 block w-[200px] border text-xs  border-gray-300 rounded-md p-2"
+              />
+              <span class="text-xs  ml-2 text-orange-400 italic text-[10px]">Precio por día</span>
+            </div>
           </div>
           <div class="mb-4">
             <h2 class="text-lg font-bold mb-4">Seleccionar característica</h2>
@@ -110,12 +122,14 @@
                   <select
                     class="appearance-none pl-10 pr-6 py-2 border text-xs rounded-full text-gray-700 bg-white hover:bg-gray-100 focus:outline-none"
                     v-model="currentVehicle.luggage"
+                    
                     name="luggage"
                   >
-                    <option disabled>Equipaje</option>
-                    <option value="2">2</option>
-                    <option value="4">4</option>
-                    <option value="8">8</option>
+                  <option selected>{{currentVehicle.luggage}}</option>
+
+                    <option value="2">2 Maletas</option>
+                    <option value="4">4 Maletas</option>
+                    <option value="8">8 Maletas</option>
                   </select>
                 </div>
 
@@ -125,7 +139,7 @@
                     v-model="currentVehicle.people"
                     name="people"
                   >
-                    <option disabled>Capacidad</option>
+                    <option selected>{{ currentVehicle.people }}</option>
                     <option value="2">2 Personas</option>
                     <option value="4">4 Personas</option>
                     <option value="6">6 Personas</option>
@@ -141,7 +155,7 @@
                     v-model="currentVehicle.type_of_car"
                     name="type_of_car"
                   >
-                    <option disabled>Tipo</option>
+                    <option selected>{{ currentVehicle.type_of_car }}</option>
                     <option value="sedan">Sedan</option>
                     <option value="suv">SUV</option>
                     <option value="camioneta">Camioneta</option>
@@ -154,7 +168,7 @@
                     v-model="currentVehicle.transmision"
                     name="transmision"
                   >
-                    <option disabled>Transmisión</option>
+                    <option selected>{{ currentVehicle.transmision }}</option>
                     <option value="automatica">automática</option>
                     <option value="cvt">CVT</option>
                     <option value="secuencial">secuencial</option>
@@ -342,9 +356,7 @@ export default {
       const vehicleId = localStorage.getItem("vehicleToEdit");
 
       try {
-        const response = await Axios.get(
-          `/vehicles/${landingId}/${vehicleId}`
-        );
+        const response = await Axios.get(`/vehicles/${landingId}/${vehicleId}`);
         console.log(response.data);
         this.vehicleImages = response.data.vehicle.images.map(
           (image) => `/storage/${image.path_images}`
@@ -358,73 +370,74 @@ export default {
       }
     },
     async updateVehicle() {
-  const landingId = this.$route.params.id;
-  const vehicleId = localStorage.getItem("vehicleToEdit");
+      const landingId = this.$route.params.id;
+      const vehicleId = localStorage.getItem("vehicleToEdit");
 
-  try {
-    console.log(
-      "Datos del vehículo antes de la actualización:",
-      this.currentVehicle
-    );
+      try {
+        console.log(
+          "Datos del vehículo antes de la actualización:",
+          this.currentVehicle
+        );
 
-    // Actualizar datos generales del vehículo
-    const response = await Axios.put(
-      `/vehicles/${landingId}/${vehicleId}`,
-      this.currentVehicle
-    );
-    console.log(
-      "Respuesta del servidor al actualizar el vehículo:",
-      response.data
-    );
+        // Actualizar datos generales del vehículo
+        const response = await Axios.put(
+          `/vehicles/${landingId}/${vehicleId}`,
+          this.currentVehicle
+        );
+        console.log(
+          "Respuesta del servidor al actualizar el vehículo:",
+          response.data
+        );
 
-    // Actualizar características especiales
-    if (this.selectedFeatures && this.selectedFeatures.length > 0) {
-      // Iterar sobre cada característica seleccionada
-      for (const featureId of this.selectedFeatures) {
-        // Buscar el nombre de la característica
-        const feature = this.specialFeatures.find((f) => f.id === featureId);
+        // Actualizar características especiales
+        if (this.selectedFeatures && this.selectedFeatures.length > 0) {
+          // Iterar sobre cada característica seleccionada
+          for (const featureId of this.selectedFeatures) {
+            // Buscar el nombre de la característica
+            const feature = this.specialFeatures.find(
+              (f) => f.id === featureId
+            );
 
-        if (feature) {
-          try {
-            const featureResponse = await Axios.post(
-              `/vehicles/${vehicleId}/special-features`,
-              {
-                special_feature_id: feature.id,
-                name: feature.name, // Backend lo requiere
+            if (feature) {
+              try {
+                const featureResponse = await Axios.post(
+                  `/vehicles/${vehicleId}/special-features`,
+                  {
+                    special_feature_id: feature.id,
+                    name: feature.name, // Backend lo requiere
+                  }
+                );
+                console.log(
+                  `Característica especial asignada: ${feature.name}`,
+                  featureResponse.data
+                );
+              } catch (featureError) {
+                console.error(
+                  `Error al asignar la característica especial (${feature.name}):`,
+                  featureError.response || featureError
+                );
               }
-            );
-            console.log(
-              `Característica especial asignada: ${feature.name}`,
-              featureResponse.data
-            );
-          } catch (featureError) {
-            console.error(
-              `Error al asignar la característica especial (${feature.name}):`,
-              featureError.response || featureError
-            );
+            }
           }
+        } else {
+          console.log("No se seleccionaron características para actualizar.");
         }
+
+        // Mostrar mensaje de éxito
+        this.showToast = true;
+        setTimeout(() => {
+          this.showToast = false;
+        }, 3000);
+      } catch (error) {
+        // Manejo de errores
+        console.error(
+          "Error actualizando el vehículo:",
+          error.response || error
+        );
+        this.errorMessage = "Hubo un error al enviar los datos del vehículo.";
+        this.showErrorModal = true;
       }
-    } else {
-      console.log("No se seleccionaron características para actualizar.");
-    }
-
-    // Mostrar mensaje de éxito
-    this.showToast = true;
-    setTimeout(() => {
-      this.showToast = false;
-    }, 3000);
-  } catch (error) {
-    // Manejo de errores
-    console.error(
-      "Error actualizando el vehículo:",
-      error.response || error
-    );
-    this.errorMessage = "Hubo un error al enviar los datos del vehículo.";
-    this.showErrorModal = true;
-  }
-},
-
+    },
 
     handleImageUpload(event) {
       const files = event.target.files;

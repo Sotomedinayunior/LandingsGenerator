@@ -68,7 +68,8 @@
           </div>
           <a href="#" 
             @click.prevent="Guardar" 
-            class="inline-block px-6 py-3 bg-blue-600 text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
+            :style="{ backgroundColor: hover ? landing.color_secondary : landing.color_primary }"
+            class="inline-block px-6 py-3  text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
           >
             {{ $t('select') }}
           </a>
@@ -188,7 +189,7 @@ export default {
         this.formVehicles.image_path = null; // En caso de que no haya imagen disponible
       }
       localStorage.setItem("formVehicles", JSON.stringify(this.formVehicles));
-      this.$router.push({ name:"vehicle-additions" });
+      this.$router.push({ name:"vehicle-review" });
     },
 
     updateMetaTags() {
