@@ -3,7 +3,7 @@
   class="fixed top-0 left-0 w-full z-50 bg-white shadow-md p-3"
 >
   <div class="container max-w-screen-lg mx-auto">
-    <div class="flex justify-between items-center">
+    <div class="flex justify-center items-center">
       <!-- Logo -->
       <div class="flex">
         <img
@@ -19,36 +19,7 @@
       </div>
 
       <!-- Menú de navegación (oculto en pantallas pequeñas) -->
-      <nav
-        :class="isMenuOpen ? 'block' : 'hidden'"
-        class="absolute top-full left-0 w-full bg-white md:relative md:block md:w-auto md:bg-transparent"
-      >
-        <ul
-          class="flex flex-col items-center md:flex-row md:space-x-4 font-bold text-xs"
-        >
-          <li>
-            <a
-              href="#"
-              class="p-2 hover:underline transition duration-600 ease-in-out"
-              >{{ $t("overview") }}</a
-            >
-          </li>
-          <li>
-            <a
-              href="#vehicle"
-              class="p-2 hover:underline transition duration-600 ease-in-out"
-              >{{ $t("vehicle") }}</a
-            >
-          </li>
-          <li>
-            <a
-              href="#about"
-              class="p-2 hover:underline transition duration-600 ease-in-out"
-              >{{ $t("about_us") }}</a
-            >
-          </li>
-        </ul>
-      </nav>
+    
     </div>
   </div>
 </header>
