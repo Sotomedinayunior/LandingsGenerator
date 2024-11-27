@@ -94,6 +94,7 @@ class ReservationController extends Controller
         $validatedData = $request->validate([
             'name' => 'string|max:255',
             'last_name' => 'string|max:255',
+            'phone' => 'string|max:255',
             'email' => 'string|email|max:255|unique:reservations,email,' . $id,
             'description' => 'nullable|string',
             'id_vehicle' => 'exists:vehicles,id',
@@ -104,6 +105,7 @@ class ReservationController extends Controller
             'time_of_departure' => 'date_format',
             'date_of_arrival' => 'date',
             'time_of_arrival' => 'date_format',
+
             'id_landing' => 'exists:landings,id',
         ]);
 
