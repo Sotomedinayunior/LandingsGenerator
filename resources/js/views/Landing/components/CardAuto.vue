@@ -1,83 +1,43 @@
 <template>
-  <div class="card-auto" :style="{ borderColor: colorPrimary }">
+  <div class="max-w-sm">
+    <h2 class="capitalize font-bold">{{ vehicle.name }}</h2>
+
+    <div class="w-full my-3 flex justify-between">
+      <div class="flex gap-1">
+        <div
+          class="flex justify-between items-center rounded-full bg-slate-100 p-1"
+        >
+          <div>
+            <img src="../asset/User.png" alt="usuario" width="19" height="18" />
+          </div>
+          <span class="text-xs px-1">{{ vehicle.people }}</span>
+        </div>
+        <div
+          class="flex justify-between items-center rounded-full bg-slate-100 p-1"
+        >
+          <div>
+            <img src="../asset/bag.png" alt="usuario" width="19" height="18" />
+          </div>
+          <span class="text-xs px-1">{{ vehicle.luggage }}</span>
+        </div>
+      </div>
+      <div class="flex">
+        <h2 class="text-xs font-bold" :style="{ color: colorPrimary }">
+          US${{ vehicle.price }}
+        </h2>
+        <span class="text-xs text-gray-400 ml-1">/day</span>
+      </div>
+    </div>
     <img
       :src="url + '/' + vehicle.images[0].path_images"
       :alt="vehicle.name"
       loading="lazy"
       :title="vehicle.name"
-      class="vehicle-image"
+      width="200"
+      height="150"
+      class="w-full h-50 object-cover cursor-pointer aspect-[20/9] rounded-lg transform transition-transform duration-300 hover:scale-105"
+      @click="Redirect"
     />
-    <div class="card-header" :style="{ backgroundColor: colorPrimary }">
-      <h3 class="vehicle-name">{{ vehicle.name }}</h3>
-      <p class="vehicle-type">{{ vehicle.type }}</p>
-    </div>
-    <div class="flex justify-between w-full items-center">
-      
-      <div class="py-3 px-2">
-        <i
-          v-for="(star, index) in 5"
-          :key="index"
-          :class="getStarClass(index)"
-          class="fa"
-          :style="{ color: colorPrimary }"
-          title="Rating"
-        ></i>
-      </div>
-      <div class="text-xs py-3 px-2">
-        <span class="font-bold mx-1" :style="{ color: colorPrimary }">
-          {{ $t("price_per_day") }}
-        </span>
-
-        $ {{ vehicle.price }}
-      </div>
-    </div>
-    <div class="py-3 px-2">
-      <p class="text-xs text-justify">{{ vehicle.description }}</p>
-    </div>
-    <div class="py-3 px-2">
-      <h2 class="text-left font-bold text-sm" :style="{ color: colorPrimary }">
-        {{ $t("special_features") }}
-      </h2>
-
-      <div class="flex space-x-5 my-3">
-        <span class="px-3 py-1 bg-gray-200 rounded-lg text-xs">{{
-          vehicle.transmision
-        }}</span>
-        <span class="px-3 py-1 bg-gray-200 rounded-lg text-xs">{{
-          vehicle.type_of_car
-        }}</span>
-        <span class="px-3 py-1 bg-gray-200 rounded-lg text-xs"
-          >{{ $t('people')}} {{ vehicle.people }}</span
-        >
-        <span class="px-3 py-1 bg-gray-200 rounded-lg text-xs"
-          >{{ $t('suitcase') }} {{ vehicle.people }}</span
-        >
-      </div>
-      <div class="flex space-x-2 my-3">
-        <span
-          v-for="(item, index) in feature"
-          :key="index"
-          class="px-3 py-1 bg-gray-200 rounded-lg text-xs"
-        >
-          {{ item.name }}
-        </span>
-      </div>
-    </div>
-
-    <!-- Indicación visual de que el filtro está activo -->
-    <div v-if="isFiltered" class="filter-active">
-      Este vehículo cumple con el filtro
-    </div>
-
-    <a
-  :href="`vehicles/${vehicle.id}`"
-  class="btn-select"
-  :style="{ backgroundColor: colorPrimary }"
-  :class="{ 'hover-effect': true }"
->
-  {{ $t('select') }}
-</a>
-
   </div>
 </template>
 
@@ -107,6 +67,7 @@ export default {
       api: import.meta.env.VITE_API_URL,
     };
   },
+
   created() {
     // Generar un valor aleatorio de calificación al crear el componente
     this.randomRating = this.getRandomRating();
@@ -123,10 +84,11 @@ export default {
   methods: {
     getFeatures() {
       // Obtiene las características del vehículo
+      const vehicleId = this.vehicle.id;
       axios
-        .get(`${this.api}/special-features-public`)
+        .get(`${this.api}/vehicle/${vehicleId}/special-features-public`)
         .then((response) => {
-          this.feature = response.data;
+          this.feature = response.data.specialFeatures;
           console.log(this.feature);
         })
         .catch((error) => {
@@ -148,6 +110,14 @@ export default {
         return "fa-star text-gray-300"; // Estrella vacía o gris
       }
     },
+    Redirect() {
+      console.log(this.vehicle.id);
+      console.log("tesssst");
+      this.$router.push({
+        name: "vehicle-pages",
+        params: { idvehicle: this.vehicle.id },
+      });
+    },
   },
 };
 </script>
@@ -167,23 +137,22 @@ export default {
 }
 
 .card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
   padding: 5px;
   color: #fff;
 }
 
 .vehicle-name {
   font-size: 1.2em;
+  text-transform: capitalize;
   font-weight: bold;
+  padding: 0 0 0 4px;
 }
 
 .vehicle-type {
   font-size: 0.9em;
-}
-
-.vehicle-image {
-  width: 100%;
-  height: 300px;
-  aspect-ratio: 16/9;
 }
 
 .card-details {

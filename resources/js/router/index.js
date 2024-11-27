@@ -6,6 +6,7 @@ import ConfigUser from '../views/ConfigUser.vue';
 import FeatureView from '../views/FeatureView.vue';
 import FormUpdateVehicles from '../components/FormUpdateVehicles.vue';
 import FormVehiclesCreate from '../components/FormVehiclesCreate.vue';
+import FAQ from '../views/Landing/Faq.vue';
 import HomeLanding from '../views/Landing/HomeLanding.vue';
 import Help from '../views/Help.vue';
 import HistoryLanding from '../views/HistoryLanding.vue';
@@ -108,6 +109,7 @@ const routes = [
         component:LogoColorsTab,
         meta:{title:'landing - Nelly App' , requiresAuth:true},
       },
+      
       {
         path:'add-vehicles',
         name:'add-vehicles',
@@ -175,6 +177,13 @@ const routes = [
         path:'vehicles/:idvehicle',
         name: 'vehicle-pages',
         component:VehicleDetail,
+      },
+      {
+        path:'FAQ',
+        name:'fqa',
+        component:FAQ,
+        
+
       },
       {
         path:'additions',

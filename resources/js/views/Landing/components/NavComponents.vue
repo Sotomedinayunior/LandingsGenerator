@@ -1,76 +1,62 @@
 <template>
-    <header class=" flex justify-between p-3 items-center border-b border-gray-200  bg-white shadow-md">
-      <!-- Logo -->
+  <header
+    class="flex justify-between p-3 items-center border-b border-gray-200 bg-white shadow-md"
+  >
+    <!-- Logo -->
+    <div class="container max-w-[1150px] mx-auto">
       <img
         :src="logo"
         :alt="logoTitle"
         :title="logoTitle"
         width="230"
         height="200"
-        class="w-auto h-20  cursor-pointer mr-7 object-cover aspect-auto"
+        class="w-auto h-20 cursor-pointer mr-7 object-cover aspect-auto"
         @click="goToHome"
-
       />
-      
-      <!-- Selector de idioma -->
-      <!-- <div class="relative inline-block text-left">
-        <select
-          v-model="currentLanguage"
-          @change="$emit('language-change', $event.target.value)"
-          :style="{
-            'background-color': colorPrimary,
-            color: colorSecondary,
-          }"
-          class="block w-full px-4 py-2 text-sm font-medium border rounded-md shadow-sm focus:outline-none focus:ring-2 transition duration-300 ease-in-out"
-        >
-          <option value="en">EN</option>
-          <option value="es">ES</option>
-        </select>
-      </div> -->
-    </header>
-  </template>
-  
-  <script>
-  export default {
-    props: {
-      logo: {
-        type: String,
-        required: true,
-      },
-      logoTitle: {
-        type: String,
-        required: true,
-      },
-      colorPrimary: {
-        type: String,
-        default: '#ffffff',
-      },
-      colorSecondary: {
-        type: String,
-        default: '#000000',
-      },
-      defaultLanguage: {
-        type: String,
-        default: 'en',
-      },
+    </div>
+  </header>
+</template>
+
+<script>
+export default {
+  props: {
+    logo: {
+      type: String,
+      required: true,
     },
-    data() {
-      return {
-        currentLanguage: this.defaultLanguage, // idioma predeterminado
-      };
+    logoTitle: {
+      type: String,
+      required: true,
     },
-    methods: {
-      changeLanguage(language) {
-        this.$emit('language-change', language); // Emite un evento cuando cambia el idioma
-      },
-      goToHome() {
+    colorPrimary: {
+      type: String,
+      default: "#ffffff",
+    },
+    colorSecondary: {
+      type: String,
+      default: "#000000",
+    },
+    defaultLanguage: {
+      type: String,
+      default: "en",
+    },
+  },
+  data() {
+    return {
+      currentLanguage: this.defaultLanguage, // idioma predeterminado
+    };
+  },
+  methods: {
+    changeLanguage(language) {
+      this.$emit("language-change", language); // Emite un evento cuando cambia el idioma
+    },
+    goToHome() {
       this.$router.push({ name: "home-landing" });
     },
-    },
-  };
-  </script>
-  
-  <style scoped>
-  /* Puedes agregar estilos personalizados aquí */
-  </style>
-  
+  },
+};
+</script>
+
+<style scoped>
+/* Puedes agregar estilos personalizados aquí */
+</style>

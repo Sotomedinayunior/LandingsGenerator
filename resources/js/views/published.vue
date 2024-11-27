@@ -53,15 +53,13 @@ export default {
     return {
       landing: {}, // Inicializa como objeto vacío
       showNotification: false, // Controla la visibilidad de la notificación
+      url:import.meta.env.VITE_API_BASE_URL,
     };
   },
   computed: {
     productionURL() {
-      return `https://generator.nellyrac.do/${this.landing.name}`;
-    },
-    developmentURL() {
-      return `http://localhost:8000/${this.landing.name}`;
-    },
+      return `${this.url}${this.landing.name}`;
+    }
   },
   mounted() {
     this.CargaData();

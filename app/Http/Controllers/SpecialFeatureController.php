@@ -70,6 +70,26 @@ class SpecialFeatureController extends Controller
             ], 500);
         }
     }
+    // Método para obtener las características especiales de un vehículo específico
+    public function getFeaturesByVehicle($vehicleId)
+    {
+        try {
+            // Encuentra el vehículo por su ID
+            $vehicle = Vehicle::with('specialFeatures')->findOrFail($vehicleId);
+
+            // Retorna las características relacionadas
+            return response()->json([
+                'message' => 'Características especiales obtenidas exitosamente.',
+                'data' => $vehicle->specialFeatures
+            ], 200);
+        } catch (\Exception $e) {
+            return response()->json([
+                'message' => 'Error al obtener las características especiales del vehículo.',
+                'error' => $e->getMessage()
+            ], 500);
+        }
+    }
+
 
 
 

@@ -10,7 +10,7 @@
        
       />
 
-      <section class="slider fade-in">
+      <section class="slider fade-in ">
         <div class="d-flex justify-center items-center flex-col">
           <h1 class="text-center text-6xl bold text-white text-wrap mb-8">
             {{ $t("Rent") }}
@@ -20,7 +20,7 @@
           >
             {{ $t("Find") }}
           </p>
-          <div class="pickup">
+          <div class="pickup ">
             <form @submit="SubmitForm">
               <div class="flex flex-row justify-between">
                 <div class="flex-col">
@@ -139,7 +139,7 @@
         </div>
       </section>
       <section
-        class="container max-w-screen-lg mx-auto py-5 my-7 fade-in"
+        class="container max-w-screen-lg mx-auto py-12 my-7 fade-in"
         id="vehicle"
       >
         <h2 class="text-4xl font-bold text-slate-950 text-left">
@@ -147,7 +147,7 @@
         </h2>
 
         <!-- Validar si hay vehículos disponibles -->
-        <div v-if="vehicles.length > 0" class="grid grid-cols-3 gap-x-20  mt-5">
+        <div v-if="vehicles.length > 0" class="grid grid-cols-3 gap-x-20  my-6">
           <CardVehicle
             v-for="vehicle in vehicles.slice(0, 3)"
             :key="vehicle.id"
@@ -164,12 +164,12 @@
       </section>
 
       <section
-        class="container max-w-screen-lg mx-auto py-5 my-7 grid grid-cols-2 gap-6 fade-in"
+        class="container max-w-screen-lg mx-auto py-12 my-7 grid grid-cols-2 gap-6 fade-in"
         id="about"
       >
         <div class="vehicle"></div>
         <div class="flex flex-col justify-center">
-          <h2 class="text-2xl font-bold text-slate-950 text-left mb-7">
+          <h2 class="text-3xl font-bold text-slate-950 text-left mb-7">
            {{ $t("how_it_works") }}
           </h2>
           <ul class="space-y-4">
@@ -179,8 +179,8 @@
                 >1</span
               >
               <div>
-                <h3 class="font-semibold text-slate-950">{{ $t("select_vehicle") }}</h3>
-                <p class="text-slate-600">
+                <h2 class="font-semibold text-slate-950 text-xl">{{ $t("select_vehicle") }}</h2>
+                <p class="text-slate-600 text-sm">
                  {{ $t("browser") }}
                 </p>
               </div>
@@ -191,8 +191,8 @@
                 >2</span
               >
               <div>
-                <h3 class="font-semibold text-slate-950">{{ $t("book_you_ride") }}</h3>
-                <p class="text-slate-600">
+                <h2 class="font-semibold text-slate-950 text-xl">{{ $t("book_you_ride") }}</h2>
+                <p class="text-slate-600 text-sm">
                   {{ $t('book_you') }}
                   
                 </p>
@@ -204,8 +204,8 @@
                 >3</span
               >
               <div>
-                <h3 class="font-semibold text-slate-950">{{ $t('enjoy') }}</h3>
-                <p class="text-slate-600">
+                <h2 class="font-semibold text-slate-950 text-xl">{{ $t('enjoy') }}</h2>
+                <p class="text-slate-600 text-sm">
                   {{ $t('enjoy_text') }}
                 </p>
               </div>
@@ -431,8 +431,8 @@ export default {
   background-size: cover;
   background-position: center;
   margin-top: 40px;
-  padding:40px 0px 0px 0px;
-  min-height: 400px;
+  padding:80px 0px 40px 0px;
+  min-height: 500px;
 }
 .vehicle {
   background-image: url("./asset/vehicle.png");

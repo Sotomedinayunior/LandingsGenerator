@@ -13,26 +13,26 @@
         <TabsComponents />
       </section>
       <section class="wrapper-content">
-        <aside class="p-10 flex flex-col space-y-6 bg-gray-50 shadow-lg">
+        <aside class="flex flex-col space-y-6 p-12 bg-gray-50 shadow-lg">
           <!-- busqueda rapida  -->
           <div class="flex flex-col space-y-2">
-            <h2 class="text-lg font-semibold text-gray-700">
+            <h2 class="text-base	 font-semibold text-gray-700">
               {{ $t("quick_search") }}
             </h2>
             <input
               type="text"
               :placeholder="$t('search_placeholder')"
               v-model="quickSearch"
-              class="p-2 w-full border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors ease-in-out"
+              class="p-2 w-full border text-xs text-gray-700 border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 transition-colors ease-in-out"
             />
           </div>
           <!-- Capacidad -->
           <div class="flex flex-col space-y-2">
-            <h2 class="text-lg font-semibold text-gray-700">
+            <h2 class="text-base	 font-semibold text-gray-700">
               {{ $t("capacity") }}
             </h2>
             <select
-              class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              class="p-2 border border-gray-300 rounded-md text-xs focus:outline-none focus:ring-2 focus:ring-indigo-500"
               @change="filters.capacity = $event.target.value"
             >
               <option value="">{{ $t("all") }}</option>
@@ -50,7 +50,7 @@
               {{ $t("vehicle_type") }}
             </h2>
             <select
-              class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              class="p-2 border border-gray-300 text-xs rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               @change="filters.type_of_car = $event.target.value"
             >
               <option value="">{{ $t("all") }}</option>
@@ -62,11 +62,11 @@
 
           <!-- Equipaje -->
           <div class="flex flex-col space-y-2">
-            <h2 class="text-lg font-semibold text-gray-700">
+            <h2 class="text-sm font-semibold text-gray-700">
               {{ $t("luggage") }}
             </h2>
             <select
-              class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              class="p-2 border text-xs border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               @change="filters.luggage = $event.target.value"
             >
               <option value="">{{ $t("any_capacity") }}</option>
@@ -93,9 +93,9 @@
 
           <!-- Transmisión -->
           <div class="flex flex-col space-y-2">
-            <h2 class="text-lg font-semibold text-gray-700">Transmisión</h2>
+            <h2 class="text-sm font-semibold text-gray-700">Transmisión</h2>
             <select
-              class="p-2 border border-gray-300 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
+              class="p-2 border border-gray-300 text-xs rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500"
               @change="filters.transmision = $event.target.value"
             >
               <option value="">{{ $t("transmission_any") }}</option>
@@ -147,7 +147,7 @@
 
           <!-- Botón de Restablecer Filtros -->
           <button
-            class="mt-4 w-full py-2 text-white rounded-md transition-colors font-semibold"
+            class="mt-4 w-full py-2 text-sm text-white rounded-md transition-colors font-semibold"
             @click="resetFilters"
             :style="{ backgroundColor: color1 }"
           >
@@ -384,14 +384,16 @@ export default {
 <style scoped>
 .wrapper-content {
   display: grid;
-  grid-template-columns: 1fr 3fr;
-  margin: 0px 0px 0px 0px;
+  grid-template-columns:25% 75%;
+  row-gap: 1rem;
+  
 }
 .wrapper-cards {
   display: grid;
-  grid-template-columns: auto auto;
-  margin: 20px 0px 0px 0px;
-  padding-bottom: 20px;
+  grid-template-columns: auto auto auto;
+  padding: 1rem;
+ 
+  gap: 1rem;
 }
 @media screen and (max-width: 576px) {
   .wrapper-cards {

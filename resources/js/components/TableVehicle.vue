@@ -194,8 +194,5 @@ export default {
   height: 40px;
 }
 
-.vehiculo-nombre {
-  display: flex;
-  align-items: center;
-}
+
 </style>

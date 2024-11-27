@@ -1,5 +1,5 @@
 <template>
-  <div class="p-4 max-w-sm bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
+  <div class=" max-w-sm bg-white shadow-md rounded-lg overflow-hidden hover:shadow-xl transition-shadow duration-300">
     <!-- Imagen del vehículo -->
     <img
       :src="imageSrc"
@@ -14,7 +14,7 @@
       <h3 class="text-lg font-semibold text-gray-900">{{ vehicle.name }}</h3>
 
       <!-- Descripción corta -->
-      <p class="text-gray-600 mt-2">
+      <p class="text-gray-600 mt-2 text-xs">
         {{
           vehicle.description.length > 100
             ? vehicle.description.slice(0, 100) + "..."
@@ -24,7 +24,7 @@
 
       <!-- Precio del vehículo -->
       <div class="mt-4 flex justify-between items-center">
-        <span :style="{ color: primaryColor }" class="text-xl font-bold">${{ vehicle.price }}</span>
+        <span :style="{ color: primaryColor }" class="text-sm font-bold">${{ vehicle.price }}</span>
         <button
           :style="{ backgroundColor: hover ? secondaryColor : primaryColor }"
           class="px-3 py-2 text-white text-xs font-bold uppercase rounded transition-colors duration-200"
@@ -32,8 +32,8 @@
           @mouseleave="hover = false"
           @click="Redirect" 
         >
-          Reservar
-        </button>
+        {{ $t("reserve") }}
+      </button>
          <!-- Tooltip -->
          <div 
             v-if="showTooltip" 

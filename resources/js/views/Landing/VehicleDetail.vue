@@ -1,22 +1,34 @@
 <template>
-  <div :style="{ '--primary-color': landing.color_primary }">
+  <div :style="{ '--primary-color': landing.color_secondary }">
     <NavComponents
       :logo="logoLanding"
       :logoTitle="LogoTitle"
       :colorPrimary="color1"
       :colorSecondary="color2"
-      :defaultLanguage="currentLang"
-      @language-change="onLanguageChange"
     />
     <TabsComponents />
-    <section class="wrapper">
+    <button
+      class="py-2 px-12 mx-[4rem] mt-3 font-semibold rounded-lg w-92 text-center"
+      :style="{
+        border: `1px solid ${landing.color_primary}`,
+        color: landing.color_primary,
+      }"
+      @click.prevent="goBack"
+    >
+      {{ $t("back") }}
+    </button>
+    <section class="container max-w-[1150px] grid grid-cols-2 gap-10 mx-auto">
       <!-- Carrusel de imágenes -->
-      <div v-if="vehicle.images && vehicle.images.length > 1" class="carousel-container">
+
+      <div
+        v-if="vehicle.images && vehicle.images.length > 1"
+        class="carousel-container"
+      >
         <button @click="prevImage" class="carousel-btn prev-btn"><</button>
         <img
           :src="url + '/' + vehicle.images[activeIndex].path_images"
           :alt="vehicle.name"
-          class="carousel-image"
+          class="carousel-image "
           :title="vehicle.name"
           width="400"
           height="400"
@@ -24,28 +36,36 @@
         <button @click="nextImage" class="carousel-btn next-btn">></button>
       </div>
       <!-- Si solo hay una imagen, mostrarla normalmente -->
-      <img v-else
+      <img
+        v-else
         v-if="vehicle.images && vehicle.images.length > 0"
         :src="url + '/' + vehicle.images[0].path_images"
         :alt="vehicle.name"
-        class="w-full h-85"
+        class="w-full h-29 rounded-lg"
         :title="vehicle.name"
-        width="400"
-        height="400"
+        width="300"
+        height="300"
       />
 
       <div>
-        <h2 class="text-gray-700 text-3xl font-bold py-1">
+        <h2 class="text-gray-900 text-2xl capitalize font-bold py-1">
           {{ vehicle.name }}
         </h2>
-        <h2 class="text-gray-700 text-sm py-1">
-          <span class="text-xs mx-2">{{ $t('price_per_day') }}</span> ${{ vehicle.price }} 
-        </h2>
-        <p class="text-gray-500 text-lg py-1">{{ vehicle.description }}</p>
-        <div class="py-8">
+        <div class="flex items-center">
+          <span class="text-gray-900 text-base font-bold"
+            >US${{ vehicle.price }}
+          </span>
+
+          <span class="text-xs text-gray-400">
+            / {{ $t("price_per_day") }}</span
+          >
+        </div>
+        <p class="text-gray-500 text-xs py-1">{{ vehicle.description }}</p>
+        <div class="py-2">
           <h2 class="text-left font-bold" :style="{ color: colorPrimary }">
-            {{ $t('special_features') }}
+            {{ $t("features") }}
           </h2>
+
           <div class="flex space-x-2 my-3">
             <span class="px-3 py-1 bg-gray-200 rounded-lg text-xs">{{
               vehicle.transmision
@@ -54,10 +74,21 @@
               vehicle.type_of_car
             }}</span>
             <span class="px-3 py-1 bg-gray-200 rounded-lg text-xs"
-              >{{$t('people')}} {{ vehicle.luggage }}</span
+              >{{ $t("people") }} {{ vehicle.luggage }}</span
             >
           </div>
-          <div class="flex space-x-2 my-3">
+        </div>
+        <div class="py-3">
+          <h2 class="text-left font-bold" :style="{ color: colorPrimary }">
+            {{ $t("special_features") }}
+          </h2>
+          <div v-if="feature < 1">
+            <h2 class="text-xs text-left py-3 text-gray-700">
+              {{ $t("noFeatures") }}
+            </h2>
+          </div>
+
+          <div v-else class="flex space-x-2 my-3">
             <span
               v-for="(item, index) in feature"
               :key="index"
@@ -66,13 +97,20 @@
               {{ item.name }}
             </span>
           </div>
-          <a href="#" 
-            @click.prevent="Guardar" 
-            :style="{ backgroundColor: hover ? landing.color_secondary : landing.color_primary }"
-            class="inline-block px-6 py-3  text-white font-semibold rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
-          >
-            {{ $t('select') }}
-          </a>
+          <div class="flex justify-end">
+            <a
+              href="#"
+              @click.prevent="Guardar"
+              :style="{
+                backgroundColor: hover
+                  ? landing.color_secondary
+                  : landing.color_primary,
+              }"
+              class="inline-block px-12 w-60 py-4 text-white text-center text-xs rounded-lg shadow-md hover:bg-blue-700 transition duration-300"
+            >
+              {{ $t("select") }}
+            </a>
+          </div>
         </div>
       </div>
     </section>
@@ -124,18 +162,30 @@ export default {
   methods: {
     prevImage() {
       // Lógica para mostrar la imagen anterior
-      this.activeIndex = this.activeIndex === 0 ? this.vehicle.images.length - 1 : this.activeIndex - 1;
+      this.activeIndex =
+        this.activeIndex === 0
+          ? this.vehicle.images.length - 1
+          : this.activeIndex - 1;
+    },
+    goBack(event) {
+      event.preventDefault();
+      this.$router.back(-1);
     },
     nextImage() {
       // Lógica para mostrar la siguiente imagen
-      this.activeIndex = this.activeIndex === this.vehicle.images.length - 1 ? 0 : this.activeIndex + 1;
+      this.activeIndex =
+        this.activeIndex === this.vehicle.images.length - 1
+          ? 0
+          : this.activeIndex + 1;
     },
     getFeatures() {
+      const vehicleId = this.$route.params.id;
       // Obtiene las características del vehículo
       axios
-        .get(`${this.api}/special-features-public`)
+        .get(`${this.api}/vehicle/${vehicleId}/special-features-public`)
         .then((response) => {
           this.feature = response.data;
+          console.log(this.feature);
         })
         .catch((error) => {
           console.error(error);
@@ -177,6 +227,7 @@ export default {
     },
 
     changeLanguage(language) {
+      this.$i18n.locale = language;
       this.currentLanguage = language;
     },
     Guardar() {
@@ -184,18 +235,21 @@ export default {
       this.formVehicles.id_vehicle = this.$route.params.idvehicle; // ID del vehículo
       this.formVehicles.title = this.vehicle.name; // Título del vehículo
       if (this.vehicle.images && this.vehicle.images.length > 0) {
-        this.formVehicles.image_path = this.url + "/" + this.vehicle.images[0].path_images;
+        this.formVehicles.image_path =
+          this.url + "/" + this.vehicle.images[0].path_images;
       } else {
         this.formVehicles.image_path = null; // En caso de que no haya imagen disponible
       }
       localStorage.setItem("formVehicles", JSON.stringify(this.formVehicles));
-      this.$router.push({ name:"vehicle-review" });
+      this.$router.push({ name: "vehicle-review" });
     },
 
     updateMetaTags() {
       const metaData = this.metaInfo();
       document.title = metaData.title;
-      const existingMetaTags = document.querySelectorAll("meta[name], meta[property]");
+      const existingMetaTags = document.querySelectorAll(
+        "meta[name], meta[property]"
+      );
       existingMetaTags.forEach((tag) => tag.parentNode.removeChild(tag));
       metaData.meta.forEach((metaTag) => {
         const meta = document.createElement("meta");
@@ -217,6 +271,9 @@ export default {
           this.color1 = response.data.landing.color_primary;
           this.color2 = response.data.landing.color_secondary;
           this.vehicles = response.data.landing.vehicles;
+          const landingLanguage = this.landing.default_language; // Aquí puedes cambiar 'es' por el idioma que quieras como predeterminado
+
+          this.changeLanguage(landingLanguage);
         })
         .catch((err) => {
           if (err.response && err.response.status === 404) {
@@ -249,13 +306,19 @@ export default {
 </script>
 
 <style scoped>
+::selection{
+  background-color: var(--primary-color);
+  color: white;
+}
 .wrapper {
-  padding: 10px;
+  max-width: 1030px;
+  padding: 0px 0px 0px 0px;
   display: grid;
   gap: 50px;
-  justify-content: space-around;
+  justify-content: center;
+
   grid-auto-flow: column;
-  grid-template-columns: auto auto;
+  grid-template-columns: 53% auto;
 }
 
 /* Carrusel */
@@ -270,6 +333,7 @@ export default {
   aspect-ratio: 16/9;
   width: 100%;
   height: auto;
+  border-radius: 8px;
   object-fit: cover;
 }
 

@@ -1,5 +1,5 @@
 <template>
-  <div class="grid grid-cols-2 gap-2">
+  <div class="grid grid-cols-2 gap-20 p-4">
     <div class="grid grid-cols-1">
       <form
         ref="form"
@@ -129,7 +129,7 @@
       </form>
     </div>
 
-    <div class="grid grid-cols-1 w-full">
+    <div class="grid grid-cols-1  w-full">
       <div class="px-10 w-full flex flex-col">
         <div class="flex justify-between">
           <h2 class="text-2xl font-bold text-gray-500">Preview</h2>

@@ -1,23 +1,29 @@
 <template>
-  <div v-if="landing">
+  <div v-if="landing" :style="{ '--primary-color': landing.color_primary }">
     <NavComponents
       :logo="logoLanding"
       :logoTitle="LogoTitle"
       :colorPrimary="color1"
       :colorSecondary="color2"
-      :defaultLanguage="currentLanguage"
-      @language-change="changeLanguage"
     />
-    <main class="grid grid-cols-2 gap-5 py-[45px]">
-      <section class="py-11 px-5">
-        <h2 class="text-2xl font-bold mb-4">{{ $t('overview') }}</h2>
+    <TabsComponents />
+    <main
+      class="container max-w-[1150px] mx-auto grid grid-cols-2 justify-between gap-9"
+    >
+      <section class="py-11">
+        <h2 class="text-2xl font-bold mb-4">{{ $t("overview") }}</h2>
 
         <div class="border rounded-lg p-4 bg-gray-100">
-          <h2 class="text-lg font-semibold">{{ $t('order_details') }}</h2>
+          <h2 class="text-lg font-semibold">{{ $t("order_details") }}</h2>
           <div class="flex flex-col">
-            <h2 class="text-sm text-gray-700 my-5">{{ $t('date_location') }}</h2>
+            <h2
+              class="text-xs text-gray-700 my-5 font-semibold"
+              :style="{ color: landing.color_primary }"
+            >
+              {{ $t("date_location") }}
+            </h2>
             <div class="flex items-center whitespace-nowrap">
-              <h2 class="text-xs font-bold">{{ $t('pickup') }}</h2>
+              <h2 class="text-xs font-bold">{{ $t("pickup") }}</h2>
               <span class="text-xs ml-2">{{ Tabs1.place_of_departure }}</span>
               <img
                 src="./asset/line.png"
@@ -26,7 +32,7 @@
                 height="30"
                 class="mx-3"
               />
-              <h2 class="text-xs font-bold ml-2">Return -</h2>
+              <h2 class="text-xs font-bold ml-2">{{ $t("return") }} -</h2>
               <span class="text-xs ml-2">{{ Tabs1.arrival_place }}</span>
             </div>
           </div>
@@ -43,7 +49,12 @@
             <h2 class="text-xs font-bold">{{ Tabs1.time_of_departure }}</h2>
           </div>
           <div class="flex flex-col">
-            <h2 class="text-sm text-gray-700 my-2">Vehicle</h2>
+            <h2
+              class="text-xs font-semibold my-2"
+              :style="{ color: landing.color_primary }"
+            >
+              {{ $t("vehicle") }}
+            </h2>
             <div class="flex items-center">
               <img
                 :src="Tabs2.image_path"
@@ -55,48 +66,53 @@
               </h2>
             </div>
           </div>
-          <div class="flex flex-col">
+          <!-- <div class="flex flex-col">
             <h2 class="text-sm text-gray-700 my-3">Extras</h2>
             <h2 class="text-xs font-extrabold">{{ Tabs3.name }}</h2>
-          </div>
+          </div> -->
         </div>
       </section>
-      <section class="">
-        <div class="max-w-md mx-auto p-5 bg-white">
-          <h2 class="text-xl font-bold mb-4">Charges</h2>
+      <section class="w-full">
+        <div class="mx-auto py-5 bg-white">
+          <h2 class="text-sm font-bold mb-4">{{ $t("charges") }}</h2>
           <div class="space-y-3">
             <div class="flex justify-between">
-              <span class="text-gray-600">Charges Summary</span>
-              <span class="text-gray-600">US$180.00</span>
+              <span class="text-gray-600 text-xs">{{
+                $t("charges_summary")
+              }}</span>
+              <span class="text-gray-600 text-xs">US$180.00</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-gray-600">Additional Liability Service</span>
-              <span class="text-gray-600">US$9.95</span>
+              <span class="text-gray-600 text-xs">{{
+                $t("additional_liability_service")
+              }}</span>
+              <span class="text-gray-600 text-xs">US$9.95</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-gray-600">Vehicle License Fee</span>
-              <span class="text-gray-600">US$3.50</span>
-            </div>
-            <div class="flex justify-between">
-              <span class="text-gray-600">Silla Extra Bebé</span>
-              <span class="text-gray-600">US$20.00</span>
+              <span class="text-gray-600 text-xs">{{
+                $t("vehicle_license_fee")
+              }}</span>
+              <span class="text-gray-600 text-xs">US$3.50</span>
             </div>
             <div class="flex justify-between font-semibold">
-              <span class="text-gray-700">Subtotal</span>
-              <span class="text-gray-700">US$213.45</span>
+              <span class="text-gray-700 text-xs">{{ $t("subtotal") }}</span>
+              <span class="text-gray-700 text-xs">US$213.45</span>
             </div>
             <div class="flex justify-between">
-              <span class="text-gray-600">ITBIS (18%)</span>
-              <span class="text-gray-600">US$38.42</span>
+              <span class="text-gray-600 text-xs">{{ $t("tax_itbis") }}</span>
+              <span class="text-gray-600 text-xs">US$38.42</span>
             </div>
-            <div class="flex justify-between text-lg font-bold mt-4">
-              <span>Total</span>
+            <div class="flex justify-between text-xs font-bold mt-4">
+              <span>{{ $t("total") }}</span>
               <span>US$251.87</span>
             </div>
           </div>
         </div>
-        <div class="max-w-lg mx-auto p-6 bg-white shadow-md rounded-lg">
-          <h2 class="text-xl font-semibold mb-4">Contact Information</h2>
+
+        <div class="w-full mx-auto py-6">
+          <h2 class="text-sm font-semibold mb-4">
+            {{ $t("contact_information") }}
+          </h2>
 
           <form class="space-y-4" @submit.prevent="submitForm">
             <!-- Name Field -->
@@ -104,69 +120,53 @@
               type="text"
               v-model="name"
               required
-              placeholder="Name"
-              class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              :placeholder="$t('name')"
+              class="w-full border rounded-lg p-3 text-xs focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
             <input
               type="text"
               v-model="lastName"
               required
-              placeholder="Last Name"
-              class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              :placeholder="$t('last_name')"
+              class="w-full border text-xs rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
             <!-- Email Field -->
             <input
               type="email"
-              placeholder="Email"
               required
               v-model="email"
-              class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              :placeholder="$t('email')"
+              class="w-full border text-xs rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
             <!-- Phone Field -->
             <input
               type="phone"
               required
-              placeholder="Phone/ Cellphone"
-              class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              :placeholder="$t('phone')"
+              class="w-full border text-xs rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
             <!-- Comment Field -->
             <textarea
               rows="4"
-              placeholder="Algun comentario adicional"
               v-model="comment"
-              class="w-full border rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
+              :placeholder="$t('additional_comment')"
+              class="w-full border text-xs rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             ></textarea>
 
             <!-- Information Text -->
             <p class="text-xs text-gray-500">
-              <strong>IMPORTANT INFORMATION</strong> about your PREPAID
-              reservation: prepaid rates are subject to the following
-              cancellation and no-show fees. Please note that the cancellation
-              fees listed below will never exceed the total prepaid amount:
+              <strong>{{ $t("important_information") }}</strong>
+              {{ $t("prepaid_reservation_info") }}
             </p>
 
             <ul class="list-disc list-inside text-xs text-gray-500">
-              <li>
-                When booking is cancelled within 24 hours before the pickup
-                time, a fee of $200.00 will be charged.
-              </li>
-              <li>
-                When the booking is cancelled more than 24 hours before the
-                pickup time, a fee of $100.00 will be charged.
-              </li>
-              <li>
-                No refund for No-Show: No refund will be issued in case of
-                failure to pick up your vehicle (no-show) or cancellation after
-                scheduled pick up time.
-              </li>
-              <li>
-                No refund for unused rental days: No refunds or credits will be
-                issued for unused rental days (late pick up or early return)
-                once the vehicle is rented.
-              </li>
+              <li>{{ $t("cancellation_within_24_hours") }}</li>
+              <li>{{ $t("cancellation_more_than_24_hours") }}</li>
+              <li>{{ $t("no_show_no_refund") }}</li>
+              <li>{{ $t("unused_rental_days_no_refund") }}</li>
             </ul>
 
             <!-- Checkbox -->
@@ -175,31 +175,31 @@
                 type="checkbox"
                 id="accept"
                 required
-                class="mt-1 mr-2 focus:ring-blue-500 focus:border-blue-500"
+                class="mt-1 mr-2 text-xs focus:ring-blue-500 focus:border-blue-500"
               />
               <label for="accept" class="text-xs text-gray-600">
-                I have read and accept the
-                <a href="#" class="underline">rental information</a>, the
-                <a href="#" class="underline">terms and conditions</a>, and the
-                <a href="#" class="underline">privacy policy</a>, and I
-                acknowledge that I am booking a prepaid rate, where the total
-                rental price is immediately charged to the credit or debit card
-                I provided. I am aware that certain
-                <a href="#" class="underline">driver requirements</a> (e.g.,
-                age),
-                <a href="#" class="underline">payment requirements</a> (e.g.,
-                debit cards, security hold/deposit), and
-                <a href="#" class="underline">territorial restrictions</a>
-                apply.
+                {{ $t("accept_terms") }}
+                <a href="#" class="underline">{{ $t("rental_information") }}</a
+                >, <a href="#" class="underline">{{ $t("terms_conditions") }}</a
+                >, <a href="#" class="underline">{{ $t("privacy_policy") }}</a
+                >,
+                {{ $t("prepaid_rate_acknowledgment") }}
+                <a href="#" class="underline">{{ $t("driver_requirements") }}</a
+                >,
+                <a href="#" class="underline">{{
+                  $t("payment_requirements")
+                }}</a
+                >,
+                {{ $t("territorial_restrictions") }}
               </label>
             </div>
 
             <!-- Submit Button -->
             <button
               type="submit"
-              class="w-full bg-black text-white font-semibold py-3 rounded-lg hover:bg-gray-800"
+              class="w-full bg-black text-white text-xs font-semibold py-3 rounded-lg hover:bg-gray-800"
             >
-              Reservar
+              {{ $t("reserve") }}
             </button>
           </form>
         </div>
@@ -213,16 +213,19 @@
 
 <script>
 import axios from "axios";
-const url =  import.meta.env.VITE_API_URL  ;
+import TabsComponents from "./components/TabsComponents.vue";
+
+const url = import.meta.env.VITE_API_URL;
 import NavComponents from "./components/NavComponents.vue";
 export default {
   components: {
     NavComponents,
+    TabsComponents,
   },
   data() {
     return {
-      message: "Calculando información...",
-      currentLanguage: "en",
+      message: this.$t('calculating_information'),
+      currentLanguage: null,
       name: "",
       lastName: "", // Asegúrate de definir lastName
       email: "",
@@ -264,72 +267,129 @@ export default {
     },
 
     submitForm() {
-  const storedVehicle = localStorage.getItem("formVehicles");
-  const storedFormData = localStorage.getItem("formValidate");
+      const storedVehicle = localStorage.getItem("formVehicles");
+      const storedFormData = localStorage.getItem("formValidate");
 
-  if (storedVehicle && storedFormData) {
-    // Convertir los datos del localStorage a objetos
-    const vehicleData = JSON.parse(storedVehicle);
-    const formData = JSON.parse(storedFormData);
+      if (storedVehicle && storedFormData) {
+        // Convertir los datos del localStorage a objetos
+        const vehicleData = JSON.parse(storedVehicle);
+        const formData = JSON.parse(storedFormData);
 
-    // Verificar que los datos necesarios estén presentes
-    if (!vehicleData || !formData) {
-      console.error("Faltan datos necesarios en localStorage.");
-      return;
-    }
+        // Verificar que los datos necesarios estén presentes
+        if (!vehicleData || !formData) {
+          console.error("Faltan datos necesarios en localStorage.");
+          return;
+        }
 
-    // Verificar que 'time_of_departure' y 'time_of_arrival' existan en formData
-    const timeOfDeparture24 = formData.time_of_departure ? this.convertTo24Hour(formData.time_of_departure) : null;
-    const timeOfArrival24 = formData.time_of_arrival ? this.convertTo24Hour(formData.time_of_arrival) : null;
+        // Verificar que 'time_of_departure' y 'time_of_arrival' existan en formData
+        const timeOfDeparture24 = formData.time_of_departure
+          ? this.convertTo24Hour(formData.time_of_departure)
+          : null;
+        const timeOfArrival24 = formData.time_of_arrival
+          ? this.convertTo24Hour(formData.time_of_arrival)
+          : null;
 
-    // Asegúrate de que 'name_landing' esté en formData
-    const nameLanding = formData.name_landing || "Unknown Landing"; // Valor por defecto si no existe
+        // Asegúrate de que 'name_landing' esté en formData
+        const nameLanding = formData.name_landing || "Unknown Landing"; // Valor por defecto si no existe
 
-    // Aquí se agrega la URL del logo de la landing
-    const urlLanding = this.logoLanding || "";  // Si no hay logo, se envía una cadena vacía
+        // Aquí se agrega la URL del logo de la landing
+        const urlLanding = this.logoLanding || ""; // Si no hay logo, se envía una cadena vacía
 
-    // Crear los datos para la reserva
-    const reservationData = {
-      id_vehicle: vehicleData.id_vehicle,
-      id_landing: formData.id_landing,
-      name_landing: nameLanding, // Asigna name_landing desde el formData
-      name: this.name,
-      last_name: this.lastName,
-      email: this.email,
-      description: this.comment,
-      place_of_departure: formData.place_of_departure,
-      arrival_place: formData.arrival_place,
-      number_of_persons: formData.number_of_persons,
-      date_of_departure: this.formatDate(formData.date_of_departure), // Convertir aquí
-      time_of_departure: timeOfDeparture24,
-      date_of_arrival: this.formatDate(formData.date_of_arrival), // Convertir aquí también
-      time_of_arrival: timeOfArrival24,
-      url_landing: urlLanding,  // Se agrega la URL del logo de la landing
-    };
+        // Crear los datos para la reserva
+        const reservationData = {
+          id_vehicle: vehicleData.id_vehicle,
+          id_landing: formData.id_landing,
+          name_landing: nameLanding, // Asigna name_landing desde el formData
+          name: this.name,
+          last_name: this.lastName,
+          email: this.email,
+          description: this.comment,
+          place_of_departure: formData.place_of_departure,
+          arrival_place: formData.arrival_place,
+          number_of_persons: formData.number_of_persons,
+          date_of_departure: this.formatDate(formData.date_of_departure), // Convertir aquí
+          time_of_departure: timeOfDeparture24,
+          date_of_arrival: this.formatDate(formData.date_of_arrival), // Convertir aquí también
+          time_of_arrival: timeOfArrival24,
+          url_landing: urlLanding, // Se agrega la URL del logo de la landing
+        };
 
-    // Hacer la solicitud para crear la reserva
-    axios.post(`${url}/reservations`, reservationData)
-      .then(response => {
-        console.log("Reservación creada:", response.data);
+        // Hacer la solicitud para crear la reserva
+        axios
+          .post(`${url}/reservations`, reservationData)
+          .then((response) => {
+            console.log("Reservación creada:", response.data);
 
-        // Limpiar los datos del localStorage
-        localStorage.removeItem("formValidate");
-        localStorage.removeItem("formVehicles");
-        localStorage.removeItem("selectedProduct");
-        localStorage.setItem("NameUser", this.name);
+            // Limpiar los datos del localStorage
+            localStorage.removeItem("formValidate");
+            localStorage.removeItem("formVehicles");
+            localStorage.removeItem("selectedProduct");
+            localStorage.setItem("NameUser", this.name);
 
-        // Redirigir a la página de agradecimiento
-        this.$router.push({ name: "thanks-you" });
-      })
-      .catch(error => {
-        console.error("Error al crear la reservación:", error);
+            // Redirigir a la página de agradecimiento
+            this.$router.push({ name: "thanks-you" });
+          })
+          .catch((error) => {
+            console.error("Error al crear la reservación:", error);
+          });
+      } else {
+        console.error("No se encontraron datos en localStorage.");
+      }
+    },
+    metaInfo() {
+      return {
+        title: this.landing?.meta_title || "Default Title",
+        meta: [
+          {
+            name: "description",
+            content: this.landing?.meta_description || "Default description",
+          },
+          {
+            name: "viewport",
+            content: "width=device-width, initial-scale=1.0",
+          },
+          { name: "keywords", content: this.landing?.meta_keywords || "" },
+          {
+            property: "og:title",
+            content: this.landing?.og_title || "Default OG Title",
+          },
+          {
+            property: "og:description",
+            content: this.landing?.og_description || "Default OG Description",
+          },
+          {
+            property: "og:image",
+            content: this.landing?.og_image || "default-image-url.jpg",
+          },
+          { name: "robots", content: this.landing?.robots || "index, follow" },
+          {
+            rel: "canonical",
+            href: this.landing?.canonical_url || window.location.href,
+          },
+        ],
+      };
+    },
+    updateMetaTags() {
+      const metaData = this.metaInfo();
+
+      // Actualiza el título de la página
+      document.title = metaData.title;
+
+      // Eliminar meta tags existentes (si es necesario)
+      const existingMetaTags = document
+        .querySelectorAll("meta")
+        .forEach((meta) => meta.remove());
+      existingMetaTags.forEach((tag) => tag.parentNode.removeChild(tag));
+
+      // Añadir nuevos meta tags
+      metaData.meta.forEach((metaTag) => {
+        const meta = document.createElement("meta");
+        Object.keys(metaTag).forEach((key) => {
+          meta.setAttribute(key, metaTag[key]);
+        });
+        document.head.appendChild(meta);
       });
-  } else {
-    console.error("No se encontraron datos en localStorage.");
-  }
-},
-
-
+    },
 
     getVehicles() {
       const NameLandingId = this.$route.params.name;
@@ -340,6 +400,9 @@ export default {
           this.landing = response.data.landing;
           this.logoLanding = this.landing.logo;
           this.LogoTitle = this.landing.name;
+          const landingLanguage = this.landing.default_language; // Aquí puedes cambiar 'es' por el idioma que quieras como predeterminado
+
+          this.changeLanguage(landingLanguage);
           this.color1 = this.landing.color_primary;
           this.color2 = this.landing.color_secondary;
 
@@ -411,4 +474,9 @@ export default {
 };
 </script>
 
-<style scoped></style>
+<style scoped>
+::selection {
+  background-color: var(--primary-color);
+  color: #fff;
+}
+</style>

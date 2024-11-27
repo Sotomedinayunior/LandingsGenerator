@@ -144,7 +144,7 @@ export default {
 .table td {
   padding: 7px;
   text-align: left;
-  border-bottom: 1.2px solid #ddd;
+  border-bottom: 2px solid #ddd;
   vertical-align: middle;
 }
 
@@ -166,10 +166,8 @@ export default {
   border-radius: 5px;
 }
 
-.actions-cell {
-  display: flex;
-  justify-content: space-evenly;
-  align-items: center;
+i{
+  margin: 0px 10px 0px 10px;
 }
 
 /* Ocultar íconos por defecto */
@@ -191,8 +189,5 @@ export default {
   height: 40px;
 }
 
-.vehiculo-nombre {
-  display: flex;
-  align-items: center;
-}
+
 </style>
