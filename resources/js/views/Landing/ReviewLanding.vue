@@ -303,6 +303,7 @@ export default {
           name: this.name,
           last_name: this.lastName,
           email: this.email,
+          phone: this.phone,
           description: this.comment,
           place_of_departure: formData.place_of_departure,
           arrival_place: formData.arrival_place,

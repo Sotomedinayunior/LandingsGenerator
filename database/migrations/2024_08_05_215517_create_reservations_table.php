@@ -31,6 +31,7 @@ return new class extends Migration
             $table->time('time_of_arrival');
             $table->integer('total_price')->nullable();
             $table->string('name_landing');
+            
             $table->string('url_landing');
 
             $table->unsignedBigInteger('id_landing');

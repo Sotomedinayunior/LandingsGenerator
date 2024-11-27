@@ -57,7 +57,6 @@
       </div>
     </div>
 
-
     <!-- Mostrar mensaje si no hay reservas -->
     <div v-else-if="filteredReservations.length === 0" class="text-center">
       <p class="text-lg">No hay datos disponibles.</p>
@@ -78,7 +77,6 @@
           @deleted="handleDeleted"
           @viewReservation="openModal(reservation)"
         />
-        
       </div>
     </div>
 
@@ -98,7 +96,9 @@
             <div class="flex flex-col">
               <div class="flex items-center whitespace-nowrap">
                 <h2 class="text-xs font-bold">Salida -</h2>
-                <span class="text-xs ml-3">{{ selectedReservation.place_of_departure }}</span>
+                <span class="text-xs ml-3">{{
+                  selectedReservation.place_of_departure
+                }}</span>
                 <img
                   src="./Landing/asset/line.png"
                   alt="line"
@@ -107,23 +107,28 @@
                   class="mx-3"
                 />
                 <h2 class="text-xs font-bold ml-5">Regreso -</h2>
-                <span class="text-xs ml-3">{{ selectedReservation.arrival_place }}</span>
+                <span class="text-xs ml-3">{{
+                  selectedReservation.arrival_place
+                }}</span>
               </div>
               <div class="flex items-center whitespace-nowrap">
                 <h2 class="text-xs font-bold whitespace-nowrap">
                   {{ selectedReservation.date_of_arrival }}
                 </h2>
                 <img src="./Landing/asset/circle.png" alt="" class="mx-3" />
-                <h2 class="text-xs font-bold">{{ selectedReservation.time_of_arrival }}</h2>
+                <h2 class="text-xs font-bold">
+                  {{ selectedReservation.time_of_arrival }}
+                </h2>
                 <h2 class="text-xs font-bold ml-4">
                   {{ selectedReservation.date_of_departure }}
                 </h2>
                 <img src="./Landing/asset/circle.png" alt="" class="mx-3" />
-                <h2 class="text-xs font-bold">{{ selectedReservation.time_of_departure }}</h2>
+                <h2 class="text-xs font-bold">
+                  {{ selectedReservation.time_of_departure }}
+                </h2>
               </div>
             </div>
             <div>
-             
               <p class="text-gray-800 text-sm">
                 {{ selectedReservation.return_date }} ·
                 {{ selectedReservation.return_time }}
@@ -141,43 +146,34 @@
               alt="Vehicle"
               class="w-24 h-16 object-cover rounded-md mr-4"
             />
-           
           </div>
         </div>
 
-        <!-- Extras -->
-        <div class="mb-4">
-          <h3 class="font-semibold text-orange-600 text-sm">Extras</h3>
-          <!-- <p class="text-gray-800 text-sm">
-            {{ selectedReservation.extras.join(", ") || "No extras selected" }}
-          </p> -->
-        </div>
-
         <!-- Información del cliente -->
-        <div class="border-t pt-4">
-          <div class="flex items-center space-x-4">
+        <div class="flex justify-around pt-4">
+          <div class="flex items-center justify-center flex-col space-x-3">
             <img
               :src="selectedReservation.avatar_url"
               alt="Customer"
               class="w-12 h-12 rounded-full"
             />
             <div>
-              <p class="font-semibold text-gray-800">
+              <p class="font-semibold text-gray-800 text-xs text-center">
                 {{ selectedReservation.name }}
               </p>
-              <p class="text-sm text-gray-600">
+              <p class="text-gray-600 text-xs">
                 {{ selectedReservation.phone }}
               </p>
-              <p class="text-sm text-gray-600">
+              <p class="text-xs text-gray-600">
                 {{ selectedReservation.email }}
               </p>
             </div>
           </div>
-          <div class="mt-4">
-            <p class="font-semibold text-sm text-gray-800">
+          <div class="mt-4 bg-gray-50 p-3">
+            <p class="font-bold text-sm text-orange-600 my-2">
               Comentario adicional:
             </p>
-            <p class="text-sm text-gray-600">
+            <p class="text-xs text-gray-600">
               {{ selectedReservation.description }}
             </p>
           </div>
@@ -213,6 +209,7 @@ export default {
       searchTerm: "", // Término de búsqueda
       isModalOpen: false, // Estado del modal
       selectedReservation: null, // Datos de la reserva seleccionada
+      vehicle:[]
     };
   },
 
@@ -246,6 +243,21 @@ export default {
         this.loading = false; // Terminar la carga
       }
     },
+    async fetchVehicleDetails(vehicleId , landingId) {
+      vehicleId = this.selectedReservation.id_vehicle;
+      landingId = this.selectedReservation.id_landing;
+    try {
+      const response = await Axios.get(`/vehicles/${landingId}/${vehicleId}`);
+      this.vehicle = response.data; // Guardar la información del vehículo en el estado
+      console.log('aqui esta los vehicles' + this.vehicle);
+    } catch (error) {
+      console.error("Error al cargar los detalles del vehículo:", error);
+    }
+ 
+
+
+
+    },
     openModal(reservation) {
       // Abrir el modal y cargar la información de la reserva seleccionada
       this.selectedReservation = reservation;
@@ -265,6 +277,7 @@ export default {
 
   mounted() {
     this.fetchReservations(); // Cargar las reservas al montar el componente
+    this.fetchVehicleDetails(); // Cargar los detalles del vehículo al montar el componente
   },
 };
 </script>

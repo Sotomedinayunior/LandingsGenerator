@@ -8,7 +8,7 @@
     />
     <TabsComponents />
     <button
-      class="py-2 px-12 mx-[4rem] mt-3 font-semibold rounded-lg w-92 text-center"
+      class="py-2 px-12 mx-[4rem] mt-3 mb-3 font-semibold rounded-lg w-92 text-center"
       :style="{
         border: `1px solid ${landing.color_primary}`,
         color: landing.color_primary,
