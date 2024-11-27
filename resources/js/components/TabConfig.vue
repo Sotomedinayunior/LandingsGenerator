@@ -94,7 +94,7 @@
               class="bg-white w-20 h-auto shadow-xl flex justify-around items-center cursor-pointer"
               @click="selectLanguage('es')"
               :class="{
-                'border-4 border-orange-500': defaultLanguage === 'es',
+                'border-4 border-orange-500':defaultLanguage === 'es',
               }"
             >
               <div class="w-full h-full">
@@ -293,10 +293,11 @@ export default {
         logo: null,
         color_primary: "#000000",
         logoUrl: null,
-        defaultLanguage: "",
+        
 
         color_secondary: "#FFFFFF",
       },
+      defaultLanguage:'',
       isModalVisible: false, // Controla la visibilidad del modal
       modalTitle: "Landing Actualizada",
       modalMessage: "Tu landing ha sido Actualizada exitosamente.",
@@ -320,6 +321,9 @@ export default {
         .replace(/\s+/g, "-") // Reemplaza espacios por guiones
         .replace(/-+/g, "-"); // Elimina guiones duplicados
     },
+    selectLanguage(lang) {
+      this.defaultLanguage = lang; // Asigna el idioma seleccionado a defaultLanguage
+    },
     fetchLandingData() {
       const userId = localStorage.getItem("NellyUserId");
       const landingId = this.$route.params.id;
@@ -333,6 +337,7 @@ export default {
         .then((response) => {
           this.LandingInfo = response.data;
           this.LandingInfo.logoUrl = response.data.logo; // Asegura que logoUrl esté configurado
+          this.defaultLanguage = response.data.default_language	 || 'es';
         })
         .catch((error) => {
           console.error("Error fetching landing data:", error);
@@ -369,6 +374,8 @@ export default {
 
       formData.append("color_primary", this.LandingInfo.color_primary);
       formData.append("color_secondary", this.LandingInfo.color_secondary);
+      formData.append("default_language", this.defaultLanguage); // Aquí agregamos el idioma
+
 
       Axios.post(`/landing-update/${userId}/${landingId}`, formData, {
         headers: {

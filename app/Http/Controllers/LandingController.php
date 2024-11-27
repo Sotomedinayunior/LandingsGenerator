@@ -133,6 +133,7 @@ class LandingController extends Controller
            'logo' => 'nullable|image|mimes:jpeg,png,jpg,gif,svg,webp|max:2048',
            'color_primary' => 'nullable|string|max:20',
            'color_secondary' => 'nullable|string|max:20',
+           'default_language' => 'nullable|string|max:10',
            'published' => 'nullable|boolean',
        ]);
    

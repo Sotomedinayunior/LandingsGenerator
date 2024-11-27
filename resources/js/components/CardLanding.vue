@@ -27,11 +27,11 @@
         <!-- Trash Icon iconsss -->
         <i class="fas fa-trash w-4 h-4" @click.stop="showModal = true"></i>
       </div>
-      <div class="flex justify-between mt-4">
+      <div class="flex justify-between px-3 mt-4">
         <!-- Expand Icon -->
         
-        <i class="fa-solid fa-circle-check text-[#f16822]" v-if="landing.published" title="Landing publicada"></i>
-        <button class="bg-orange-500 text-white px-2 py-1 rounded text-xs" @click="Copiar(this.URL)">Ver</button>
+        <!-- <i class="fa-solid fa-circle-check text-[#f16822]" v-if="landing.published" title="Landing publicada"></i> -->
+        <button class="bg-orange-500 text-white px-2 py-1 rounded text-xs" @click="Copiar(this.URL)">Ver sitio</button>
         <div class="flex items-center space-x-2">
           <!-- Truck Icon -->
           <img
@@ -172,14 +172,8 @@ export default {
       window.open(this.URL, "_blank");
     },
     Copiar(text){
-      navigator.clipboard.writeText(this.URL).then(() => {
-        this.showNotification = true; // Muestra la notificación
-        setTimeout(() => {
-          this.showNotification = false; // Oculta la notificación después de 3 segundos
-        }, 3000);
-      }).catch((err) => {
-        console.error("Error copiando al portapapeles: ", err);
-      });
+      window.open(this.URL, '_blank'); // Abre la URL en una nueva pestaña
+
     },
 
 
