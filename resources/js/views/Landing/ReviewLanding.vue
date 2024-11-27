@@ -142,9 +142,11 @@
 
             <!-- Phone Field -->
             <input
-              type="phone"
+              type="text"
               required
+              v-model="phone"
               :placeholder="$t('phone')"
+
               class="w-full border text-xs rounded-lg p-3 focus:outline-none focus:ring-2 focus:ring-blue-500"
             />
 
@@ -230,7 +232,7 @@ export default {
       lastName: "", // Asegúrate de definir lastName
       email: "",
       comment: "",
-     
+      phone: "", // Asegúrate de definir phone
       logoLanding: "",
       LogoTitle: "",
       color1: "",
@@ -300,6 +302,7 @@ export default {
           id_landing: formData.id_landing,
           name_landing: nameLanding, // Asigna name_landing desde el formData
           name: this.name,
+          phone: this.phone,
           last_name: this.lastName,
           email: this.email,
           description: this.comment,
