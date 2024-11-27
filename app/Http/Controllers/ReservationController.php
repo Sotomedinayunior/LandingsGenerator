@@ -94,7 +94,7 @@ class ReservationController extends Controller
         $validatedData = $request->validate([
             'name' => 'string|max:255',
             'last_name' => 'string|max:255',
-            'phone' => 'string|max:255',
+            'phone' => 'nullable|max:255',
             'email' => 'string|email|max:255|unique:reservations,email,' . $id,
             'description' => 'nullable|string',
             'id_vehicle' => 'exists:vehicles,id',
