@@ -11,7 +11,7 @@
             type="text"
             placeholder="Buscar una landing eliminada"
             v-model="searchTerm"
-            class="p-2 pr-5 border border-gray-500 rounded-md focus:outline-none placeholder:text-sm w-full sm:w-auto"
+            class="p-2 pr-5 border border-gray-500 rounded-md focus:outline-none placeholder:text-xs w-full sm:w-auto"
           />
           <!-- SVG de lupa -->
           <svg
