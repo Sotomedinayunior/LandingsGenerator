@@ -166,6 +166,7 @@ export default {
     this.getLanding();
     this.getFeatures();
     this.updateMetaTags();
+
   },
 
   methods: {
@@ -188,13 +189,13 @@ export default {
           : this.activeIndex + 1;
     },
     getFeatures() {
-      const vehicleId = this.$route.params.id;
+      const vehicleId = this.$route.params.idvehicle;
       // Obtiene las características del vehículo
       axios
         .get(`${this.api}/vehicle/${vehicleId}/special-features-public`)
         .then((response) => {
-          this.feature = response.data;
-          console.log(this.feature);
+          this.feature = response.data.specialFeatures;
+          console.log( "This features" , this.feature);
         })
         .catch((error) => {
           console.error(error);
