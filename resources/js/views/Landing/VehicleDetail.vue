@@ -7,16 +7,19 @@
       :colorSecondary="color2"
     />
     <TabsComponents />
-    <button
-      class="py-2 px-12 mx-[4rem] mt-3 mb-3 font-semibold rounded-lg w-92 text-center"
-      :style="{
-        border: `1px solid ${landing.color_primary}`,
-        color: landing.color_primary,
-      }"
-      @click.prevent="goBack"
-    >
-      {{ $t("back") }}
-    </button>
+    <div class="container max-w-[1150px]">
+      <button
+        class="py-2 px-12 mx-[4rem] mt-3 mb-3 font-semibold rounded-lg w-92 text-center"
+        :style="{
+          border: `1px solid ${landing.color_primary}`,
+          color: landing.color_primary,
+        }"
+        @click.prevent="goBack"
+      >
+        {{ $t("back") }}
+      </button>
+    </div>
+
     <section class="container max-w-[1150px] grid grid-cols-2 gap-10 mx-auto">
       <!-- Carrusel de imágenes -->
 
@@ -28,7 +31,7 @@
         <img
           :src="url + '/' + vehicle.images[activeIndex].path_images"
           :alt="vehicle.name"
-          class="carousel-image "
+          class="carousel-image"
           :title="vehicle.name"
           width="400"
           height="400"
@@ -66,7 +69,7 @@
             {{ $t("features") }}
           </h2>
 
-          <div class="flex space-x-2 my-3">
+          <div class="flex space-x-2 my-2">
             <span class="px-3 py-1 bg-gray-200 rounded-lg text-xs">{{
               vehicle.transmision
             }}</span>
@@ -74,11 +77,15 @@
               vehicle.type_of_car
             }}</span>
             <span class="px-3 py-1 bg-gray-200 rounded-lg text-xs"
-              >{{ $t("people") }} {{ vehicle.luggage }}</span
+              >{{ $t("people") }} {{ vehicle.people }}</span
+            >
+            <span class="px-3 py-1 bg-gray-200 rounded-lg text-xs"
+              >{{ $t("luggage") }} {{ vehicle.luggage }}</span
             >
           </div>
+          
         </div>
-        <div class="py-3">
+        <div class="py-2">
           <h2 class="text-left font-bold" :style="{ color: colorPrimary }">
             {{ $t("special_features") }}
           </h2>
@@ -146,6 +153,8 @@ export default {
         id_vehicle: "",
         id_user: "",
         id_landing: "",
+        luggage: "",
+        people: "",
       },
       url: import.meta.env.VITE_API_DATA,
       api: import.meta.env.VITE_API_URL,
@@ -234,6 +243,9 @@ export default {
       // Asignar los valores al objeto formVehicles
       this.formVehicles.id_vehicle = this.$route.params.idvehicle; // ID del vehículo
       this.formVehicles.title = this.vehicle.name; // Título del vehículo
+      this.formVehicles.luggage = this.vehicle.luggage; // Asignar el luggage del vehículo
+      this.formVehicles.people = this.vehicle.people; // Asignar el people del vehículo
+
       if (this.vehicle.images && this.vehicle.images.length > 0) {
         this.formVehicles.image_path =
           this.url + "/" + this.vehicle.images[0].path_images;
@@ -306,7 +318,7 @@ export default {
 </script>
 
 <style scoped>
-::selection{
+::selection {
   background-color: var(--primary-color);
   color: white;
 }

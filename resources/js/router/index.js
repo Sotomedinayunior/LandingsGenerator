@@ -46,6 +46,7 @@ const routes = [
       { 
         path: '/landings', 
         component: ListLanding, 
+        name: 'landings',
         meta: { title: 'List of Landings - Nelly App'  } 
       },
       { 
@@ -224,7 +225,12 @@ router.beforeEach(async (to, from, next) => {
     next({ name: 'login' });
   } else if (to.name === 'login' && isAuthenticated) {
     next({ name: 'landings' }); 
-  } else {
+
+  }else if(to.name === '/' && isAuthenticated){
+    next({ name: 'landings' });
+  }
+  
+  else {
     // Establecer el título de la página
     const title = to.meta.title || 'Nelly App'; // Título predeterminado si no se especifica
     document.title = title;

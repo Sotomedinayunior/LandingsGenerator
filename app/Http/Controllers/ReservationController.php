@@ -43,7 +43,7 @@ class ReservationController extends Controller
         $validatedData = $request->validate([
             'name' => 'nullable|string|max:255', // Opcional
             'last_name' => 'nullable|string|max:255', // Opcional
-            'phone' => 'string|string|max:255', // Opcional
+            'phone' => 'nullable|string|max:255', // Opcional
             'email' => 'nullable|string|email|max:255|unique:reservations,email,' . $id, // Opcional
             'description' => 'nullable|string', // Opcional
             'name_landing' => 'required|string|max:255', // Obligatorio
@@ -51,11 +51,13 @@ class ReservationController extends Controller
             'url_landing' => 'required|string|max:500', // Obligatorio
             'place_of_departure' => 'nullable|string|max:255', // Opcional
             'arrival_place' => 'nullable|string|max:255', // Opcional
-            'number_of_persons' => 'nullable|integer', // Opcional
-            'date_of_departure' => 'nullable|date', // Opcional
+            'url_vehicle' => 'nullable|string|max:500', // Opcional, si no siempre es obligatorio
+            'date_of_departure' => 'nullable|date|before_or_equal:date_of_arrival', // Validar coherencia de fechas
             'time_of_departure' => 'nullable|date_format:H:i', // Opcional
-            'date_of_arrival' => 'nullable|date', // Opcional
+            'date_of_arrival' => 'nullable|date|after_or_equal:date_of_departure', // Validar coherencia de fechas
             'time_of_arrival' => 'nullable|date_format:H:i', // Opcional
+            'number_person' => 'required|integer|min:1', // Número de personas, asegurarse que sea un entero
+            'number_bag' => 'required|integer|min:0', // Número de maletas
             'id_landing' => 'required|exists:landings,id', // Obligatorio
         ]);
 

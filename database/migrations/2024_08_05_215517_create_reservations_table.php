@@ -17,14 +17,13 @@ return new class extends Migration
 
             $table->string('name');
             $table->string('last_name');
-            $table->string('phone');
+            $table->string('phone' , 25);
             $table->string('email')->unique();
 
             $table->text('description')->nullable();
             $table->unsignedBigInteger('id_vehicle');
             $table->string('place_of_departure');
             $table->string('arrival_place');
-            $table->integer('number_of_persons');
             $table->date('date_of_departure');
             $table->time('time_of_departure');
             $table->date('date_of_arrival');
@@ -33,6 +32,9 @@ return new class extends Migration
             $table->string('name_landing');
             
             $table->string('url_landing');
+            $table->string('url_vehicle');
+            $table->string('number_person');
+            $table->string('number_bag');
 
             $table->unsignedBigInteger('id_landing');
             $table->timestamps();

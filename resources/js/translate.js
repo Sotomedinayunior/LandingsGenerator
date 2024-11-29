@@ -53,6 +53,7 @@ const messages = {
     all: 'All',
     vehicle_type: 'Vehicle Type',
     luggage: 'Luggage',
+
     people: 'People',
     suitcase: 'Suitcase',
     people_2: '2 People',
@@ -203,6 +204,7 @@ const messages = {
     people_5: '5 Personas',
     people_7: '7 Personas',
     people_9: '9 Personas',
+    luggage: 'Maletas',
     luggage_2: '2 Maletas',
     luggage_4: '4 Maletas',
     luggage_6: '6 Maletas',

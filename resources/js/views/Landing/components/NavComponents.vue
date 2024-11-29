@@ -1,16 +1,16 @@
 <template>
   <header
-    class="flex justify-between p-3 items-center border-b border-gray-200 bg-white shadow-md"
+    class="flex justify-center items-center p-3  border-b border-gray-200 bg-white shadow-md"
   >
     <!-- Logo -->
-    <div class="container max-w-[1150px] mx-auto">
+    <div class="container max-w-[1150px] ">
       <img
         :src="logo"
         :alt="logoTitle"
         :title="logoTitle"
         width="230"
         height="200"
-        class="w-auto h-20 cursor-pointer mr-7 object-cover aspect-auto"
+        class="w-auto h-20 cursor-pointer  object-cover aspect-auto"
         @click="goToHome"
       />
     </div>

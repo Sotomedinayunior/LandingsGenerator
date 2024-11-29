@@ -407,6 +407,9 @@ export default {
 </script>
 
 <style scoped>
+*{
+  font-family: "Montserrat", sans-serif;
+}
 ::selection {
   background-color: var(--primary-color);
   color: #fff;

@@ -24,6 +24,6 @@ class Location extends Model
 
     public function landing()
     {
-        return $this->belongsTo(Landing::class);
+        return $this->belongsTo(Landing::class , 'id_landing');
     }
 }

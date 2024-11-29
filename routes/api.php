@@ -47,6 +47,9 @@ Route::middleware('auth:sanctum')->group(function () {
     Route::delete('/landing/deletedFinal/{id}', [LandingController::class, 'deletefinal']);
     // Definir la ruta para agregar los campos place_of_departure y arrival_place
     Route::post('/landings/{id}/addLocation', [LandingController::class, 'addLocation']);
+    Route::delete('/landings/delete-location/{id}', [LandingController::class, 'deleteLocation']);
+
+
     //cambiar la landing de status
     Route::patch('/landing/status', [LandingController::class, 'status']);
     // Ruta para restaurar una landing eliminada

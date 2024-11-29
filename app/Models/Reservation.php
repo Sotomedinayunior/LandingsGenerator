@@ -26,6 +26,9 @@ class Reservation extends Model
         'url_landing',
         'time_of_arrival',
         'id_landing',
+        'url_vehicle',   
+        'number_person',
+        'number_bag' ,
     ];
     
 

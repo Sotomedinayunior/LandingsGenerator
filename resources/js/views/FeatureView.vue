@@ -90,17 +90,7 @@
             autocomplete="off"
           />
         </div>
-        <!-- <div class="flex items-center gap-4 mb-8">
-          <label for="descripcion" class="font-semibold w-24"
-            >Descripción</label
-          >
-          <input
-            id="descripcion"
-            v-model="newFeature.description"
-            class="flex-auto border border-gray-300 rounded-md p-2"
-            autocomplete="off"
-          />
-        </div> -->
+       
         <div class="flex justify-center gap-2">
           <button
             type="button"

@@ -15,8 +15,11 @@ class Vehicle extends Model
         'price',
         'luggage',
         'people',
-        'type_of_car',   
-        'transmision',  
+        'type_of_car', 
+        'url_vehicle',  
+        'transmision', 
+        'number_person',
+        'number_bag' ,
           
         'id_image',
         'dynamic_fields'

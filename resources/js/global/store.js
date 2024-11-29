@@ -93,7 +93,10 @@ const store = createStore({
   getters: {
     isAuthenticated(state) {
       const now = new Date().getTime();
+      
       return !!state.token && state.sessionExpiry && now < state.sessionExpiry;
+      
+
     },
     getUser(state) {
       return state.user;

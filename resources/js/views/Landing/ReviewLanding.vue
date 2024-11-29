@@ -299,6 +299,9 @@ export default {
         // Crear los datos para la reserva
         const reservationData = {
           id_vehicle: vehicleData.id_vehicle,
+          url_vehicle: vehicleData.image_path,
+          number_person: vehicleData.people,
+          number_bag: vehicleData.luggage,
           id_landing: formData.id_landing,
           name_landing: nameLanding, // Asigna name_landing desde el formData
           name: this.name,
@@ -308,7 +311,6 @@ export default {
           description: this.comment,
           place_of_departure: formData.place_of_departure,
           arrival_place: formData.arrival_place,
-          number_of_persons: formData.number_of_persons,
           date_of_departure: this.formatDate(formData.date_of_departure), // Convertir aquí
           time_of_departure: timeOfDeparture24,
           date_of_arrival: this.formatDate(formData.date_of_arrival), // Convertir aquí también

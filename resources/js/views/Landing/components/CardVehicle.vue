@@ -24,7 +24,7 @@
 
       <!-- Precio del vehículo -->
       <div class="mt-4 flex justify-between items-center">
-        <span :style="{ color: primaryColor }" class="text-sm font-bold">${{ vehicle.price }}</span>
+        <span :style="{ color: primaryColor }" class="text-sm font-bold">US${{ vehicle.price }}</span>
         <button
           :style="{ backgroundColor: hover ? secondaryColor : primaryColor }"
           class="px-3 py-2 text-white text-xs font-bold uppercase rounded transition-colors duration-200"
