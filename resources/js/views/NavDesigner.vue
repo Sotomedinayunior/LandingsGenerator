@@ -24,13 +24,13 @@
     class="flex justify-around items-center border-b border-gray-200 my-10 font-semibold"
   >
     <router-link to="/layout-designer/" exact class="nav-link"
-      >Logo & Colors</router-link
+      >Logo & Colores</router-link
     >
     <router-link to="/layout-designer/add-vehicles" exact class="nav-link"
-      >Add Vehicles</router-link
+      >Agregar  Vehículos</router-link
     >
     <router-link to="/layout-designer/review" exact class="nav-link"
-      >Review</router-link
+      >Previsualizar</router-link
     >
   </section>
 </template>

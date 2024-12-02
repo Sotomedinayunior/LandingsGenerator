@@ -166,7 +166,7 @@ export default {
     this.getLanding();
     this.getFeatures();
     this.updateMetaTags();
-
+// 
   },
 
   methods: {
