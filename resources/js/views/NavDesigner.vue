@@ -1,38 +1,45 @@
 <template>
-  <header class="flex p-4 justify-between items-center">
-    <div class="flex pl-9 py-2">
-      <button
-        @click="cancelProcess"
-        class="border border-gray-400 rounded px-4 py-3 text-gray-600 hover:bg-gray-100"
-      >
-        Cancelar Proceso
-      </button>
-    </div>
-    <div class="flex justify-start items-center mr-32">
-      <img
-        src="../static/asset/Logo.webp"
-        width="510"
-        height="104"
-        class="w-[200px] h-auto text-center"
-        alt="Logo nelly"
-      />
-    </div>
-    <div class="hi"></div>
-  </header>
+  <div class="box-container">
+    <header class="container">
+      <div class="w-full mx-auto grid grid-cols-3   justify-between py-4  items-center">
+        <div class="col-span-1">
+          <button
+            @click="cancelProcess"
+            class="border border-gray-400 rounded px-4 py-3 text-gray-600 hover:bg-gray-100"
+          >
+            Cancelar Proceso
+          </button>
+        </div>
+        <div class="col-span-1 mx-auto">
+          <img
+            src="../static/asset/Logo.webp"
+            width="510"
+            height="104"
+            class="w-[200px] h-auto text-center"
+            alt="Logo nelly"
+            title="Logo  nelly"
+          />
+        </div>
+        
+      </div>
+    </header>
 
-  <section
-    class="flex justify-around items-center border-b border-gray-200 my-10 font-semibold"
-  >
-    <router-link to="/layout-designer/" exact class="nav-link"
-      >Logo & Colores</router-link
-    >
-    <router-link to="/layout-designer/add-vehicles" exact class="nav-link"
-      >Agregar  Vehículos</router-link
-    >
-    <router-link to="/layout-designer/review" exact class="nav-link"
-      >Previsualizar</router-link
-    >
-  </section>
+    <section class="container">
+      <div
+        class="max-w-screen-lg mx-auto flex justify-between items-center border-b border-gray-200 my-10 font-semibold"
+      >
+        <router-link to="/layout-designer/" exact class="nav-link"
+          >Logo & Colores</router-link
+        >
+        <router-link to="/layout-designer/add-vehicles" exact class="nav-link"
+          >Agregar Vehículos</router-link
+        >
+        <router-link to="/layout-designer/review" exact class="nav-link"
+          >Previsualizar</router-link
+        >
+      </div>
+    </section>
+  </div>
 </template>
 
 <script>
@@ -52,6 +59,12 @@ export default {
 </script>
 
 <style scoped>
+/* Caja principal */
+.box-container {
+  max-width: 1024px; /* Ancho máximo */
+  margin: 0 auto; /* Centrar horizontalmente */
+}
+
 header {
   background-color: white;
 }
