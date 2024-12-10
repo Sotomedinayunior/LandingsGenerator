@@ -1,40 +1,45 @@
 <template>
-  <div class="container my-3">
-    <div v-if="!error">
-      <CountVehicles :vehicles="vehicle" />
+  <div class="box-container">
+    <div class="container my-3">
+      <div v-if="!error">
+        <CountVehicles :vehicles="vehicle" />
 
-      <div v-if="vehicle.length" class="flex items-center justify-center flex-col mt-6">
-        <TableVehicle :vehicles="vehicle" @delete="deleteVehicle" />
-        <button
-          @click="review"
-          class="px-4 py-2 text-sm text-[#F57200] border border-[#F57200] rounded hover:bg-[#F57200] hover:text-white transition-colors"
-        >
-          Continuar
-        </button>
-
-        <!-- Toast Notification for Success -->
         <div
-          v-if="showToast"
-          class="fixed bottom-4 right-4 p-4 bg-orange-500 text-white rounded-md shadow-md transition-opacity duration-300"
-          @click="showToast = false"
+          v-if="vehicle.length"
+          class="flex items-center justify-center flex-col mt-6"
         >
-          Vehículo eliminado con éxito
-        </div>
+          <TableVehicle :vehicles="vehicle" @delete="deleteVehicle" />
+          <button
+            @click="review"
+            class="px-4 py-2 text-sm text-[#F57200] border border-[#F57200] rounded hover:bg-[#F57200] hover:text-white transition-colors"
+          >
+            Continuar
+          </button>
 
-        <!-- Toast Notification for Error -->
-        <div
-          v-if="showErrorToast"
-          class="fixed bottom-16 right-4 p-4 bg-red-500 text-white rounded-md shadow-md transition-opacity duration-300"
-          @click="showErrorToast = false"
-        >
-          Hubo un error al eliminar el vehículo.
+          <!-- Toast Notification for Success -->
+          <div
+            v-if="showToast"
+            class="fixed bottom-4 right-4 p-4 bg-orange-500 text-white rounded-md shadow-md transition-opacity duration-300"
+            @click="showToast = false"
+          >
+            Vehículo eliminado con éxito
+          </div>
+
+          <!-- Toast Notification for Error -->
+          <div
+            v-if="showErrorToast"
+            class="fixed bottom-16 right-4 p-4 bg-red-500 text-white rounded-md shadow-md transition-opacity duration-300"
+            @click="showErrorToast = false"
+          >
+            Hubo un error al eliminar el vehículo.
+          </div>
         </div>
       </div>
-    </div>
 
-    <div v-else class="text-center text-red-600 font-bold">
-      Error: Debes crear una landing primero para luego agregarles los vehículos. Serás redirigido
-      en {{ countdown }} segundos...
+      <div v-else class="text-center text-red-600 font-bold">
+        Error: Debes crear una landing primero para luego agregarles los
+        vehículos. Serás redirigido en {{ countdown }} segundos...
+      </div>
     </div>
   </div>
 </template>
@@ -94,10 +99,10 @@ export default {
     async deleteVehicle(vehicleId, index) {
       try {
         await Axios.delete(`/vehicle/${vehicleId}`);
-        
+
         // Eliminar del array local usando splice para asegurar la reactividad
         this.vehicle.splice(index, 1);
-        
+
         this.showToast = true; // Mostrar el toast de éxito
         setTimeout(() => {
           this.showToast = false; // Ocultar el toast de éxito después de 3 segundos
@@ -121,5 +126,11 @@ export default {
   border-radius: 8px;
   padding: 14px 25px;
   color: $color-font-tertiary;
+}
+
+/* Caja principal */
+.box-container {
+  max-width: 1024px; /* Ancho máximo */
+  margin: 0 auto; /* Centrar horizontalmente */
 }
 </style>

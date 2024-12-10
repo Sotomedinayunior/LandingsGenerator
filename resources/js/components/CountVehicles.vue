@@ -1,6 +1,6 @@
 <template>
   <div>
-    <div class="flex justify-around items-center">
+    <div class="flex justify-between items-center">
       <div class="flex items-center">
         <i class="fa fa-car mr-2"></i>
         <h2 class="text-2xl font-bold">Vehículos</h2>
@@ -16,7 +16,7 @@
         + Agregar Vehículo
       </button>
     </div>
-    <p class="text-gray-500 mt-2 ml-60">
+    <p class="text-gray-500 mt-2 text-xs text-left">
       Agregar los vehículos para esta landing
     </p>
   </div>

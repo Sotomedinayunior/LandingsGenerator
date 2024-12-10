@@ -168,18 +168,18 @@ export default {
   border-radius: 5px;
 }
 
-.actions-cell {
+/* .actions-cell {
   display: flex;
   justify-content: space-evenly;
   align-items: center;
-}
+} */
 
 /* Ocultar íconos por defecto */
-.actions-cell {
+/* .actions-cell {
   opacity: 1;
   cursor: pointer;
   transition: opacity 0.3s ease;
-}
+} */
 
 
 
