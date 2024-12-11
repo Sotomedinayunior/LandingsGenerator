@@ -1,16 +1,15 @@
 <template>
   <div>
     <!-- Mostrar los detalles de la landing si fue encontrada -->
-    <div v-if="landing" :style="{ '--primary-color': landing.color_primary }" >
+    <div v-if="landing" :style="{ '--primary-color': landing.color_primary }">
       <HeaderComponents
         :logo="landing.logo"
         :name="landing.name"
         :primaryColor="landing.color_primary"
         :secondaryColor="landing.color_secondary"
-       
       />
 
-      <section class="slider fade-in ">
+      <section class="slider fade-in">
         <div class="d-flex justify-center items-center flex-col">
           <h1 class="text-center text-6xl bold text-white text-wrap mb-8">
             {{ $t("Rent") }}
@@ -20,7 +19,7 @@
           >
             {{ $t("Find") }}
           </p>
-          <div class="pickup ">
+          <div class="pickup">
             <form @submit="SubmitForm">
               <div class="flex flex-row justify-between">
                 <div class="flex-col">
@@ -129,8 +128,25 @@
                   </div>
                 </div>
                 <div class="flex justify-center items-center mt-6">
-                  <button class=" text-white px-5 py-1 rounded" :style="{'background-color':landing.color_primary}">
-                    <i class="fa-solid fa-magnifying-glass"></i>
+                  <button
+                    class="text-white px-5 py-1 rounded"
+                    :style="{ 'background-color': landing.color_primary }"
+                  >
+                    <!-- SVG de lupa, color dinámico con landing.color_primary -->
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      class="h-6 w-6"
+                      :style="{ fill: landing.color_primary }"
+                      viewBox="0 0 24 24"
+                      stroke="currentColor"
+                      stroke-width="2"
+                    >
+                      <path
+                        stroke-linecap="round"
+                        stroke-linejoin="round"
+                        d="M10 16l4-4m0 0l-4-4m4 4H6"
+                      />
+                    </svg>
                   </button>
                 </div>
               </div>
@@ -147,7 +163,7 @@
         </h2>
 
         <!-- Validar si hay vehículos disponibles -->
-        <div v-if="vehicles.length > 0" class="grid grid-cols-3 gap-x-20  my-6">
+        <div v-if="vehicles.length > 0" class="grid grid-cols-3 gap-x-20 my-6">
           <CardVehicle
             v-for="vehicle in vehicles.slice(0, 3)"
             :key="vehicle.id"
@@ -170,7 +186,7 @@
         <div class="vehicle"></div>
         <div class="flex flex-col justify-center">
           <h2 class="text-3xl font-bold text-slate-950 text-left mb-7">
-           {{ $t("how_it_works") }}
+            {{ $t("how_it_works") }}
           </h2>
           <ul class="space-y-4">
             <li class="flex items-start mb-7">
@@ -179,9 +195,11 @@
                 >1</span
               >
               <div>
-                <h2 class="font-semibold text-slate-950 text-xl">{{ $t("select_vehicle") }}</h2>
+                <h2 class="font-semibold text-slate-950 text-xl">
+                  {{ $t("select_vehicle") }}
+                </h2>
                 <p class="text-slate-600 text-sm">
-                 {{ $t("browser") }}
+                  {{ $t("browser") }}
                 </p>
               </div>
             </li>
@@ -191,10 +209,11 @@
                 >2</span
               >
               <div>
-                <h2 class="font-semibold text-slate-950 text-xl">{{ $t("book_you_ride") }}</h2>
+                <h2 class="font-semibold text-slate-950 text-xl">
+                  {{ $t("book_you_ride") }}
+                </h2>
                 <p class="text-slate-600 text-sm">
-                  {{ $t('book_you') }}
-                  
+                  {{ $t("book_you") }}
                 </p>
               </div>
             </li>
@@ -204,9 +223,11 @@
                 >3</span
               >
               <div>
-                <h2 class="font-semibold text-slate-950 text-xl">{{ $t('enjoy') }}</h2>
+                <h2 class="font-semibold text-slate-950 text-xl">
+                  {{ $t("enjoy") }}
+                </h2>
                 <p class="text-slate-600 text-sm">
-                  {{ $t('enjoy_text') }}
+                  {{ $t("enjoy_text") }}
                 </p>
               </div>
             </li>
@@ -266,18 +287,17 @@ export default {
         time_of_arrival: "",
         id_landing: "",
         name_landing: "",
-
       },
 
       vehicles: [],
       currentLanguage: null,
     };
   },
-  computed:{
-    FullName(){
-    const NameLanding = this.landing.name;
-    return  NameLanding.replace("-", " ");
-    }
+  computed: {
+    FullName() {
+      const NameLanding = this.landing.name;
+      return NameLanding.replace("-", " ");
+    },
   },
 
   mounted() {
@@ -326,7 +346,7 @@ export default {
         .then((response) => {
           this.landing = response.data.landing;
           this.formValidate.name_landing = this.landing.name;
-          
+
           this.locations = response.data.landing.locations;
           this.vehicles = response.data.landing.vehicles;
           console.log(response.data.landing.vehicles);
@@ -396,7 +416,6 @@ export default {
     changeLanguage(language) {
       this.$i18n.locale = language;
       this.currentLanguage = language;
-
     },
   },
 
@@ -407,7 +426,7 @@ export default {
 </script>
 
 <style scoped>
-*{
+* {
   font-family: "Montserrat", sans-serif;
 }
 ::selection {
@@ -434,7 +453,7 @@ export default {
   background-size: cover;
   background-position: center;
   margin-top: 40px;
-  padding:80px 0px 40px 0px;
+  padding: 80px 0px 40px 0px;
   min-height: 500px;
 }
 .vehicle {
